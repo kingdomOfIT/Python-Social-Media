@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from .forms import RegisterForm, PostForm
+from .forms import RegisterForm, PostForm, OnboardingForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required, permission_required
-from .models import Post
+from .models import Post, Profile
 from django.contrib.auth.models import User, Group
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 @login_required(login_url="/login")
@@ -14,11 +15,32 @@ def home(request):
         postID = request.POST.get("post-id")
         userID = request.POST.get("user-id")
         
-        if postID:
-            post = Post.objects.filter(id=postID).first()
+        if "delete-post" in request.POST:
+            post = Post.objects.filter(id=request.POST.get("delete-post")).first()
             
             if post and (post.author == request.user or request.user.has_perm("main.delete_post")):
                 post.delete()
+            elif post and post.author != request.user:
+                pass #potrebno završiti report post-a
+            
+        elif "update-post" in request.POST:
+            print("Just calling updatePost")
+            postID = request.POST.get("update-post")
+            post = Post.objects.filter(id=postID).first()
+
+            if post:
+                # Retrieve the new title from the form
+                print("Req: ", request.POST)
+                newTitle = request.POST.get("update-title")
+                print("New title: ", newTitle)
+                newDescription = request.POST.get("update-description")
+
+                # Update the post with the new title
+                post.title = newTitle
+                post.description = newDescription
+                print("New post obj: ", post)
+                post.save()
+            
         elif userID:
             user = User.objects.filter(id=userID).first()
             
@@ -46,6 +68,11 @@ def create_post(request):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+            
+            # Get the interests from the form and save them for the post
+            interests = form.cleaned_data.get('interests')
+            post.interests.set(interests)
+            
             return redirect("/home")
     else: 
         form = PostForm
@@ -57,8 +84,23 @@ def sign_up(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('/home')
+            return redirect('/onboarding')
     else:
         form = RegisterForm()
     
     return render(request, 'registration/sign_up.html', {"form": form})
+
+def onboarding(request):
+    
+    profile_instance = get_object_or_404(Profile, user=request.user)
+     
+    if request.method == 'POST':
+        form = OnboardingForm(request.POST, instance=profile_instance)
+        if form.is_valid():
+            form.save()
+            return redirect('/home')
+    else:
+        form = OnboardingForm(instance=profile_instance)
+
+    return render(request, 'main/onboarding.html', {'form': form})
+
