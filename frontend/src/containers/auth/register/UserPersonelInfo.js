@@ -52,7 +52,7 @@ export class UserPersonalInfo extends Component {
                                 <button
                                 type='button' onClick={previousPage} className="btn btn-general mt-3 btn-login mr-2"
                                 > Previous </button>
-                                <button className="btn btn-general mt-3 btn-login"> Next </button>
+                                <button className="button-test"> Next </button>
                             </div>
                         </div>
                     </form>

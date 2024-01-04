@@ -7,56 +7,52 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { login } from "../../actions/auth_actions"
 
 class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.switchTheme = this.switchTheme.bind(this);
-    }
     state = {
         username : "",
         password : "",
-        progress : false,
-        isDarkMode: true
+        progress : false
     }
     render() {
-        const { isAuthenticated } = this.props.authReducer;
-        const { progress, isDarkMode } = this.state;
-
-        document.body.classList.toggle("dark-mode", isDarkMode);
+        const { isAuthenticated } = this.props.authReducer
+        const  { progress} = this.state
+        const image_url = "/media/images/book.png"
         if ( isAuthenticated ){
             return <Redirect to='/'/>
         }
         return (
-            <div>
-                <div class="login-box">
-                <h1>Login</h1>
-                <form onSubmit={this.onFormSubmit.bind(this)}>
-                <input
-                    value = {this.state.username}
-                    className="form-control custom-input"
-                    name="username"
-                    type="text"
-                    onChange={this.onInputChange.bind(this)}
-                    placeholder = "Username"
-                    id="login-input"
-                    />
-                <input
-                    value={this.state.password}
-                    className="form-control custom-input"
-                    name="password"
-                    type="password"
-                    onChange={this.onInputChange.bind(this)}
-                    placeholder="Password"
-                    />
-                <button type="submit" id="login-button">Login</button>
-                </form>
-                </div>
-
-                <div class="theme-toggle">
-                    <h2></h2>
-                    <label class="switch">
-                    <input type="checkbox" onChange={this.switchTheme} />
-                    <span class="slider"></span>
-                    </label>
+            <div className="login-page">
+                <AnimatePage />
+                <div className="login-page-content">
+                    <div className="login-page-content-inner">
+                        <form onSubmit={this.onFormSubmit.bind(this)} className="form-box animated bounceIn">
+                            <img src={image_url} class="center-login-image" />
+                            <div className="form-group">
+                                <input
+                                value = {this.state.username}
+                                className="form-control custom-input"
+                                name="username"
+                                type="text"
+                                onChange={this.onInputChange.bind(this)}
+                                placeholder = "Username"
+                                />
+                            </div>
+                                <div className="form-group">
+                                    <input
+                                    value={this.state.password}
+                                    className="form-control custom-input"
+                                    name="password"
+                                    type="password"
+                                    onChange={this.onInputChange.bind(this)}
+                                    placeholder="Password"
+                                    />
+                                </div>
+                            <button style={{ marginRight : "5px"}} className="btn btn-general btn-login"> Login </button>
+                            <CircularProgress style={progress ? { display: "inline-block" } : { display: "none" }} />
+                            <p className="text-helper">
+                                New to Writter? <Link to="/register">Sign Up</Link>
+                            </p>
+                        </form>
+                    </div>
                 </div>
             </div>
         )
@@ -77,25 +73,6 @@ class Login extends Component {
                 progress: false, username : "" , password : ""
             })
         })
-    }
-
-    switchTheme() {
-        const body = document.body;
-        const loginBox = document.querySelector(".login-box");
-        const h1 = document.getElementsByTagName("h1")[0];
-        const inputs = document.querySelectorAll("input");
-        const loginButton = document.getElementById("login-button");
-        const h2 = document.getElementsByTagName("h2")[0];
-        this.setState((prevState) => ({ isDarkMode: !prevState.isDarkMode }));
-
-        loginBox.classList.toggle("dark-mode");
-        body.classList.toggle("dark-mode");
-        h1.classList.toggle("dark-mode");
-        inputs.forEach(input => {
-            input.classList.toggle("dark-mode");
-        });
-        loginButton.classList.toggle("dark-mode");
-        h2.classList.toggle("dark-mode");
     }
 }
       

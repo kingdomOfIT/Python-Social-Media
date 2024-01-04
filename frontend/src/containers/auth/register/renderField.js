@@ -64,6 +64,7 @@ const RenderField = (field) => {
                 {...field.input}
                 className={meta.touched && meta.error ? "form-control custom-input input-error" : "form-control custom-input"} 
                 type={field.type}
+                placeholder= {field.placeholder}
             />
             <div className={errorClass} data-wow-duration="2s">
                 {meta.touched ? meta.error : ""}

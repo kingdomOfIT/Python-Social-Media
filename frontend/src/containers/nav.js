@@ -23,7 +23,7 @@ class Nav extends Component {
             <nav className="navbar navbar-expand navbar-light custom-nav">
                 <AddModal open={this.state.open} onClose={this.handleModal} />
                 <div className="container">
-                    <a className="navbar-brand" href="#">SocialMedia</a>
+                    <a className="navbar-custom-color" href="#">Writter</a>
                     <div className="collapse navbar-collapse">  
                         {this.renderLeftLinks()}
                     </div>

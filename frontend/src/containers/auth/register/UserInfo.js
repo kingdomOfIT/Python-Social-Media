@@ -14,30 +14,30 @@ export class UserInfo extends Component {
                         <legend className="text-center form-legend"> Register </legend>
                         <Field 
                             name="username"
-                            label = "Username : "
                             type = "text"
                             component={renderField}
+                            placeholder = "Username"
                         />
     
                         <Field
                             name="email"
-                            label="Email Address : "
                             type="email"
                             component={renderField}
+                            placeholder = "Email"
                         />
     
                         <Field
                             name="password"
-                            label="Password : "
                             type="password"
                             component={renderField}
+                            placeholder = "Password"
                         />
     
                         <Field
                             name="password2"
-                            label="Confim Password"
                             type="password"
                             component={renderField}
+                            placeholder = "Password again"
                         />
     
                         <div className="centered-content">
