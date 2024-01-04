@@ -11,7 +11,6 @@ export class AnimatePage extends Component {
         return (
             <div className="animate-page" ref="animate"> 
                 <i className="fa fa-cog fa-2x"></i> 
-                <div className="charging"></div> 
             </div>
         )
     }

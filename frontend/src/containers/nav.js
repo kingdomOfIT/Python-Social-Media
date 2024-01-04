@@ -23,7 +23,7 @@ class Nav extends Component {
             <nav className="navbar navbar-expand navbar-light custom-nav">
                 <AddModal open={this.state.open} onClose={this.handleModal} />
                 <div className="container">
-                    <a className="navbar-custom-color" href="#">Writter</a>
+                    <a className="navbar-custom-color" href="#">Writer</a>
                     <div className="collapse navbar-collapse">  
                         {this.renderLeftLinks()}
                     </div>
@@ -64,7 +64,7 @@ class Nav extends Component {
                         <Link className="nav-link" to="/login">Login</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/register">Register</Link>
+                        <Link className="nav-link" to="/register">Sign Up</Link>
                     </li>
                 </ul>
             )

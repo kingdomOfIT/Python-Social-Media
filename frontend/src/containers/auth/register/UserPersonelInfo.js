@@ -28,7 +28,7 @@ export class UserPersonalInfo extends Component {
                         />
                         <Field
                             name="sex"
-                            label="media/img/male.png"
+                            label="media/images/man_gender.png"
                             type="radio"
                             gender="Male"
                             value="male"
@@ -37,7 +37,7 @@ export class UserPersonalInfo extends Component {
                         />
                         <Field
                             name="sex"
-                            label="media/img/female.png"
+                            label="media/images/women_gender.png"
                             gender="Female"
                             type="radio"
                             value="female"

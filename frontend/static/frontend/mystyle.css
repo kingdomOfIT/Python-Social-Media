@@ -24,11 +24,11 @@ html {
 :root {
     --user-bg: linear-gradient(to right, #10001e 0%, #10001e 100%);
     --user-bg2: linear-gradient(to right, #92fe9d 0%, #00c9ff 100%);
-    --body-bg: linear-gradient(to top, #d9afd9 0%, #97d9e1 100%);
-    --user-br: rgb(255, 255, 255);
-    --user-hr: #dafc8c;
-    --user-ei: #68d377;
-    --kk: #fd542a;
+    --body-bg: linear-gradient(to top, #fa0000 0%, #ff0000 100%);
+    --user-br: rgb(255, 0, 0);
+    --user-hr: #ffffff;
+    --user-ei: #1900ff;
+    --kk: #fedc00;
 }
 
 body {
@@ -125,9 +125,9 @@ body {
 
 
 .register-page-photo img {
-    width: 100%;
-    height: 100%;
-    padding: 50px 100px 100px 100px;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 0px 0px 0px 100px;
 }
 
 .register-page-photo {
@@ -272,7 +272,7 @@ body {
 }
 
 .file-input-desc {
-    color: #067067;
+    color: #b586f8a4;
     font-size: 1.25em;
     font-weight: 700;
     margin-top: 5px;
@@ -284,7 +284,7 @@ body {
 .file-input-label,
 .inputfile,
 .file-input-label:hover {
-    background-color: #067067;
+    background-color: #b586f8a4;
 }
 
 .inputfile,
@@ -301,7 +301,8 @@ body {
 .custom-radio {
     display: inline-block;
     position: relative;
-    padding-left: 50px;
+    padding-left: 70px;
+    padding-right: 30px;
 }
 
 .gender-radio {
@@ -692,15 +693,6 @@ body {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-}
-
-.charging {
-    width: 60%;
-    height: 5px;
-    background-color: var(--user-hr);
-    animation: charge 950ms ease-in infinite;
-    transform-origin: left;
-    margin-top: 30px;
 }
 
 /******************************************

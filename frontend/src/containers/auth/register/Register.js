@@ -29,7 +29,7 @@ class Register extends Component {
     }
 
     render() {
-        const image_url = this.state.page === 3 ? "/media/img/login6.svg" : "/media/img/login7.svg"
+        const image_url = this.state.page === 3 ? "/media/img/remove.png" : "/media/img/remove.png"
         const { isAuthenticated } = this.props.authReducer
         if ( isAuthenticated){
             return <Redirect to="/" />
