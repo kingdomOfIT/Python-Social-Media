@@ -41,7 +41,7 @@ class Register extends Component {
                         <div className="register-page-photo">
                         <img src={image_url} alt='register'/>
                         </div>
-                        <div className="register-page-body">
+                        <div>
                             {this.renderForm()}
                         </div>  
                     </div>

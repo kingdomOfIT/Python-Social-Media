@@ -119,11 +119,10 @@ body {
     margin: 0 auto;
 }
 
-.register-page-photo,
-.register-page-body {
+.register-page-photo{
     height: 460px;
-    background-color: rgb(0, 0, 0, 0.1)
 }
+
 
 .register-page-photo img {
     width: 100%;
@@ -155,7 +154,7 @@ body {
 
 .btn-login {
     border: 2px solid #b586f8a4;
-    color: #ffffff;
+    color: #b586f8a4;
     width: 100%;
 }
 
@@ -302,6 +301,7 @@ body {
 .custom-radio {
     display: inline-block;
     position: relative;
+    padding-left: 50px;
 }
 
 .gender-radio {
@@ -345,9 +345,7 @@ body {
 
 .centered-content {
     position: absolute;
-    bottom: 10px;
     left: 50%;
-    width: max-content;
 
 }
 

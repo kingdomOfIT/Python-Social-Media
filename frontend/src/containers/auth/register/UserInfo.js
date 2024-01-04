@@ -11,7 +11,7 @@ export class UserInfo extends Component {
             <Fragment>
                 <div className="form-box ">
                     <form onSubmit={handleSubmit(nextPage)} className="animated wow fadeIn">
-                        <legend className="text-center form-legend"> Register </legend>
+                        <legend className="text-center form-legend"> Credentials </legend>
                         <Field 
                             name="username"
                             type = "text"

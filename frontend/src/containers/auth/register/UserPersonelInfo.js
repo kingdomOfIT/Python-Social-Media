@@ -12,9 +12,20 @@ export class UserPersonalInfo extends Component {
             <Fragment>
                 <div className="form-box ">
                     <form onSubmit={handleSubmit(nextPage)} className="animated wow fadeIn">
-                        <legend className="text-center form-legend"> Register </legend>
+                        <legend className="text-center form-legend"> About you </legend>
+                        <Field
+                            name="first_name"
+                            type="text"
+                            component={renderField}
+                            placeholder = "First Name"
+                        />
 
-                        <label className="mt-3 mb-2 input-label"> Gender : </label>
+                        <Field
+                            name="last_name"
+                            type="text"
+                            component={renderField}
+                            placeholder = "Last Name"
+                        />
                         <Field
                             name="sex"
                             label="media/img/male.png"
@@ -33,26 +44,13 @@ export class UserPersonalInfo extends Component {
                             labelId="female"
                             component={renderField}
                         />
-                        <Field
-                            name="first_name"
-                            label="First Name : "
-                            type="text"
-                            component={renderField}
-                        />
-    
-                        <Field
-                            name="last_name"
-                            label="Last Name : "
-                            type="text"
-                            component={renderField}
-                        />
     
                         <div className="centered-content">
                             <div className="centered-content-inner">
                                 <button
-                                type='button' onClick={previousPage} className="btn btn-general mt-3 btn-login mr-2"
+                                onClick={previousPage} className="btn btn-general mt-3 btn-login"
                                 > Previous </button>
-                                <button className="button-test"> Next </button>
+                                <button className="btn btn-general mt-3 btn-login"> Next </button>
                             </div>
                         </div>
                     </form>

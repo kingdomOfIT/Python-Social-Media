@@ -13,11 +13,10 @@ export class UserImage extends Component {
             <Fragment>
                 <div className="form-box ">
                     <form encType="multipart/form-data"
-                        encType="multipart/form-data"
                         onSubmit={handleSubmit(onFormSubmit)}
                         className="animated wow fadeIn">
                         
-                        <legend className="text-center form-legend"> Register </legend>
+                        <legend className="text-center form-legend"> Profile picture </legend>
                         <Field
                             id="f-input"
                             name="image"

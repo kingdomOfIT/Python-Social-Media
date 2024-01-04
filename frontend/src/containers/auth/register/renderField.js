@@ -37,9 +37,6 @@ const RenderField = (field) => {
         return (
             <div className="register-profile-img">
                 <div className="register-img-wrapper">
-                <span className="file-input-desc">
-                        for more and fun exprerience choose a picture for your profile please
-                </span>
                 <img className="img-responsive register-img" src="/media/img/man.svg"/>
                 </div>
 
