@@ -10,7 +10,7 @@ export class AnimatePage extends Component {
     render() {
         return (
             <div className="animate-page" ref="animate"> 
-                <i className="fa fa-cog fa-2x"></i> 
+                <div className="charging"></div> 
             </div>
         )
     }

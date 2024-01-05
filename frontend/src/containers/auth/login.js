@@ -49,7 +49,7 @@ class Login extends Component {
                             <button style={{ marginRight : "5px"}} className="btn btn-general btn-login"> Login </button>
                             <CircularProgress style={progress ? { display: "inline-block" } : { display: "none" }} />
                             <p className="text-helper">
-                                New to Writer? <Link to="/register">Sign Up</Link>
+                                New to Writer? <Link className="nav-item" to="/register"> Sign Up</Link>
                             </p>
                         </form>
                     </div>

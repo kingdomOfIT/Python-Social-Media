@@ -45,19 +45,26 @@ body {
 *******************************************/
 
 .navbar-custom-color{
-    color: #ffffff
+    color: #b586f8a4;
+    font-size:16px;
 }
+
+.navbar-custom-color:hover {
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
 .custom-nav {
     height: 8%;
 }
 
 .nav-item a {
-    color: rgb(120, 145, 143) !important;
-    font-size: 14px !important;
+    color: #b586f8a4 !important;
+    font-size: 16px !important;
 }
 
 .nav-item a:hover {
-    color: rgb(3, 37, 35) !important;
+    color: #ffffff !important;
 }
 
 /******************************************
@@ -94,6 +101,15 @@ body {
     width: 25%;
     margin-bottom: 20px;
   }
+
+.nav-item {
+    color: #b586f8a4 !important;
+}
+
+.nav-item:hover {
+    color: #ffffff !important;
+    text-decoration: none;
+}
   
 
 /******************************************
@@ -693,6 +709,15 @@ body {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.charging {
+    width: 60%;
+    height: 5px;
+    background-color: var(--user-hr);
+    animation: charge 950ms ease-in infinite;
+    transform-origin: left;
+    margin-top: 30px;
 }
 
 /******************************************
