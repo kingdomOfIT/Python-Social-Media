@@ -86,11 +86,11 @@ class UserValidationSer(serializers.Serializer):
     def validate(self , data):
         user = User.objects.filter(username = data["username"])
         if user.exists() :
-            raise serializers.ValidationError({"username":"user with this username already exists"})
+            raise serializers.ValidationError({"username":"Uh-oh! This username is already taken. How about trying a unique one?"})
 
         user = User.objects.filter(email = data["email"])
         if user.exists() :
-            raise serializers.ValidationError({"email":"user with this email already exists"})
+            raise serializers.ValidationError({"email":"Uh-oh! This email is already taken. How about trying a unique one?"})
 
         return data
     

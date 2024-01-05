@@ -11,59 +11,59 @@ export const validate = (values) => {
 
     //username validation
     if ( !username ){
-        errors.username= "this field shouldn't be empty"
+        errors.username= "Oops! Looks like you left this field feeling a bit lonely."
     } else {
         if ( username.length < 5){
-            errors.username = "username must be more than 4 characteres"
+            errors.username = "Choose a username with at least 5 characters to join the username party!"
         }
     }
 
     //email validation
     if (!email) {
-        errors.email = "this field shouldn't be empty"
+        errors.email = "Oops! Looks like you left this field feeling a bit lonely."
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-        errors.email = 'Invalid email address'
+        errors.email = 'Whoops! That email address seems to be doing a little dance of its own.'
     }
 
     // password validation
     if (!password) {
-        errors.password = "this field shouldn't be empty"
+        errors.password = "Oops! Looks like you left this field feeling a bit lonely."
     } else {
         if (password.length < 8) {
-            errors.password = "password length must be more than 08"
+            errors.password = "Secure your account with a password of at least 9 characters."
         }
         if (!alpha.test(password) || !numbers.test(password)) {
-            errors.password = "password must contains both chars and numbers"
+            errors.password = "Create a password that's the perfect mix of characters and numbers for added security!"
         }
     }
 
     // password2 validation
     if (!password2) {
-        errors.password2 = "this field shouldn't be empty"
+        errors.password2 = "Oops! Looks like you left this field feeling a bit lonely."
     } else {
         if (password != password2) {
-            errors.password2 = "password didnt match"
+            errors.password2 = "Passwords are like best friends; they need to match. Double-check and try again!"
         }
     }
 
     //first name validation
     if (!first_name) {
-        errors.first_name = "this field shouldn't be empty"
+        errors.first_name = "Oops! Looks like you left this field feeling a bit lonely."
     }
 
     //last name validation
     if (!last_name) {
-        errors.last_name = "this field shouldn't be empty"
+        errors.last_name = "Oops! Looks like you left this field feeling a bit lonely."
     } 
 
     //sex validation
     if (!sex) {
-        errors.sex = "what is you Gender??"
+        errors.sex = "Please select your gender."
     } 
 
     //image validation
     if (!image) {
-        errors.image = "choose a picture for your profile please!!"
+        errors.image = "Pick a picture to personalize your profile, please!"
     } 
 
     return errors
