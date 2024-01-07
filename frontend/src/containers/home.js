@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import moment from "moment"
+import Sidebar from "../components/sidebar.js";
 
 import { Container } from "@material-ui/core"
 import Card from '@material-ui/core/Card';
@@ -76,42 +77,56 @@ class Home extends Component {
             return <div style={{ textAlign: "center", marginTop: "50px" }} > <CircularProgress /></div>
         }
         return (
-             <div className={classes.pc}>
+            <div class="flex-container">
+                <div class="box1">
+                    <Sidebar />
+                </div>
+                <div class="box2">
+                <div>
+                    <h1>Testing</h1>
+                </div>
+                <div className={classes.pc}>
 
-                <UserInfo open={userInfoOpen} close={this.closeUserInfo} user={selectedUser}/>
-                <DeleteModal
-                open={modalOpen}
-                handleClose={this.handleModalClose}
-                postTitle={modalPostTitle} 
-                postId={modalPostId}
-                />
-
-                <EditModal 
-                open={editModalOpen}
-                handleClose={this.handleModalClose}
-                postTitle={modalPostTitle}
-                postContent = {modalPostContent}
-                postId={modalPostId}
-                />
-
-                <CommentModal
-                    open={commentModalOpen}
+                    {/* <UserInfo open={userInfoOpen} close={this.closeUserInfo} user={selectedUser}/>
+                    <DeleteModal
+                    open={modalOpen}
                     handleClose={this.handleModalClose}
+                    postTitle={modalPostTitle} 
                     postId={modalPostId}
-                />
+                    />
 
-                {this.props.posts.posts && <AnimatePage />}
-                <Container maxWidth="lg">
-                    {this.renderPosts()}
-                    <div className={classes.load}>
-                        { nextPage &&
-                        <Button variant="outlined" size="medium" color="primary"
-                        onClick={this.loadPageClicked} style = {{ marginRight : "5px"}}>
-                            Load More
-                        </Button> }
-                        { progress && <CircularProgress /> }
-                    </div>
-                </Container>
+                    <EditModal
+                    open={editModalOpen}
+                    handleClose={this.handleModalClose}
+                    postTitle={modalPostTitle}
+                    postContent = {modalPostContent}
+                    postId={modalPostId}
+                    />
+
+                    <CommentModal
+                        open={commentModalOpen}
+                        handleClose={this.handleModalClose}
+                        postId={modalPostId}
+                    />
+
+                    {this.props.posts.posts && <AnimatePage />}
+                    <Container maxWidth="lg">
+                        {this.renderPosts()}
+                        <div className={classes.load}>
+                            { nextPage &&
+                            <Button variant="outlined" size="medium" color="primary"
+                            onClick={this.loadPageClicked} style = {{ marginRight : "5px"}}>
+                                Load More
+                            </Button> }
+                            { progress && <CircularProgress /> }
+                        </div>
+                    </Container> */}
+                </div>
+                </div>
+                <div class="box3">
+                    <h1>Testing</h1>
+                </div>
+
             </div>
         )
     }
