@@ -3,9 +3,16 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import moment from "moment"
 import Sidebar from "../components/sidebar.js";
+import ShareButton from "../components/saveButton.js";
+import HeartButton from "../components/heartButton.js";
+import CommentButton from "../components/comments/commentButton.js";
+import ResponsiveDialog from "../components/responsiveDialog.js";
 
 import { Container } from "@material-ui/core"
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
 import Card from '@material-ui/core/Card';
+import IconButton from "@material-ui/core/IconButton";
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
@@ -82,12 +89,54 @@ class Home extends Component {
                     <Sidebar />
                 </div>
                 <div class="box2">
-                <div>
-                    <h1>Testing</h1>
-                </div>
+                    <div class="create-post">
+                        <Card className={classes.card} raised style={{ backgroundColor:"#19002f", color:"white"}}>
+                            <Grid container direction="column">
+                            <Grid item>
+                            <CardHeader
+                                className={classes.header}
+                                disableTypography
+                                avatar={<Avatar aria-label="Profile Photo" />}
+                                style={{ 
+                                    padding: '16px 16px 16px 16px', 
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    display: 'flex',
+                                    justifyContent: 'center' 
+                                }}
+                                title={
+                                    <TextField
+                                        id="standard-basic"
+                                        placeholder='Your amazing story is starting just here...'
+                                        variant="standard"
+                                        className='create-post-text'
+                                        InputProps={{
+                                            style: {
+                                            color: 'white',
+                                            backgroundColor: 'transparent',
+                                            borderColor: 'white',
+                                            border: '1px solid white',
+                                            borderRadius: '15px',
+                                            width: '100%',
+                                            marginBottom: '15px',
+                                            paddingLeft: '10px'
+                                            },
+                                        }}
+                                        InputLabelProps={{
+                                            style: {
+                                            color: 'white',
+                                            fontSize: '20px'
+                                            },
+                                        }}
+                                    />
+                                }
+                            />
+                            </Grid>
+                            </Grid>
+                        </Card>
+                    </div>
                 <div className={classes.pc}>
-
-                    {/* <UserInfo open={userInfoOpen} close={this.closeUserInfo} user={selectedUser}/>
+                    <UserInfo open={userInfoOpen} close={this.closeUserInfo} user={selectedUser}/>
                     <DeleteModal
                     open={modalOpen}
                     handleClose={this.handleModalClose}
@@ -120,7 +169,7 @@ class Home extends Component {
                             </Button> }
                             { progress && <CircularProgress /> }
                         </div>
-                    </Container> */}
+                    </Container>
                 </div>
                 </div>
                 <div class="box3">
@@ -141,38 +190,71 @@ class Home extends Component {
             const p_date = moment(post.p_date).format("DD/MM/YYYY ,HH:mm")
             const u_date = moment(post.u_date).format("DD/MM/YYYY ,HH:mm")
             return (
-                <Card key={post.id} className={classes.card}>
-                    <CardHeader className={classes.cardHeader}
-                        onClick={() => this.getUserInfo(post)}
-                        avatar={<Avatar alt="" src={post.owner.profile.image_path} className={classes.avatar}/>}
-                        title={<h4>{post.owner.username}</h4>}
-                        subheader={p_date}
-                    />
-                    <CardContent className={classes.cardContent}>
-                        <Typography variant="h6" color="textPrimary" component="h6">
-                            {post.title}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            {post.content}
-                        </Typography>
-                        <Typography variant="overline" color="textPrimary" component="p">
-                            Latest update : {u_date}
-                        </Typography>
-                    </CardContent>
-                    <CardActions>
-                        <Likes
-                        post = {post}
-                        userId = {this.props.authReducer.user.id}
-                        />
-
-                        <Button
-                        variant="contained" size="small" 
-                        color="primary" className={classes.cardActionLeft}
-                        onClick={() => this.onOpenComments(post.id)}>
-                            Comment({post.comments_count})
-                        </Button>
-                        {this.renderOwnerBtn(post)}
-                    </CardActions>
+                <Card className={classes.card} raised style={{ backgroundColor:"#19002f", color:"white"}}>
+                    <Grid container direction="column">
+                        <Grid item>
+                            <CardHeader
+                            className={classes.header}
+                            disableTypography
+                            avatar={<Avatar aria-label="Profile Photo" src={post.owner.profile.image_path} />}
+                            style={{ padding: '16px 16px 10px 16px' }}
+                            title={
+                                <Typography
+                                className= "ownerName"
+                                variant="title"
+                                display="inline"
+                                >
+                                Amir Kahriman
+                                </Typography>
+                            }
+                            action={
+                                <IconButton
+                                aria-label="settings"
+                                disableRipple
+                                disableTouchRipple
+                                style={{ color: 'white' }}
+                                >
+                                <ResponsiveDialog />
+                                </IconButton>
+                            }
+                            />
+                        </Grid>
+                        <Grid item>
+                            <CardContent className= "postTitle" style={{ paddingBottom: '5px' }}>
+                            <Typography
+                                variant="title1"
+                                gutterBottom
+                                className={classes.title}
+                            > This is some long title
+                            </Typography>
+                            </CardContent>
+                        </Grid>
+                        <Grid item>
+                            <CardContent className={classes.content} style={{ paddingBottom: '5px' }}>
+                            <Typography
+                                variant="body1"
+                                gutterBottom
+                                className={classes.paragraph}
+                            > Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.  
+                            </Typography>
+                            </CardContent>
+                        </Grid>
+                        <Grid item>
+                            <CardActions className={classes.actions}>
+                            <Grid container justify="space-around" wrap="nowrap">
+                                <Grid item>
+                                <HeartButton className={classes.icons} />
+                                </Grid>
+                                <Grid item>
+                                <CommentButton className={classes.icons} />
+                                </Grid>
+                                <Grid item>
+                                <ShareButton className={classes.icons} />
+                                </Grid>
+                            </Grid>
+                            </CardActions>
+                        </Grid>
+                    </Grid>
                 </Card>
             )
         })
@@ -198,7 +280,6 @@ class Home extends Component {
         }
 
     }
-
 
     handleModalClose = () => {
         this.setState({ modalOpen: false, editModalOpen: false, commentModalOpen : false })

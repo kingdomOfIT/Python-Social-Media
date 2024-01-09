@@ -48,21 +48,22 @@ body {
 .flex-container {
     display: flex;
     flex-wrap: nowrap;
+    padding: 0;
   }
   
   .flex-container > div {
-    margin: 10px;
-    text-align: center;
+    margin: 0px;
+    padding: 0px;
   }
   
   .box1 {
-    width: 10%;
+    width: 20%;
     /* padding: 10px; */
   }
   
   .box2 {
-    width: 75%;
-    padding: 10px;
+    width: 70%;
+    padding: 0;
   }
   
   .box3 {
@@ -70,6 +71,39 @@ body {
     padding: 10px;
   }
 
+.postTitle {
+    margin: 0px;
+    padding: 0px;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.ownerName {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.MuiCardContent-root:last-child{
+    padding-top: 0px;
+}
+.MuiCardHeader-root:headerClass{
+    padding:200px;
+}
+
+.headerClass{
+    padding: 100px;
+}
+
+.create-post{
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 24px;
+}
+.create-post-text{
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
 
 /******************************************
                 SIDEBAR
@@ -78,7 +112,7 @@ body {
     --background: #9c88ff;
     --navbar-width: 256px;
     --navbar-width-min: 80px;
-    --navbar-dark-primary: #19002f;
+    --navbar-dark-primary: transparent;
     --navbar-dark-secondary: #2c3e50;
     --navbar-light-primary: #f5f6fa;
     --navbar-light-secondary: #8392a5;
