@@ -37,12 +37,6 @@ class Nav extends Component {
             const { username } = this.props.authReducer.user
             return (
                 <ul className="navbar-nav ml-auto">
-                    <Fab 
-                    color="secondary" size="small"
-                    aria-label="delete" style={{ marginRight: 8 }} 
-                    onClick={this.onOpenModal} >
-                        <AddIcon />
-                    </Fab>
                     <li className="nav-item" style={{ margin : "auto 0" }}>
                         <Link className="btn btn-sm btn-outline-info" to="/user-info">
                             {username}<i className="fa fa-user ml-1"></i>

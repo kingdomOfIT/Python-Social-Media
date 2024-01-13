@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import moment from "moment"
@@ -7,6 +7,8 @@ import ShareButton from "../components/saveButton.js";
 import HeartButton from "../components/heartButton.js";
 import CommentButton from "../components/comments/commentButton.js";
 import ResponsiveDialog from "../components/responsiveDialog.js";
+import { Link } from "react-router-dom";
+import AddModal from '../components/addModal'
 
 import { Container } from "@material-ui/core"
 import Grid from "@material-ui/core/Grid";
@@ -32,6 +34,7 @@ import CommentModal from '../components/comments/commentModal'
 import Likes from './post_likes'
 import { loadPage } from "../actions/posts_action"
 import UserInfo from './anyUserInfo'
+import '../../static/frontend/mystyle.css';
 
 const useStyles = theme  =>  ({
     avatar: {
@@ -72,6 +75,12 @@ class Home extends Component {
         userInfoOpen : false,
         selectedUser : null,
     }
+    handleModal = () => {
+        this.setState({open : false })
+    }
+    onOpenModal = () => {
+        this.setState({open : true})
+    }
 
     render() {
         const { classes, loadPosts} = this.props
@@ -79,6 +88,14 @@ class Home extends Component {
         const { modalOpen, editModalOpen, modalPostTitle, progress, selectedUser,
             modalPostId, modalPostContent, commentModalOpen, userInfoOpen}
         = this.state
+        const creatorsData = [
+            { id: 1, avatar: 'avatar1.jpg', name: 'John', surname: 'Doe', username: 'john_doe' },
+            { id: 2, avatar: 'avatar2.jpg', name: 'Jane', surname: 'Smith', username: 'jane_smith' },
+            { id: 3, avatar: 'avatar3.jpg', name: 'Alex', surname: 'Johnson', username: 'alex_j' },
+            { id: 4, avatar: 'avatar4.jpg', name: 'Emily', surname: 'Williams', username: 'emily_w' },
+            { id: 5, avatar: 'avatar5.jpg', name: 'Michael', surname: 'Brown', username: 'michael_b' },
+            { id: 6, avatar: 'avatar6.jpg', name: 'Samantha', surname: 'Davis', username: 'samantha_d' },
+          ];
 
         if (loadPosts){
             return <div style={{ textAlign: "center", marginTop: "50px" }} > <CircularProgress /></div>
@@ -105,6 +122,7 @@ class Home extends Component {
                                     justifyContent: 'center' 
                                 }}
                                 title={
+                                    <div>
                                     <TextField
                                         id="standard-basic"
                                         placeholder='Your amazing story is starting just here...'
@@ -128,7 +146,11 @@ class Home extends Component {
                                             fontSize: '20px'
                                             },
                                         }}
+                                        onClick={this.onOpenModal}
                                     />
+                                    <AddModal open={this.state.open} onClose={this.handleModal} />
+                                    </div>
+                                    
                                 }
                             />
                             </Grid>
@@ -173,7 +195,45 @@ class Home extends Component {
                 </div>
                 </div>
                 <div class="box3">
-                    <h1>Testing</h1>
+                    <div className = "container-card">
+                        <h2>Top Creators</h2>
+                        <div class="row">
+                            <div className="card-container">
+                            <img className="round" src={"../../static/frontend/profile-placeholder.svg"} alt="user" />
+                            <h3>Amir Kahriman</h3>
+                            <h6>@amirkahriman</h6>
+                        </div>
+                        <div className="card-container">
+                            <img className="round" src={"../../static/frontend/profile-placeholder.svg"} alt="user" />
+                            <h3>Amir Kahriman</h3>
+                            <h6>@amirkahriman</h6>
+                        </div>
+                        </div>
+                        <div className="row">
+                            <div className="card-container">
+                            <img className="round" src={"../../static/frontend/profile-placeholder.svg"} alt="user" />
+                            <h3>Amir Kahriman</h3>
+                            <h6>@amirkahriman</h6>
+                        </div>
+                        <div className="card-container">
+                            <img className="round" src={"../../static/frontend/profile-placeholder.svg"} alt="user" />
+                            <h3>Amir Kahriman</h3>
+                            <h6>@amirkahriman</h6>
+                        </div>
+                        </div>
+                        <div className="row">
+                            <div className="card-container">
+                            <img className="round" src={"../../static/frontend/profile-placeholder.svg"} alt="user" />
+                            <h3>Amir Kahriman</h3>
+                            <h6>@amirkahriman</h6>
+                        </div>
+                        <div className="card-container">
+                            <img className="round" src={"../../static/frontend/profile-placeholder.svg"} alt="user" />
+                            <h3>Amir Kahriman</h3>
+                            <h6>@amirkahriman</h6>
+                        </div>
+                        </div>
+                    </div>                                          
                 </div>
 
             </div>
@@ -187,8 +247,40 @@ class Home extends Component {
         // and userpostsReducer has an array 
         const posts = this.props.posts.posts ? this.props.posts.posts : this.props.posts
         return posts.map((post) => {
-            const p_date = moment(post.p_date).format("DD/MM/YYYY ,HH:mm")
-            const u_date = moment(post.u_date).format("DD/MM/YYYY ,HH:mm")
+            const u_date = moment(post.u_date).format("DD/MM/YYYY, HH:mm")
+            const p_date = moment(post.p_date).format('DD/MM/YYYY, HH:mm');
+            const PostTime = ({ postDate }) => {
+                const [timeAgo, setTimeAgo] = useState('');
+              
+                useEffect(() => {
+                  const calculateTimeAgo = () => {
+                    const currentDate = moment();
+                    const postCreationDate = moment(postDate, 'DD/MM/YYYY, HH:mm');
+                    const duration = moment.duration(currentDate.diff(postCreationDate));
+                    
+                    if (duration.asDays() > 5) {
+                      // If created more than 5 days ago, display full date
+                      setTimeAgo(postCreationDate.format('DD/MM/YYYY'));
+                    } else if (duration.asHours() >= 24) {
+                      // If created more than 24 hours ago, display days ago
+                      setTimeAgo(`${Math.floor(duration.asDays())} days ago`);
+                    } else if (duration.asMinutes() >= 60) {
+                      // If created more than 60 minutes ago, display hours ago
+                      setTimeAgo(`${Math.floor(duration.asHours())} hours ago`);
+                    } else if (duration.asMinutes() < 1) {
+                        
+                        setTimeAgo(`Just Now`);
+                    } else {
+                      // If created less than an hour ago, display minutes ago
+                      setTimeAgo(`${Math.floor(duration.asMinutes())} minutes ago`);
+                    } 
+                  };
+              
+                  calculateTimeAgo();
+                }, [postDate]);
+              
+                return <span>{timeAgo}</span>;
+              };
             return (
                 <Card className={classes.card} raised style={{ backgroundColor:"#19002f", color:"white"}}>
                     <Grid container direction="column">
@@ -199,13 +291,18 @@ class Home extends Component {
                             avatar={<Avatar aria-label="Profile Photo" src={post.owner.profile.image_path} />}
                             style={{ padding: '16px 16px 10px 16px' }}
                             title={
+                                <div>
                                 <Typography
-                                className= "ownerName"
-                                variant="title"
-                                display="inline"
+                                    className="ownerName"
+                                    variant="title"
+                                    display="inline"
                                 >
-                                Amir Kahriman
+                                    Amir Kahriman
                                 </Typography>
+                                <Typography variant="subtitle1" style={{color:"#808080", fontSize:"16px"}}>
+                                    <p><PostTime postDate={p_date} /></p>
+                                </Typography>
+                            </div>
                             }
                             action={
                                 <IconButton
@@ -232,7 +329,7 @@ class Home extends Component {
                         <Grid item>
                             <CardContent className={classes.content} style={{ paddingBottom: '5px' }}>
                             <Typography
-                                variant="body1"
+                                variant="body2"
                                 gutterBottom
                                 className={classes.paragraph}
                             > Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.  

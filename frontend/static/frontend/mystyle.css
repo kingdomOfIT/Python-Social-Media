@@ -62,13 +62,8 @@ body {
   }
   
   .box2 {
-    width: 70%;
+    width: 60%;
     padding: 0;
-  }
-  
-  .box3 {
-    width: 15%;
-    padding: 10px;
   }
 
 .postTitle {
@@ -104,7 +99,74 @@ body {
     align-items: center;
     justify-content: center;
 }
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
 
+* {
+	box-sizing: border-box;
+}
+
+.box3 {
+	font-family: Montserrat, sans-serif;
+    width: 20%;
+    padding: 10px;
+	
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+
+	min-height: 100vh;
+	margin: 0;
+}
+
+.box3 h3 {
+	margin: 10px 0;
+    font-size: 0.8rem;
+}
+
+.box3 h6 {
+	margin: 5px 0;
+	text-transform: uppercase;
+    font-size: 0.6rem;
+}
+
+.box3 p {
+	font-size: 14px;
+	line-height: 21px;
+}
+
+.container-card {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.col {
+    flex: 0 0 calc(33.333% - 10px); /* 33.333% width with 10px margin between columns */
+    background-color: #f0f0f0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.card-container {
+	border-radius: 5px;
+	color: #B3B8CD;
+	padding-top: 30px;
+	position: relative;
+	width: 120px;
+	max-width: 100%;
+	text-align: center;
+}
+
+.card-container .round {
+	border: 1px solid #03BFCB;
+	border-radius: 50%;
+	padding: 7px;
+}
 /******************************************
                 SIDEBAR
 *******************************************/    
