@@ -107,55 +107,14 @@ class Home extends Component {
                 </div>
                 <div class="box2">
                     <div class="create-post">
-                        <Card className={classes.card} raised style={{ backgroundColor:"#19002f", color:"white"}}>
-                            <Grid container direction="column">
-                            <Grid item>
-                            <CardHeader
-                                className={classes.header}
-                                disableTypography
-                                avatar={<Avatar aria-label="Profile Photo" />}
-                                style={{ 
-                                    padding: '16px 16px 16px 16px', 
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    display: 'flex',
-                                    justifyContent: 'center' 
-                                }}
-                                title={
-                                    <div>
-                                    <TextField
-                                        id="standard-basic"
-                                        placeholder='Your amazing story is starting just here...'
-                                        variant="standard"
-                                        className='create-post-text'
-                                        InputProps={{
-                                            style: {
-                                            color: 'white',
-                                            backgroundColor: 'transparent',
-                                            borderColor: 'white',
-                                            border: '1px solid white',
-                                            borderRadius: '15px',
-                                            width: '100%',
-                                            marginBottom: '15px',
-                                            paddingLeft: '10px'
-                                            },
-                                        }}
-                                        InputLabelProps={{
-                                            style: {
-                                            color: 'white',
-                                            fontSize: '20px'
-                                            },
-                                        }}
-                                        onClick={this.onOpenModal}
-                                    />
-                                    <AddModal open={this.state.open} onClose={this.handleModal} />
-                                    </div>
-                                    
-                                }
-                            />
-                            </Grid>
-                            </Grid>
-                        </Card>
+                    <div class="profile-container">
+                        <div class="profile-picture">
+                            <img src="https://picsum.photos/200/300
+                        " alt="Profile Picture"></img>
+                        </div>
+                        <input type="text" class="text-field" placeholder="Your amazing story starts here..." onClick={this.onOpenModal}></input>
+                        <AddModal open={this.state.open} onClose={this.handleModal} />
+                    </div>
                     </div>
                 <div className={classes.pc}>
                     <UserInfo open={userInfoOpen} close={this.closeUserInfo} user={selectedUser}/>
@@ -287,6 +246,7 @@ class Home extends Component {
                         <Grid item>
                             <CardHeader
                             className={classes.header}
+                            onClick={() => this.getUserInfo(post)}
                             disableTypography
                             avatar={<Avatar aria-label="Profile Photo" src={post.owner.profile.image_path} />}
                             style={{ padding: '16px 16px 10px 16px' }}

@@ -9,10 +9,6 @@ const Sidebar = () => {
   return (
     <div className='sidebar'>
     <div id="nav-bar">
-      <div id="nav-header">
-        <a id="nav-title" target="_blank">CODEPEN</a>
-          <hr/>
-      </div>
       <div id="nav-content">
           <div className="nav-button1"><i className="fas fa-palette"></i><span>Your Work</span></div>
           <div className="nav-button1"><i className="fas fa-images"></i><span>Assets</span></div>
@@ -26,14 +22,6 @@ const Sidebar = () => {
           <div className="nav-button1"><i className="fas fa-gem"></i><span>Codepen Pro</span></div>
           {/* <div className="nav-content-highlight"></div> */}
       </div><input id="nav-footer-toggle" type="checkbox" />
-      {/* <div id="nav-footer">
-          <div id="nav-footer-heading">
-              <div id="nav-footer-avatar"><img src="https://gravatar.com/avatar/4474ca42d303761c2901fa819c4f2547" /></div>
-              <div id="nav-footer-titlebox"><a id="nav-footer-title" href="https://codepen.io/uahnbu/pens/public" target="_blank">uahnbu</a><span id="nav-footer-subtitle">Admin</span></div><label for="nav-footer-toggle"><i className="fas fa-caret-up"></i></label></div>
-          <div id="nav-footer-content">
-            <p>Something text header</p>
-          </div>
-      </div> */}
   </div>
 </div>
   );

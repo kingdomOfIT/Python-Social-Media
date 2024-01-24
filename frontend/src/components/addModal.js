@@ -12,31 +12,60 @@ import { addPost } from '../actions/posts_action'
 
 const useStyles = makeStyles(theme => ({
     paper: {
-        position: 'absolute',
-        top: "calc(50% - 9rem)",
-        left: "calc(50% - 13rem)",
-        width: "80vmin",
-        backgroundImage: "var(--user-bg2)",
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        color : "#ccc",
-
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: '80vmin',
+      backgroundColor: '#19002f',
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(4),
+      color: '#ccc',
+      textAlign: 'center',
     },
-    h2 : {
-        color: "#102016",
-        padding : "1rem 0",
-        marginBottom : "1.5rem",
-        borderBottom : "white solid",
-        textAlign : "center",
+    title: {
+      padding: '1rem 0',
+      marginBottom: '1.5rem',
+      borderBottom: '2px solid white',
+      color: 'white'
+    },
+    form: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    textField: {
+        margin: '1rem 0',
+        '& input': {
+          color: 'white',
+          borderBottom: '2px solid white'
+        },
+        '& label': {
+          color: 'white',
+        },
+        '&::placeholder': {
+          color: 'white',
+        },
     },
     button: {
-        margin: theme.spacing(1),
+      margin: theme.spacing(2),
+      color: 'white',
     },
     rightIcon: {
-        marginLeft: theme.spacing(1),
+      marginLeft: theme.spacing(1),
+      color: 'white', // Set text color to white
     },
-}));
+    circularProgress: {
+      display: 'inline-block',
+    },
+    closeButton: {
+      position: 'absolute',
+      top: theme.spacing(1),
+      right: theme.spacing(1),
+    },
+  }));
+  
 
 function AddModal({ open, onClose, addPost }){
 
@@ -68,47 +97,54 @@ function AddModal({ open, onClose, addPost }){
         })
     }
     return (
-            <div>
-                <Modal
-                    aria-labelledby="title"
-                    aria-describedby="description"
-                    open={open}
-                    onClose={() => {onClose() ; onClose2()} }
-                >
-                    <div className={classes.paper}>
-                    <h2 className={classes.h2} id="title">Add A New Post</h2>
-                        <form id="description" onSubmit={onBtnClicked}>
-                            <TextField
-                                required
-                                label="Title"
-                                type="text"
-                                value={values.title}
-                                onChange={onInputChange}
-                                name='title'
-                                fullWidth = {true}
-                            />
-                            <TextField
-                                required
-                                name='content'
-                                label="Content"
-                                multiline = {true}
-                                rowsMax="4"
-                                value={values.content}
-                                onChange={onInputChange}
-                                margin="normal"
-                                fullWidth={true}
-                            />
-                            <Button type='submit' variant="contained" color="primary"
-                                className={classes.button}>
-                                Create
-                                <Icon className={classes.rightIcon}>send</Icon>
-                            </Button>
-                        <CircularProgress style={progress ? { display: "inline-block" } : { display: "none" }} />
-                        </form>
-                    </div>
-                </Modal>
+        <div>
+          <Modal
+            aria-labelledby="title"
+            aria-describedby="description"
+            open={open}
+            onClose={() => {
+              onClose();
+              onClose2();
+            }}
+          >
+            <div className={classes.paper}>
+              <h2 className={classes.title} id="title">
+                Crate a new Post
+              </h2>
+              <form className={classes.form} onSubmit={onBtnClicked}>
+                <TextField
+                  required
+                  className={classes.textField}
+                  label="Title"
+                  type="text"
+                  value={values.title}
+                  onChange={onInputChange}
+                  name="title"
+                  fullWidth
+                />
+                <TextField
+                  required
+                  className={classes.textField}
+                  name="content"
+                  label="Content"
+                  value={values.content}
+                  onChange={onInputChange}
+                  margin="normal"
+                  fullWidth
+                />
+                <Button type="submit" variant="contained" color="primary" className={classes.button}>
+                  CREATE 
+                  <Icon className={classes.rightIcon}>send</Icon>
+                </Button>
+                <CircularProgress
+                  className={classes.circularProgress}
+                  style={progress ? {} : { display: 'none' }}
+                />
+              </form>
             </div>
-    )
+          </Modal>
+        </div>
+      );
 }
 
 export default connect(null ,{ addPost })(AddModal)
