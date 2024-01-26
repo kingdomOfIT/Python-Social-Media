@@ -7,6 +7,7 @@ COLORS :
     #D5E2E1;
     #4b4e4e;
 *******************************************/
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
 body,
 html {
     overflow-x: hidden;
@@ -46,7 +47,7 @@ DROPDOWN SEARCH
 
 
 .Appp {
-    font-family: sans-serif;
+    font-family: Montserrat;
   }
   
   .dropdown {
@@ -179,6 +180,7 @@ DROPDOWN SEARCH
   .flex-container > div {
     margin: 0px;
     padding: 0px;
+    padding-top: 75px;
   }
   
   .box1 {
@@ -217,14 +219,12 @@ DROPDOWN SEARCH
 .create-post{
     padding-left: 24px;
     padding-right: 24px;
-    padding-bottom: 10px;
 }
 .create-post-text{
     width: 100%;
     align-items: center;
     justify-content: center;
 }
-@import url('https://fonts.googleapis.com/css?family=Montserrat');
 
 * {
 	box-sizing: border-box;
@@ -297,6 +297,10 @@ DROPDOWN SEARCH
 
 /* General styles */
 .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -443,7 +447,7 @@ DROPDOWN SEARCH
     display: flex;
     flex-direction: column;
     color: var(--navbar-light-primary);
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: Montserrat;
     overflow: hidden;
     user-select: none;
   }
@@ -635,6 +639,8 @@ DROPDOWN SEARCH
 }
 
 .custom-nav {
+    position: fixed;
+    top: 0;
     height: 8%;
 }
 

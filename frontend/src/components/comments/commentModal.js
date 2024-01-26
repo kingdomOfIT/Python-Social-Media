@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
         width: "95vmin",
         maxHeight : "50%",
         overflowY: 'scroll',
-        backgroundImage: "var(--user-bg2)",
+        backgroundColor: "#19002f",
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
         color: "#102016",
         padding: "1rem 0",
         marginBottom: "1.5rem",
-        borderBottom: "white solid",
+        borderBottom: "2px solid white", // Updated bottom border to white
         textAlign: "center",
     },
     button: {
@@ -47,9 +47,16 @@ const useStyles = makeStyles(theme => ({
     btnDiv: {
         textAlign: "end",
     },
-    form : {
-        marginTop : 10,
-    }
+    form: {
+        marginTop: 10,
+        '& .MuiInputBase-root': {
+            color: 'white',
+            borderBottom: '1px solid white',
+        },
+        '& .MuiFormLabel-root': {
+            color: 'white', // Set label color to white
+        },
+    },
 }));
 
 function CommentModal({open, handleClose, postId, addComment, getComments , comments })
@@ -100,13 +107,13 @@ function CommentModal({open, handleClose, postId, addComment, getComments , comm
                     <form className={classes.form} id="description" onSubmit = {onFormSubmit}>
                         <TextField
                             required
-                            label="add comments"
+                            label="Write a comment"
                             type="text"
                             value={values.content}
                             onChange={onInputChange}
                             name='content'
                             fullWidth={true}
-                            rowsMax="4"
+                            maxRows="4"
                             multiline = {true}
                         />
                         <div className={classes.btnDiv}>

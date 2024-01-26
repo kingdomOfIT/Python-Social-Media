@@ -40,25 +40,20 @@ function ShareButton() {
       >
         <DialogContent>
           <List>
-            <ListItem button onClick={handleClose}>
-              <ListItemIcon>
-                <Mail />
-              </ListItemIcon>
-              <ListItemText primary="Share via Direct Message" />
-            </ListItem>
+
             <Divider />
             <ListItem button onClick={handleClose}>
               <ListItemIcon>
                 <BookmarkBorderRoundedIcon />
               </ListItemIcon>
-              <ListItemText primary="Add Tweet to Bookmarks" />
+              <ListItemText primary="Save Post" />
             </ListItem>
             <Divider />
             <ListItem button onClick={handleClose}>
               <ListItemIcon>
                 <Link />
               </ListItemIcon>
-              <ListItemText primary="Copy link to tweet" />
+              <ListItemText primary="Copy link to post" />
             </ListItem>
           </List>
         </DialogContent>

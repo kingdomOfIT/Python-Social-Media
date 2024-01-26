@@ -1,4 +1,4 @@
-import { CLOSEALERT, LOGIN_ERROR, LOGIN, REGISTER_ERROR, REGISTER,
+import { CLOSEALERT, LOGIN_ERROR, REGISTER_ERROR,
     UPDATE_USER_ERROR, POST_CREATED_FAILED, DELETE_POST, EDIT_POST_FAIL ,
     EDIT_POST, UPDATE_USER_INFO, UPDATE_IMAGE}
 from "../actions/types"
@@ -30,15 +30,6 @@ export default function(state = init , action) {
                 type : "error",
                 msg
             }
-
-        case LOGIN:
-        case REGISTER:
-            msg = `welcome ${action.payload.user.username} Have Fun`
-            return {
-                ...state,
-                type : "success",
-                msg
-            }
         
         case REGISTER_ERROR:
             msg = "the file you/'ve choosen isn't an image ,provide an image for your profile please"
@@ -62,12 +53,6 @@ export default function(state = init , action) {
                 msg
             }
 
-        case EDIT_POST :
-            msg = `Post ${action.payload.title} has been updated succefully`
-            return {
-                type: "success",
-                msg  
-            }
         case CLOSEALERT:
             return init
 

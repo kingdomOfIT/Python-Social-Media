@@ -14,7 +14,13 @@ const styles = {
 };
 
 function CommentButton(props) {
-  const { classes } = props;
+  const { classes, onClick, post } = props;
+
+  const handleButtonClick = () => {
+    if (onClick) {
+      onClick();
+    }
+  };
   return (
     <>
       <IconButton
@@ -22,9 +28,10 @@ function CommentButton(props) {
         disableRipple
         color="inherit"
         className={classes.icon}
+        onClick={handleButtonClick}
       >
         <MessageCircle />
-        <Typography className={classes.number}>{24}</Typography>
+        <Typography className={classes.number}>{post.comments_count}</Typography>
       </IconButton>
     </>
   );

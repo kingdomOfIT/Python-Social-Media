@@ -1,7 +1,12 @@
-import React , { useState } from "react"
-import Icon from '@material-ui/core/Icon';
+import React from "react"
 import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles';
+import IconButton from "@material-ui/core/IconButton";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import Typography from "@material-ui/core/Typography";
+
+
 
 import { makeLike, updateLike, deleteLike } from '../actions/index'
 
@@ -39,35 +44,63 @@ function Likes({ post, userId, makeLike, updateLike, deleteLike }){
         { like &&
             <div>
                 {like.like && 
-                <div>
-                    <Icon onClick={() => deleteLike(like.id)} className={classes.icon}>
-                    thumb_up_alt
-                    </Icon>{post.likes_count}
-                    <Icon onClick={() => updateLike2(false)} className={classes.icon} style={{ marginLeft: "5px", opacity: ".5" }}>
-                    thumb_down_alt
-                    </Icon>{post.delikes_count}
-                </div>}
+                <>
+                    <IconButton
+                        disableFocusRipple
+                        disableRipple
+                        color="inherit"
+                        className={classes.icon}
+                        onClick={() => deleteLike(like.id)}
+                    >
+                        {like ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
+                        {like ? (
+                        <Typography className={`${classes.number} ${classes.optional}`}>
+                            {post.likes_count}
+                        </Typography>
+                        ) : ( <Typography className={classes.number}>{count}</Typography> ) }
+                    </IconButton>
+                </>
+                
+                }
 
                 {!like.like &&
-                <div>
-                    <Icon onClick={() => updateLike2(true)} className={classes.icon} style={{ opacity: ".5" }}>
-                    thumb_up_alt
-                    </Icon>{post.likes_count}
-                    <Icon onClick={() => deleteLike(like.id)} className={classes.icon} style={{ marginLeft: "5px" }} >
-                    thumb_down_alt
-                    </Icon>{post.delikes_count}
-                </div>}
+                <>
+                <IconButton
+                    disableFocusRipple
+                    disableRipple
+                    color="inherit"
+                    className={classes.icon}
+                    onClick={() => updateLike2(true)}
+                >
+                    {like ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
+                    {like ? (
+                    <Typography className={`${classes.number} ${classes.optional}`}>
+                        {post.likes_count}
+                    </Typography>
+                    ) : ( <Typography className={classes.number}>{post.likes_count}</Typography> ) }
+                </IconButton>
+            </>
+                
+                }
             </div>    
-        } 
+        }
         {!like &&
-            <div>
-                <Icon onClick={() => makeLike2(true)} className={classes.icon} style={{ opacity: ".5" }}>
-                thumb_up_alt
-                </Icon>{post.likes_count}
-                <Icon onClick={() => makeLike2(false)} className={classes.icon} style={{ marginLeft: "5px", opacity: ".5" }}>
-                thumb_down_alt
-                </Icon>{post.delikes_count}
-            </div>
+            <>
+            <IconButton
+                disableFocusRipple
+                disableRipple
+                color="inherit"
+                className={classes.icon}
+                onClick={() => makeLike2(true)}
+            >
+                {like ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
+                {like ? (
+                <Typography className={`${classes.number} ${classes.optional}`}>
+                    {post.likes_count}
+                </Typography>
+                ) : ( <Typography className={classes.number}>{post.likes_count}</Typography> ) }
+            </IconButton>
+        </>
         } 
         </div>
     )

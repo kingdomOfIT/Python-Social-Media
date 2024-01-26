@@ -4,7 +4,6 @@ import { CLOSEALERT, UPDATE_USER_INFO, UPDATE_USER_ERROR, CLEAR_REDUX_FORM,
     UPDATE_IMAGE, UPDATE_IMAGE_FAIL, MAKE_LIKE, UPDATE_LIKE ,DELETE_LIKE}
 from "./types"
 import { setConfig } from "./auth_actions"
-// import { bindActionCreators } from "C:/Users/BisasterBoy/AppData/Local/Microsoft/TypeScript/3.6/node_modules/redux"
 
 export const closeAlert = () => {
     return (dispatch) =>{
@@ -60,12 +59,16 @@ export const clearForm = () => {
  export const makeLike = (values) => {
     return (dispatch ,getState) => {
         const config = setConfig(getState)
-        axios.post("likes/",values,config).then((res)=> {
+        axios.post("likes/",values,config)
+        .then((res)=> {
             dispatch({
                 type : MAKE_LIKE,
                 payload : res.data
             })
         })
+        .catch((error) => {
+            console.error("Error making like:", error);
+          });
     }
 }
 

@@ -93,7 +93,7 @@ function CommentItem({ user, comment, editComment }) {
                     required
                     name='content'
                     multiline={true}
-                    rowsMax="6"
+                    maxRows="6"
                     value={value}
                     onChange={onInputChange}
                     margin="normal"
@@ -145,7 +145,7 @@ function CommentItem({ user, comment, editComment }) {
         >
             <CardHeader className={classes.cardHead}
                 avatar={<Avatar alt="" src={comment.owner.profile.image_path} className={classes.avatar} />}
-                title={<p className={classes.owner}>{comment.owner.username}</p>}
+                title={<p className={classes.owner}>{comment.owner.first_name} {comment.owner.last_name}</p>}
                 subheader={p_date}
             />
             <CardContent className={classes.cardContent}>

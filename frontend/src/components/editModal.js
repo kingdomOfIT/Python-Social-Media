@@ -12,37 +12,59 @@ import { editPost } from '../actions/posts_action'
 
 const useStyles = makeStyles(theme => ({
     paper: {
-        position: 'absolute',
-        top: "calc(50% - 9rem)",
-        left: "calc(50% - 13rem)",
-        width: "80vmin",
-        backgroundImage: "var(--user-bg2)",
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-        color: "#ccc",
-
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: '80vmin',
+      backgroundColor: '#19002f',
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(4),
+      color: '#ccc',
+      textAlign: 'center',
     },
-    h2: {
-        color: "#102016",
-        padding: "1rem 0",
-        marginBottom: "1.5rem",
-        borderBottom: "white solid",
-        textAlign: "center",
+    title: {
+      padding: '1rem 0',
+      marginBottom: '1.5rem',
+      borderBottom: '2px solid white',
+      color: 'white'
+    },
+    form: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    textField: {
+        margin: '1rem 0',
+        '& input': {
+          color: 'white',
+          borderBottom: '2px solid white'
+        },
+        '& label': {
+          color: 'white',
+        },
+        '&::placeholder': {
+          color: 'white',
+        },
     },
     button: {
-        margin: theme.spacing(1),
+      margin: theme.spacing(2),
+      color: 'white',
     },
     rightIcon: {
-        marginLeft: theme.spacing(1),
+      marginLeft: theme.spacing(1),
+      color: 'white', // Set text color to white
     },
-    cancel: {
-        marginRight: "5px",
+    circularProgress: {
+      display: 'inline-block',
     },
-    btnDiv: {
-        textAlign: "end",
+    closeButton: {
+      position: 'absolute',
+      top: theme.spacing(1),
+      right: theme.spacing(1),
     },
-}));
+  }));
 
 function EditModal({ open, handleClose, postTitle, postContent, postId, editPost }) {
 
@@ -89,27 +111,28 @@ function EditModal({ open, handleClose, postTitle, postContent, postId, editPost
                 onClose={onCloseModal}
             >
                 <div className={classes.paper}>
-                    <h2 className={classes.h2} id="title">Add A New Post</h2>
-                    <form id="description" onSubmit={onFormSubmit}>
+                    <h2 className={classes.title} id="title">Update your post</h2>
+                    <form className={classes.form} id="description" onSubmit={onFormSubmit}>
                         <TextField
                             required
                             label="Title"
+                            name='title'
                             type="text"
                             value={values.title}
                             onChange={onInputChange}
-                            name='title'
                             fullWidth={true}
+                            className={classes.textField}
                         />
                         <TextField
                             required
-                            name='content'
                             label="Content"
+                            name='content'
                             multiline={true}
-                            rowsMax="4"
                             value={values.content}
                             onChange={onInputChange}
                             margin="normal"
                             fullWidth={true}
+                            className={classes.textField}
                         />
                         <div className={classes.btnDiv}>
                             <Button className={classes.cancel} onClick={onCloseModal} variant="contained">

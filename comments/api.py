@@ -42,6 +42,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         return Response( CommentSer(comments ,many = True).data )
 
 class LikeViewSet(viewsets.ModelViewSet):
+    print("EVO MENE EVO MENE, OVDJE SSAAAAAM")
     queryset = Like.objects.all()
     serializer_class = LikeSer
     permission_classes = [
@@ -53,12 +54,16 @@ class LikeViewSet(viewsets.ModelViewSet):
         return serializer.save(owner = self.request.user)
 
     def create(self ,request , pk=None):
-        serializer = self.get_serializer(data = request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(owner = self.request.user)
-        post_id = serializer.data["post"]
-        post = Post.objects.get(id = post_id)
-        return Response(PostSer(post).data)
+        try:
+            serializer = self.get_serializer(data = request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(owner = self.request.user)
+            post_id = serializer.data["post"]
+            post = Post.objects.get(id = post_id)
+            return Response(PostSer(post).data)
+        except Exception as e:
+            print("Error from create like function")
+            print(e)
 
     def update(self ,request , pk=None):
         like = get_object_or_404(Like ,id = pk)

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import moment from "moment"
 import Sidebar from "../components/sidebar.js";
 import ShareButton from "../components/saveButton.js";
-import HeartButton from "../components/heartButton.js";
 import CommentButton from "../components/comments/commentButton.js";
 import ResponsiveDialog from "../components/responsiveDialog.js";
 import { Link } from "react-router-dom";
@@ -81,6 +80,12 @@ class Home extends Component {
     onOpenModal = () => {
         this.setState({open : true})
     }
+    onOpenComments = (postId) => {
+        console.log("Okinut")
+        this.setState({
+            commentModalOpen: true, modalPostId: postId
+        })
+    }
 
     render() {
         const { classes, loadPosts} = this.props
@@ -88,14 +93,6 @@ class Home extends Component {
         const { modalOpen, editModalOpen, modalPostTitle, progress, selectedUser,
             modalPostId, modalPostContent, commentModalOpen, userInfoOpen}
         = this.state
-        const creatorsData = [
-            { id: 1, avatar: 'avatar1.jpg', name: 'John', surname: 'Doe', username: 'john_doe' },
-            { id: 2, avatar: 'avatar2.jpg', name: 'Jane', surname: 'Smith', username: 'jane_smith' },
-            { id: 3, avatar: 'avatar3.jpg', name: 'Alex', surname: 'Johnson', username: 'alex_j' },
-            { id: 4, avatar: 'avatar4.jpg', name: 'Emily', surname: 'Williams', username: 'emily_w' },
-            { id: 5, avatar: 'avatar5.jpg', name: 'Michael', surname: 'Brown', username: 'michael_b' },
-            { id: 6, avatar: 'avatar6.jpg', name: 'Samantha', surname: 'Davis', username: 'samantha_d' },
-          ];
 
         if (loadPosts){
             return <div style={{ textAlign: "center", marginTop: "50px" }} > <CircularProgress /></div>
@@ -109,8 +106,8 @@ class Home extends Component {
                     <div class="create-post">
                     <div class="profile-container">
                         <div class="profile-picture">
-                            <img src="https://picsum.photos/200/300
-                        " alt="Profile Picture"></img>
+                            <img src={this.props.authReducer.user.profile.image_path}
+                            alt="Profile Picture"></img>
                         </div>
                         <input type="text" class="text-field" placeholder="Your amazing story starts here..." onClick={this.onOpenModal}></input>
                         <AddModal open={this.state.open} onClose={this.handleModal} />
@@ -206,7 +203,6 @@ class Home extends Component {
         // and userpostsReducer has an array 
         const posts = this.props.posts.posts ? this.props.posts.posts : this.props.posts
         return posts.map((post) => {
-            const u_date = moment(post.u_date).format("DD/MM/YYYY, HH:mm")
             const p_date = moment(post.p_date).format('DD/MM/YYYY, HH:mm');
             const PostTime = ({ postDate }) => {
                 const [timeAgo, setTimeAgo] = useState('');
@@ -246,9 +242,8 @@ class Home extends Component {
                         <Grid item>
                             <CardHeader
                             className={classes.header}
-                            onClick={() => this.getUserInfo(post)}
                             disableTypography
-                            avatar={<Avatar aria-label="Profile Photo" src={post.owner.profile.image_path} />}
+                            avatar={<Avatar aria-label="Profile Photo" src={post.owner.profile.image_path} onClick={() => this.getUserInfo(post)}/>}
                             style={{ padding: '16px 16px 10px 16px' }}
                             title={
                                 <div>
@@ -257,7 +252,7 @@ class Home extends Component {
                                     variant="title"
                                     display="inline"
                                 >
-                                    Amir Kahriman
+                                {post.owner.first_name} {post.owner.last_name}
                                 </Typography>
                                 <Typography variant="subtitle1" style={{color:"#808080", fontSize:"16px"}}>
                                     <p><PostTime postDate={p_date} /></p>
@@ -271,7 +266,7 @@ class Home extends Component {
                                 disableTouchRipple
                                 style={{ color: 'white' }}
                                 >
-                                <ResponsiveDialog />
+                                <ResponsiveDialog post={post} userId={this.props.authReducer.user.id}/>
                                 </IconButton>
                             }
                             />
@@ -282,7 +277,7 @@ class Home extends Component {
                                 variant="title1"
                                 gutterBottom
                                 className={classes.title}
-                            > This is some long title
+                            > {post.title}
                             </Typography>
                             </CardContent>
                         </Grid>
@@ -292,18 +287,23 @@ class Home extends Component {
                                 variant="body2"
                                 gutterBottom
                                 className={classes.paragraph}
-                            > Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.  
+                            > {post.content}  
                             </Typography>
                             </CardContent>
                         </Grid>
                         <Grid item>
                             <CardActions className={classes.actions}>
                             <Grid container justify="space-around" wrap="nowrap">
+                                <Likes
+                                post = {post}
+                                userId = {this.props.authReducer.user.id}
+                                />
                                 <Grid item>
-                                <HeartButton className={classes.icons} />
-                                </Grid>
-                                <Grid item>
-                                <CommentButton className={classes.icons} />
+                                <CommentButton 
+                                    post = {post}
+                                    className={classes.icons} 
+                                    onClick={() => this.onOpenComments(post.id)}
+                                />
                                 </Grid>
                                 <Grid item>
                                 <ShareButton className={classes.icons} />
@@ -355,6 +355,7 @@ class Home extends Component {
     }
 
     onOpenComments = (postId) => {
+        console.log("Okinut")
         this.setState({
             commentModalOpen: true, modalPostId: postId
         })
