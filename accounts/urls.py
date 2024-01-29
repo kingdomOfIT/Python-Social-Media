@@ -4,6 +4,7 @@ from knox.urls import views as knoxviews
 
 urlpatterns = [
     path('user/',api.GetUserAPI.as_view() ,name='get_user'),
+    path('user/<int:user_id>/', api.GetUserAPI.as_view(), name='get_user_by_id'),
     path('log-in/',api.LoginAPI.as_view() ,name='log-in'),
     path('register/',api.RegisterAPI.as_view() ,name='register'),
     path('log-out/',knoxviews.LogoutView.as_view() ,name='log-out'),

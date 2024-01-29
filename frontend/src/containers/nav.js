@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import { logout } from '../actions/auth_actions';
+import { profile } from '../actions/auth_actions';
 import '../../static/frontend/mystyle.css';
 import { animals } from "./data/animals";
 import SearchableDropdown from "../components/SearchableDropdown";

@@ -21,6 +21,24 @@ export const getuser = () => {
     )}
 }
 
+export const getuserByUserID = (userId) => {
+    return (dispatch, getState) => {
+        const config = setConfig(getState);
+        dispatch({ type: USER_LOADING });
+
+        // Use the provided userId to construct the API endpoint
+        axios.get(`auth/user/${userId}/`, config).then((res) => {
+            dispatch({
+                type: GET_USER,
+                payload: res.data,
+            });
+        }, (err) => dispatch({
+            type: GET_USER_ERROR,
+            payload: err.response,
+        }));
+    };
+};
+
 export const login = (values ,callBack) => {
     return (dispatch) => {
         axios.post("auth/log-in/",values).then( (res) => {
@@ -65,7 +83,7 @@ export const logout = () => {
             dispatch({ type : LOGOUT })
         } ,(err) => console.log(err.response.data))
     }
-}  
+}
 
 // helper function ---> set the config and the headers for axios request
 export const setConfig = (getState) =>{

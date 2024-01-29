@@ -9,7 +9,7 @@ urlpatterns = [
     path('auth/',include('accounts.urls')),
     path('posts/',include('posts.urls')),
     path('comments/',include('comments.urls')),
-    path('likes/',include('comments.likes_url'))
+    path('likes/',include('comments.likes_url')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

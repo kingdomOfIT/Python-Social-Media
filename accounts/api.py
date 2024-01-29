@@ -29,11 +29,20 @@ class GetUserAPI(generics.RetrieveAPIView):
     ]
 
     def get_object(self):
+        # Get the user_id from the URL parameter
+        user_id = self.kwargs.get('user_id', None)
+
+        # Check if user_id is provided and valid
+        if user_id is not None:
+            try:
+                # Retrieve the user by user_id
+                user = User.objects.get(id=user_id)
+                return user
+            except User.DoesNotExist:
+                pass
+
+        # If user_id is not provided or the user is not found, default to the currently authenticated user
         return self.request.user
-    # if you used a genericapiview you can do that to get the user info
-    # def get(self ,request ,*args ,**kwargs):
-    #     serializer = self.get_serializer(request.user)
-    #     return Response( serializer.data )
 
 class LoginAPI(generics.GenericAPIView):
     serializer_class = LoginSerializer

@@ -104,3 +104,5 @@ def onboarding(request):
 
     return render(request, 'main/onboarding.html', {'form': form})
 
+def someone(request):
+    return render('main/someone.html')

@@ -64,7 +64,7 @@ function UserInfo({ open, close, user, getUserPosts, userPostsReducer}){
                             <CloseIcon />
                         </IconButton>
                         RETURN TO HOME PAGE
-                </div>
+                    </div>
                 </Toolbar>
             </AppBar>
             <UserCard user={user} />

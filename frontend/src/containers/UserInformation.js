@@ -5,12 +5,21 @@ import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import axios from "axios"
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { withRouter } from 'react-router-dom';
+
+import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 
 
 import AnimatePage from "../components/AnimatePage" 
 import UserPost from "./anyUserInfo"
 import { updateUserInfo } from "../actions/index"
 import { updateUserImage } from '../actions/index'
+import { getuserByUserID } from '../actions/auth_actions'
+// import '../../static/frontend/mystyle.css';
 
 export class UserInfo extends Component {
     constructor(props) {
@@ -33,65 +42,138 @@ export class UserInfo extends Component {
                 last_name: { value: user.last_name, edit: false, label: "last name", id: "last_name" },
                 sex: { value: user.profile.sex, edit: false, label: "gender", id: "sex" }
             },
-            progress : false,
-            open : false
+            progress: false,
+            open: false
         }
+    }
+    componentDidMount() {
+        const { location } = this.props;
+        const params = new URLSearchParams(location.search);
+        const userId = params.get('user_id');
+        
+        if (userId) {
+            this.props.getuserByUserID(userId);
+        }
+        console.log("Mala grupa pedera : ", this.props.getuserByUserID(userId))
     }
 
     render() {
         const { progress ,open } = this.state
         const { user } = this.props.authReducer
         return (
-            <div className='user-info-box'>
-           <AnimatePage />
-                <UserPost open={open} user = {user} close={() => this.setState({open : false})}/>
-                <div className="container user-info-box-inner">
-                    <div className="user-info-header">
-                        <div className="user-image-wrap">
-                            <img src={user.profile.image_path} className="user-image" />
-                            <div className='change-image-box'>
-                                <label htmlFor='change-image-input' className='change-image-label'>
-                                    <i style = {{ color : "white" }} className='fa fa-camera fa-3x'>
-                                    </i></label>
-                                <input
-                                    className='radio-input' id='change-image-input' type='file'
-                                    onChange={(e) => this.ImageChanged(e)}
-                                />
+            <Container style={{ paddingTop: '150px' }}>
+                <Grid container spacing={3} justifyContent="center">
+                    <Grid item xs={12} md={6} lg={4}>
+                    <Avatar className="avatar" alt="User Profile Picture" src={user.profile.image_path} style={{ width: '150px', height: '150px', marginBottom: '10px'}}/>
+
+                    <Typography variant="h5" component="div" align="center" gutterBottom>
+                        {user.first_name} {user.last_name}
+                    </Typography>
+
+                    <div align="center" style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '10px' }}>
+                        <div align="center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Typography variant="body1">
+                                <strong>883</strong>
+                                </Typography>
                             </div>
+                            <Typography variant="caption">Followers</Typography>
+                            </div>
+
+                            <div align="center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Typography variant="body1">
+                                <strong>823</strong>
+                                </Typography>
+                            </div>
+                            <Typography variant="caption">Following</Typography>
+                            </div>
+
+                            <div align="center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <Typography variant="body1">
+                                <strong>33</strong>
+                                </Typography>
+                            </div>
+                            <Typography variant="caption">Posts</Typography>
                         </div>
-                        <div className="user-username">
-                            <p onClick={() => this.setState({ open : true})} style = {{ cursor : "pointer"}}>
-                             {user.username}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="user-info-main">
-                        {this.renderValues()}
                     </div>
 
-                </div>
-                <div className="modul hidden" ref='modul'>
-                    <div className="module-inner">
-                        <ReactCrop
-                            src={this.state.src}
-                            crop={this.state.crop}
-                            onImageLoaded={this.onImageLoaded}
-                            onComplete={this.onCropComplete}
-                            onChange={this.onCropChange}
-                        />
-                        <div>
-                            <button className="btn btn-secondary mt-2 mr-3" onClick={this.closeModul.bind(this)}>cancel</button>
-                            <button className="btn btn-outline-primary mt-2 mr-3"
-                                onClick={this.updateUserImageFunc}>
-                                update
-                            </button>
-                            {progress ? <CircularProgress /> : ""} 
+                    <Button className="follow-button" variant="contained" color="primary" fullWidth>
+                        Follow
+                    </Button>
+
+                    <Typography variant="h6" component="div" align="center" style={{ marginTop: '20px' }}>
+                        User Posts:
+                    </Typography>
+
+                    <div className="posts" align="center">
+                        {/* {user.posts.map((post) => (
+                        <Typography key={post.id} variant="body2" color="textSecondary" component="p">
+                            {post.text}
+                        </Typography>
+                        ))} */}
+                        <div className={classes.userPosts}>
+                            <Home loadPosts={loadPosts} posts={userPostsReducer} />
                         </div>
                     </div>
-                </div>
-            </div>
-        )
-    }
+                    </Grid>
+                </Grid>
+                </Container>
+
+
+          );
+        };
+    //         <div className='user-info-box'>
+    //        <AnimatePage />
+    //             <UserPost open={open} user = {user} close={() => this.setState({open : false})}/>
+    //             <div className="container user-info-box-inner">
+    //                 <div className="user-info-header">
+    //                     <div className="user-image-wrap">
+    //                         <img src={user.profile.image_path} className="user-image" />
+    //                         <div className='change-image-box'>
+    //                             <label htmlFor='change-image-input' className='change-image-label'>
+    //                                 <i style = {{ color : "white" }} className='fa fa-camera fa-3x'>
+    //                                 </i></label>
+    //                             <input
+    //                                 className='radio-input' id='change-image-input' type='file'
+    //                                 onChange={(e) => this.ImageChanged(e)}
+    //                             />
+    //                         </div>
+    //                     </div>
+    //                     <div className="user-username">
+    //                         <p onClick={() => this.setState({ open : true})} style = {{ cursor : "pointer"}}>
+    //                          {user.username}
+    //                         </p>
+    //                     </div>
+    //                 </div>
+    //                 <div className="user-info-main">
+    //                     {this.renderValues()}
+    //                 </div>
+
+    //             </div>
+    //             <div className="modul hidden" ref='modul'>
+    //                 <div className="module-inner">
+    //                     <ReactCrop
+    //                         src={this.state.src}
+    //                         crop={this.state.crop}
+    //                         onImageLoaded={this.onImageLoaded}
+    //                         onComplete={this.onCropComplete}
+    //                         onChange={this.onCropChange}
+    //                     />
+    //                     <div>
+    //                         <button className="btn btn-secondary mt-2 mr-3" onClick={this.closeModul.bind(this)}>cancel</button>
+    //                         <button className="btn btn-outline-primary mt-2 mr-3"
+    //                             onClick={this.updateUserImageFunc}>
+    //                             update
+    //                         </button>
+    //                         {progress ? <CircularProgress /> : ""} 
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     )
+    // }
 
     renderValues() {
         const { progress } = this.state 
@@ -360,7 +442,7 @@ export class UserInfo extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return { authReducer: state.authReducer }
-}
+    return { authReducer: state.authReducer };
+};
 
-export default connect(mapStateToProps, { updateUserInfo, updateUserImage })(UserInfo)
+export default withRouter(connect(mapStateToProps, { updateUserInfo, updateUserImage, getuserByUserID })(UserInfo));

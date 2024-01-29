@@ -46,6 +46,56 @@ DROPDOWN SEARCH
 
 
 
+
+
+/*
+user profile
+*/
+/* Add this CSS to your component's styles or a separate stylesheet */
+
+.card {
+    width: 300px;
+    margin: auto;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .avatar {
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    margin-top: -50px;
+  }
+  
+  .user-info {
+    text-align: center;
+  }
+  
+  .username {
+    color: #555;
+  }
+  
+  .user-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+  
+  .posts {
+    margin-top: 20px;
+  }
+  
+  .post {
+    margin-bottom: 10px;
+  }
+  
+  .follow-button {
+    display: block;
+    margin: 20px auto;
+  }
+  
+
+
 .Appp {
     font-family: Montserrat;
   }

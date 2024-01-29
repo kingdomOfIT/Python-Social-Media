@@ -35,6 +35,9 @@ import { loadPage } from "../actions/posts_action"
 import UserInfo from './anyUserInfo'
 import '../../static/frontend/mystyle.css';
 
+import { withRouter } from 'react-router-dom';
+import { getuserByUserID } from '../actions/auth_actions';
+
 const useStyles = theme  =>  ({
     avatar: {
         margin: 10,
@@ -243,7 +246,7 @@ class Home extends Component {
                             <CardHeader
                             className={classes.header}
                             disableTypography
-                            avatar={<Avatar aria-label="Profile Photo" src={post.owner.profile.image_path} onClick={() => this.getUserInfo(post)}/>}
+                            avatar={<Avatar aria-label="Profile Photo" src={post.owner.profile.image_path} onClick={() => this.getUserInfo(post.owner.id)}/>}
                             style={{ padding: '16px 16px 10px 16px' }}
                             title={
                                 <div>
@@ -374,12 +377,11 @@ class Home extends Component {
         this.setState({ userInfoOpen : false })
     }
 
-    getUserInfo = (post) => {
-        this.setState({ selectedUser: post.owner } , () => {
-            // after the slectedUser state Chaged then
-            // Mount the user info component
-            this.setState({ userInfoOpen: true,})
-        })
+    getUserInfo = (userId) => {
+        const { history } = this.props;
+
+        // Use the history object to navigate to the user-info page with the specified user_id
+        history.push(`/user-info?user_id=${userId}`);
     }
 }
 
@@ -391,4 +393,4 @@ Home.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { loadPage})(withStyles(useStyles)(Home))
+export default connect(mapStateToProps, { loadPage, getuserByUserID })(withStyles(useStyles)(withRouter(Home)));
