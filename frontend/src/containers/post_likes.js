@@ -23,6 +23,7 @@ function Likes({ post, userId, makeLike, updateLike, deleteLike }){
 
     // check if the user have like on this post 
     const like = post.likes.find((like) => userId === like.owner)
+    console.log("Ovo post: ", post)
 
     const makeLike2 = (like) => {
         const values = {

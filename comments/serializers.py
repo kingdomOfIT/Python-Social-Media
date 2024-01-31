@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from .models import Comment 
 from .models import Like
+from .models import Save
 from accounts.serializers import GetUserSerializer
 
 class CommentSer(serializers.ModelSerializer):
@@ -47,3 +48,28 @@ class LikeUpdateSer(serializers.ModelSerializer):
         model = Like 
         fields = '__all__'
         read_only_fields = ['owner','post']
+
+
+class SaveSerializer(serializers.ModelSerializer):
+    class Meta():
+        model = Like 
+        fields = '__all__'
+        read_only_fields = ['owner']
+    
+    def validate(self ,data):
+        owner_id = self.context['request'].user.id
+        post = data['post']
+
+        save = Save.objects.filter(owner = owner_id ,post = post.id)
+        if save.exists():
+            raise serializers.ValidationError("this like with this user and post already exists")
+        return data
+
+
+# like Update serializer 
+class SaveUpdateSerializer(serializers.ModelSerializer):
+    class Meta():
+        model = Save 
+        fields = '__all__'
+        read_only_fields = ['owner','post']
+

@@ -1,12 +1,14 @@
-import { combineReducers } from "redux"
-import { reducer as reduxformReducer } from "redux-form"
-import authReducer from "./aut_reducer"
-import alertReducer from "./alert_reducer"
-import postsReducer from './posts_reducer'
-import commentsReducer from './comments_reducer'
-import userPostsReducer from "./userPosts_reducer"
+import { combineReducers } from "redux";
+import { reducer as reduxformReducer } from "redux-form";
+import authReducer from "./aut_reducer";
+import alertReducer from "./alert_reducer";
+import postsReducer from './posts_reducer';
+import commentsReducer from './comments_reducer';
+import userPostsReducer from "./userPosts_reducer";
+import userReducer from "./userReducer";
+import usersReducer from "./usersReducer";
 
-import { CLEAR_REDUX_FORM } from "../actions/types"
+import { CLEAR_REDUX_FORM } from "../actions/types";
 
 export default combineReducers({
     authReducer,
@@ -14,14 +16,16 @@ export default combineReducers({
     postsReducer,
     commentsReducer,
     userPostsReducer,
+    userReducer,
+    usersReducer,
     form: reduxformReducer.plugin({
         register: (state, action) => {
             switch (action.type) {
-                case CLEAR_REDUX_FORM :
-                    return undefined;       // <--- blow away form data
+                case CLEAR_REDUX_FORM:
+                    return undefined; // <--- blow away form data
                 default:
                     return state;
             }
         }
     })
-})
+});

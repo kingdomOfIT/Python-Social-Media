@@ -23,4 +23,9 @@ class Like(models.Model):
     owner = models.ForeignKey(User ,on_delete = models.CASCADE,related_name='likes')
     post = models.ForeignKey( Post ,on_delete = models.CASCADE ,related_name='likes' )
     like = models.BooleanField()
+
+class Save(models.Model):
+    owner = models.ForeignKey(User ,on_delete = models.CASCADE,related_name='save')
+    post = models.ForeignKey(Post ,on_delete = models.CASCADE ,related_name='save' )
+    save = models.BooleanField()
     

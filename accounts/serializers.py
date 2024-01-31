@@ -32,6 +32,21 @@ class GetUserSerializer(serializers.ModelSerializer):
             return ProfileSerializer(profile).data
         except :
             return None
+        
+
+class ListUserSerializer(serializers.ModelSerializer):
+    profile = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'profile']
+
+    def get_profile(self, obj):
+        try:
+            profile = obj.profile
+            return ProfileSerializer(profile).data
+        except Profile.DoesNotExist:
+            return None
 
 
 #login serializer

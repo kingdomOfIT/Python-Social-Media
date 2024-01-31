@@ -1,7 +1,7 @@
 import axios from "axios"
 
 import { CLOSEALERT, UPDATE_USER_INFO, UPDATE_USER_ERROR, CLEAR_REDUX_FORM,
-    UPDATE_IMAGE, UPDATE_IMAGE_FAIL, MAKE_LIKE, UPDATE_LIKE ,DELETE_LIKE}
+    UPDATE_IMAGE, UPDATE_IMAGE_FAIL, MAKE_LIKE, UPDATE_LIKE ,DELETE_LIKE, UPDATE_SAVE, DELETE_SAVE, SAVE}
 from "./types"
 import { setConfig } from "./auth_actions"
 
@@ -90,6 +90,50 @@ export const deleteLike = (id) => {
         axios.delete(`likes/${id}/`, config).then((res) => {
             dispatch({
                 type: DELETE_LIKE,
+                payload: res.data
+            })
+        })
+    }
+}
+
+
+/*******************************
+ *          SAVE ACTIONS
+ *******************************/
+export const savePost = (values) => {
+    return (dispatch ,getState) => {
+        const config = setConfig(getState)
+        axios.post("save/",values,config)
+        .then((res)=> {
+            dispatch({
+                type : SAVE,
+                payload : res.data
+            })
+        })
+        .catch((error) => {
+            console.error("Error making like:", error);
+          });
+    }
+}
+
+export const updateSave = (values,id) => {
+    return (dispatch, getState) => {
+        const config = setConfig(getState)
+        axios.put(`save/${id}/`, values, config).then((res) => {
+            dispatch({
+                type: UPDATE_SAVE,
+                payload: res.data
+            })
+        })
+    }
+}
+
+export const deleteSave = (id) => {
+    return (dispatch, getState) => {
+        const config = setConfig(getState)
+        axios.delete(`save/${id}/`, config).then((res) => {
+            dispatch({
+                type: DELETE_SAVE,
                 payload: res.data
             })
         })

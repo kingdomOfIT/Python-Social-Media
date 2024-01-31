@@ -1,6 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, useState, useEffect } from 'react'
+import moment from "moment"
 import { connect } from 'react-redux'
 import _ from "lodash"
+import { withStyles } from '@material-ui/styles';
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import axios from "axios"
@@ -19,12 +21,37 @@ import UserPost from "./anyUserInfo"
 import { updateUserInfo } from "../actions/index"
 import { updateUserImage } from '../actions/index'
 import { getuserByUserID } from '../actions/auth_actions'
-// import '../../static/frontend/mystyle.css';
+import { getUserPosts } from '../actions/posts_action'
+import '../../static/frontend/mystyle.css';
+import EditModal from '../components/editModal'
+import CommentModal from '../components/comments/commentModal'
+
+import CommentButton from "../components/comments/commentButton.js";
+import ResponsiveDialog from "../components/responsiveDialog.js";
+
+import Card from '@material-ui/core/Card';
+import IconButton from "@material-ui/core/IconButton";
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+
+import Likes from './post_likes'
+const styles = {
+    card: {
+        // Add your card styles here
+        backgroundColor: '#19002f',
+        color: 'white',
+        // Add other styles as needed
+    },
+    // Add other styles as needed
+};
+
 
 export class UserInfo extends Component {
     constructor(props) {
         super(props)
-        const { user } = props.authReducer
+        const { user } = props.authReducer 
+        this.modulRef = React.createRef();
         this.state = {
             originImage : "",
             croppedImageUrl: "",
@@ -53,15 +80,27 @@ export class UserInfo extends Component {
         
         if (userId) {
             this.props.getuserByUserID(userId);
+            this.props.getUserPosts(userId, () => {});
         }
-        console.log("Mala grupa pedera : ", this.props.getuserByUserID(userId))
     }
 
     render() {
-        const { progress ,open } = this.state
-        const { user } = this.props.authReducer
+        const { progress, open } = this.state;
+        const { user } = this.props.authReducer;
+        const { userId } = this.props.location;
+        let { userPostsReducer } = this.props;
+        const { classes, loadPosts} = this.props;
+        const { modalOpen, editModalOpen, modalPostTitle, selectedUser,
+            modalPostId, modalPostContent, commentModalOpen, userInfoOpen}
+        = this.state
+
+        // Sort posts by posting date in descending order
+        userPostsReducer = userPostsReducer.sort((a, b) => {
+            return new Date(b.p_date) - new Date(a.p_date);
+        });
+
         return (
-            <Container style={{ paddingTop: '150px' }}>
+            <Container style={{ paddingTop: '150px', align:"center"}}>
                 <Grid container spacing={3} justifyContent="center">
                     <Grid item xs={12} md={6} lg={4}>
                     <Avatar className="avatar" alt="User Profile Picture" src={user.profile.image_path} style={{ width: '150px', height: '150px', marginBottom: '10px'}}/>
@@ -92,7 +131,7 @@ export class UserInfo extends Component {
                             <div align="center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10px' }}>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <Typography variant="body1">
-                                <strong>33</strong>
+                                <strong>{this.props.userPostsReducer.length}</strong>
                                 </Typography>
                             </div>
                             <Typography variant="caption">Posts</Typography>
@@ -102,26 +141,25 @@ export class UserInfo extends Component {
                     <Button className="follow-button" variant="contained" color="primary" fullWidth>
                         Follow
                     </Button>
-
-                    <Typography variant="h6" component="div" align="center" style={{ marginTop: '20px' }}>
-                        User Posts:
-                    </Typography>
-
-                    <div className="posts" align="center">
-                        {/* {user.posts.map((post) => (
-                        <Typography key={post.id} variant="body2" color="textSecondary" component="p">
-                            {post.text}
-                        </Typography>
-                        ))} */}
-                        <div className={classes.userPosts}>
-                            <Home loadPosts={loadPosts} posts={userPostsReducer} />
-                        </div>
-                    </div>
                     </Grid>
                 </Grid>
+                <div className="posts" maxWidth="lg">
+                        {this.renderPosts()}
+                </div>
+                <EditModal
+                    open={editModalOpen}
+                    handleClose={this.handleModalClose}
+                    postTitle={modalPostTitle}
+                    postContent = {modalPostContent}
+                    postId={modalPostId}
+                />
+
+                <CommentModal
+                    open={commentModalOpen}
+                    handleClose={this.handleModalClose}
+                    postId={modalPostId}
+                />
                 </Container>
-
-
           );
         };
     //         <div className='user-info-box'>
@@ -174,6 +212,121 @@ export class UserInfo extends Component {
     //         </div>
     //     )
     // }
+
+    renderPosts(){
+        const { classes } = this.props
+        let { userPostsReducer } = this.props;
+        return userPostsReducer.map(post => {
+            const p_date = moment(post.p_date).format('DD/MM/YYYY, HH:mm');
+            const PostTime = ({ postDate }) => {
+                const [timeAgo, setTimeAgo] = useState('');
+              
+                useEffect(() => {
+                  const calculateTimeAgo = () => {
+                    const currentDate = moment();
+                    const postCreationDate = moment(postDate, 'DD/MM/YYYY, HH:mm');
+                    const duration = moment.duration(currentDate.diff(postCreationDate));
+                    
+                    if (duration.asDays() > 5) {
+                      // If created more than 5 days ago, display full date
+                      setTimeAgo(postCreationDate.format('DD/MM/YYYY'));
+                    } else if (duration.asHours() >= 24) {
+                      // If created more than 24 hours ago, display days ago
+                      setTimeAgo(`${Math.floor(duration.asDays())} days ago`);
+                    } else if (duration.asMinutes() >= 60) {
+                      // If created more than 60 minutes ago, display hours ago
+                      setTimeAgo(`${Math.floor(duration.asHours())} hours ago`);
+                    } else if (duration.asMinutes() < 1) {
+                        
+                        setTimeAgo(`Just Now`);
+                    } else {
+                      // If created less than an hour ago, display minutes ago
+                      setTimeAgo(`${Math.floor(duration.asMinutes())} minutes ago`);
+                    } 
+                  };
+              
+                  calculateTimeAgo();
+                }, [postDate]);
+              
+                return <span>{timeAgo}</span>;
+              };
+            return (
+                <Card className={classes.card} raised style={{ backgroundColor:"#19002f", color:"white", marginBottom: "10px"}}>
+                    <Grid container direction="column">
+                        <Grid item>
+                            <CardHeader
+                            className={classes.header}
+                            disableTypography
+                            avatar={<Avatar aria-label="Profile Photo" src={post.owner.profile.image_path} onClick={() => this.getUserInfo(post.owner.id)}/>}
+                            style={{ padding: '16px 16px 10px 16px' }}
+                            title={
+                                <div>
+                                <Typography
+                                    className="ownerName"
+                                    variant="title"
+                                    display="inline"
+                                >
+                                {post.owner.first_name} {post.owner.last_name}
+                                </Typography>
+                                <Typography variant="subtitle1" style={{color:"#808080", fontSize:"16px"}}>
+                                    <p><PostTime postDate={p_date} /></p>
+                                </Typography>
+                            </div>
+                            }
+                            action={
+                                <IconButton
+                                aria-label="settings"
+                                disableRipple
+                                disableTouchRipple
+                                style={{ color: 'white' }}
+                                >
+                                <ResponsiveDialog post={post} userId={this.props.authReducer.user.id}/>
+                                </IconButton>
+                            }
+                            />
+                        </Grid>
+                        <Grid item>
+                            <CardContent className= "postTitle" style={{ paddingBottom: '5px' }}>
+                            <Typography
+                                variant="title1"
+                                gutterBottom
+                                className={classes.title}
+                            > {post.title}
+                            </Typography>
+                            </CardContent>
+                        </Grid>
+                        <Grid item>
+                            <CardContent className={classes.content} style={{ paddingBottom: '5px' }}>
+                            <Typography
+                                variant="body2"
+                                gutterBottom
+                                className={classes.paragraph}
+                            > {post.content}  
+                            </Typography>
+                            </CardContent>
+                        </Grid>
+                        <Grid item>
+                            <CardActions className={classes.actions}>
+                            <Grid container justify="space-around" wrap="nowrap">
+                                <Likes
+                                post = {post}
+                                userId = {this.props.authReducer.user.id}
+                                />
+                                <Grid item>
+                                <CommentButton 
+                                    post = {post}
+                                    className={classes.icons} 
+                                    onClick={() => this.onOpenComments(post.id)}
+                                />
+                                </Grid>
+                            </Grid>
+                            </CardActions>
+                        </Grid>
+                    </Grid>
+                </Card>
+            )
+        })
+    }
 
     renderValues() {
         const { progress } = this.state 
@@ -231,6 +384,30 @@ export class UserInfo extends Component {
         })
     }
 
+    renderProfilePic() {
+        return(
+            <div className="user-image-wrap">
+                <Avatar className="avatar" alt="User Profile Picture" src={user.profile.image_path} style={{ width: '150px', height: '150px', marginBottom: '10px'}}/>
+                <img src={user.profile.image_path} className="user-image" />
+                <div className='change-image-box'>
+                    <label htmlFor='change-image-input' className='change-image-label'>
+                        <i style = {{ color : "white" }} className='fa fa-camera fa-3x'>
+                        </i></label>
+                    <input
+                        className='radio-input' id='change-image-input' type='file'
+                    onChange={(e) => this.ImageChanged(e)}
+                    />
+                </div>
+            </div>
+        )
+    }
+    onOpenComments = (postId) => {
+        this.setState({
+            commentModalOpen: true, modalPostId: postId
+        })
+    }
+
+
     infoClicked(id) {
         // all the info rendred normal( no input fields )
         this.handleEdit()
@@ -248,6 +425,10 @@ export class UserInfo extends Component {
 
         })
 
+    }
+
+    handleModalClose = () => {
+        this.setState({ modalOpen: false, editModalOpen: false, commentModalOpen : false })
     }
 
     inputChange(newValue, id) {
@@ -315,34 +496,6 @@ export class UserInfo extends Component {
         })
     }
 
-    sexChanged = (e) => {
-        const { user } = this.props.authReducer
-        const value = e.target.getAttribute("value")
-        const content = { }
-
-        // render the circle waiting
-        this.setState({ progress: true })
-
-        for (let key in this.state.user) {
-            content[key] = this.state.user[key].value
-        }
-        content['sex'] = value
-
-        this.props.updateUserInfo(content, user.id, () => {
-            this.setState((preState, props) => {
-                const { user } = preState
-                return {
-                    ...preState,
-                    user: {
-                        ...user,
-                        sex : { ...user['sex'] ,value : value, edit: false }
-                    }
-                }
-
-            })
-        })
-    }
-
     closeModul(e) {
         const modul = this.refs.modul
         modul.classList.add('hidden')
@@ -379,6 +532,7 @@ export class UserInfo extends Component {
             reader.readAsDataURL(e.target.files[0]);
         }
     }
+        
 
     onImageLoaded = image => {
         this.imageRef = image;
@@ -442,7 +596,10 @@ export class UserInfo extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return { authReducer: state.authReducer };
+    return {
+        authReducer: state.authReducer,
+        userPostsReducer: state.userPostsReducer || { posts: [] }, // Provide a default value for userPostsReducer
+    };
 };
 
-export default withRouter(connect(mapStateToProps, { updateUserInfo, updateUserImage, getuserByUserID })(UserInfo));
+export default withStyles(styles)(withRouter(connect(mapStateToProps, { updateUserInfo, updateUserImage, getuserByUserID, getUserPosts })(UserInfo)));

@@ -10,6 +10,7 @@ urlpatterns = [
     path('posts/',include('posts.urls')),
     path('comments/',include('comments.urls')),
     path('likes/',include('comments.likes_url')),
+    path('save/',include('comments.save_url')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

@@ -2,7 +2,7 @@ import axios from "axios"
 import { reset } from 'redux-form';
 
 import { GET_USER, LOGIN, USER_LOADING, LOGIN_ERROR,
-    GET_USER_ERROR, LOGOUT, REGISTER, REGISTER_ERROR}
+    GET_USER_ERROR, LOGOUT, REGISTER, REGISTER_ERROR, LIST_USERS}
 from "./types"
 
 export const getuser = () => {
@@ -38,6 +38,30 @@ export const getuserByUserID = (userId) => {
         }));
     };
 };
+
+export const listUsers = () => {
+    return (dispatch, getState) => {
+      const config = setConfig(getState);
+  
+      dispatch({ type: USER_LOADING });
+  
+      axios.get('auth/users/', config).then(
+        (res) => {
+          dispatch({
+            type: LIST_USERS,  // Change the action type to LIST_USERS
+            payload: res.data,
+          });
+        },
+        (err) => {
+          dispatch({
+            type: GET_USER_ERROR,
+            payload: err.response,
+          });
+        }
+      );
+    };
+  };
+  
 
 export const login = (values ,callBack) => {
     return (dispatch) => {

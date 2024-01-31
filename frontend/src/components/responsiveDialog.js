@@ -13,6 +13,8 @@ import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
 import VolumeOffOutlinedIcon from "@material-ui/icons/VolumeOffOutlined";
 import FlagOutlinedIcon from "@material-ui/icons/FlagOutlined";
 import EditModal from './editModal';
+import DeleteModal from './deleteModal';
+import commentModal from "./comments/commentModal";
 
 const styles = theme => ({
   list: {
@@ -31,16 +33,28 @@ function ResponsiveDialog(props) {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [modalPostTitle, setModalPostTitle] = useState("");
-  const [modalPostContent, setModalPostContent] = useState("");
   const [modalPostId, setModalPostId] = useState("");
+
+  const handleModal = () => {
+    setOpen(false);
+  }
 
   const handleModalClose = () => {
     setEditModalOpen(false);
+    setModalOpen(false);
   };
   
   const onOpenModal = () => {
     setEditModalOpen(true);
+    setOpen(false);
   };
+
+  const onDeletePost = (postTitle, postId) => {
+    setModalOpen(true);
+    setModalPostTitle(postTitle);
+    setModalPostId(postId);
+    setOpen(false);
+}
 
   const onEditPost = (postContent, postTitle, postId) => {
     setEditModalOpen(true);
@@ -76,6 +90,12 @@ function ResponsiveDialog(props) {
                 </ListItemIcon>
                 <ListItemText primary="Update Post" />
               </ListItem>{" "}
+              <ListItem button className={classes.listItem} onClick={(e) => onDeletePost(post.title ,post.id)}>
+                <ListItemIcon disableRipple>
+                  <VolumeOffOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary="Delete Post" />
+              </ListItem>{" "}
             </List>
           </DialogContent>
         </Dialog>
@@ -86,6 +106,12 @@ function ResponsiveDialog(props) {
           postContent={post.content}
           postId={post.id}
         />
+        <DeleteModal
+          open={modalOpen}
+          handleClose={handleModalClose}
+          postTitle={modalPostTitle} 
+          postId={modalPostId}
+          />
       </div>
     );
   } else {

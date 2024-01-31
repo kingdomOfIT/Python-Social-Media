@@ -14,7 +14,8 @@ from .serializers import (
     UserValidationSer,
     UpdateUserSer,
     UpdateProfileSer,
-    UpdateImageProfileSer
+    UpdateImageProfileSer,
+    ListUserSerializer
 
 )
 from .models import Profile 
@@ -43,6 +44,18 @@ class GetUserAPI(generics.RetrieveAPIView):
 
         # If user_id is not provided or the user is not found, default to the currently authenticated user
         return self.request.user
+    
+class ListUsersAPI(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = ListUserSerializer
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+
+        # Convert ordered dict to list of dicts
+        serialized_data = list(map(dict, response.data))
+
+        return response
 
 class LoginAPI(generics.GenericAPIView):
     serializer_class = LoginSerializer

@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import moment from "moment"
 import Sidebar from "../components/sidebar.js";
-import ShareButton from "../components/saveButton.js";
 import CommentButton from "../components/comments/commentButton.js";
 import ResponsiveDialog from "../components/responsiveDialog.js";
 import { Link } from "react-router-dom";
@@ -31,12 +30,14 @@ import DeleteModal from '../components/deleteModal'
 import EditModal from '../components/editModal'
 import CommentModal from '../components/comments/commentModal'
 import Likes from './post_likes'
+// import Save from './savePost.js'
 import { loadPage } from "../actions/posts_action"
 import UserInfo from './anyUserInfo'
 import '../../static/frontend/mystyle.css';
 
 import { withRouter } from 'react-router-dom';
 import { getuserByUserID } from '../actions/auth_actions';
+import BookmarkBorderRoundedIcon from "@material-ui/icons/BookmarkBorderRounded";
 
 const useStyles = theme  =>  ({
     avatar: {
@@ -84,7 +85,6 @@ class Home extends Component {
         this.setState({open : true})
     }
     onOpenComments = (postId) => {
-        console.log("Okinut")
         this.setState({
             commentModalOpen: true, modalPostId: postId
         })
@@ -96,7 +96,7 @@ class Home extends Component {
         const { modalOpen, editModalOpen, modalPostTitle, progress, selectedUser,
             modalPostId, modalPostContent, commentModalOpen, userInfoOpen}
         = this.state
-
+        
         if (loadPosts){
             return <div style={{ textAlign: "center", marginTop: "50px" }} > <CircularProgress /></div>
         }
@@ -296,7 +296,7 @@ class Home extends Component {
                         </Grid>
                         <Grid item>
                             <CardActions className={classes.actions}>
-                            <Grid container justify="space-around" wrap="nowrap">
+                            <Grid container justifyContent="space-around" wrap="nowrap">
                                 <Likes
                                 post = {post}
                                 userId = {this.props.authReducer.user.id}
@@ -309,7 +309,10 @@ class Home extends Component {
                                 />
                                 </Grid>
                                 <Grid item>
-                                <ShareButton className={classes.icons} />
+                                <Likes
+                                    post = {post}
+                                    userId = {this.props.authReducer.user.id}
+                                />
                                 </Grid>
                             </Grid>
                             </CardActions>
@@ -380,7 +383,6 @@ class Home extends Component {
     getUserInfo = (userId) => {
         const { history } = this.props;
 
-        // Use the history object to navigate to the user-info page with the specified user_id
         history.push(`/user-info?user_id=${userId}`);
     }
 }

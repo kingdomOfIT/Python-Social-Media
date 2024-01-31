@@ -9,74 +9,102 @@ import { deletePost } from '../actions/posts_action'
 
 const useStyles = makeStyles(theme => ({
     paper: {
-        position: 'absolute',
-        top: "calc(50% - 9rem)",
-        left: "calc(50% - 13rem)",
-        width: "80vmin",
-        backgroundImage: "var(--user-bg2)",
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: '80vmin',
+      backgroundColor: '#19002f',
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(4),
+      color: '#ccc',
+      textAlign: 'center',
     },
-    h3 : {
-        fontSize : "20px",
-        color : "#000",
-        marginBottom : "1rem",
-        paddingBottom : "1rem",
-        borderBottom : "1px solid #000"
+    title: {
+      padding: '1rem 0',
+      marginBottom: '1.5rem',
+      borderBottom: '2px solid white',
+      color: 'white'
     },
-    cancel : {
-        marginRight: "5px",       
+    form: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
     },
-    btnDiv : {
-        textAlign: "end",
+    textField: {
+        margin: '1rem 0',
+        '& input': {
+          color: 'white',
+          borderBottom: '2px solid white'
+        },
+        '& label': {
+          color: 'white',
+        },
+        '&::placeholder': {
+          color: 'white',
+        },
     },
-    span : {
-        fontWeight : "bold",
+    button: {
+      margin: theme.spacing(2),
+      color: 'white',
     },
-    delete: {
-        marginRight: "5px",       
-    }
-}));
+    rightIcon: {
+      marginLeft: theme.spacing(1),
+      color: 'white',
+    },
+    circularProgress: {
+      display: 'inline-block',
+    },
+    closeButton: {
+      position: 'absolute',
+      top: theme.spacing(1),
+      right: theme.spacing(1),
+    },
+  }));
 
-
-function DeleteModal({ open, handleClose, postTitle, postId, deletePost} ){
+  function DeleteModal({ open, handleClose, postTitle, postId, deletePost }) {
     const classes = useStyles();
     
-    // state to control the progress waiting component
-    const [progress, setProgress] = useState(false)
+    const [progress, setProgress] = useState(false);
 
     const cancelDelete = () => {
-        handleClose()
-    }
+        handleClose();
+    };
 
     const onDeleteClicked = () => {
-        setProgress(true)
-        deletePost(postId ,() => {
+        setProgress(true);
+        deletePost(postId, () => {
+            setProgress(false);
             handleClose();
-            setProgress(false)
         });
-    }
+    };
 
     return (
-        <Modal 
-            aria-labelledby="simple-modal-title"
-            aria-describedby="simple-modal-description"
+        <div>
+          <Modal
+            aria-labelledby="title"
+            aria-describedby="description"
             open={open}
-            onClose={handleClose}
-            >
+          >
             <div className={classes.paper}>
-                <h3 className={classes.h3}> Are you sure you want to delete "<span className={classes.span}>{postTitle}</span>" post </h3>
-                <div className={classes.btnDiv}>
-                    <Button className={classes.cancel} onClick={cancelDelete} variant="contained"> Cancel </Button>
-                    <Button className={classes.delete} variant="contained" color="secondary" onClick = {() => onDeleteClicked(postId)}> Yes </Button>
-                    <CircularProgress style={progress ? { display: "inline-block" } : { display: "none" }} color = "secondary" />
-                </div>
+              <h2 className={classes.title} id="title">
+                Please confirm your action
+              </h2>
+              <Button variant="contained" color="primary" className={classes.button} onClick={onDeleteClicked}>
+                Delete
+              </Button>
+              <Button variant="contained" color="primary" className={classes.button} onClick={cancelDelete}>
+                Cancel
+              </Button>
+              <CircularProgress
+                className={classes.circularProgress}
+                style={progress ? {} : { display: 'none' }}
+              />
             </div>
-        </Modal>
-    )
-
-
+          </Modal>
+        </div>
+    );
 }
 
-export default connect(null, { deletePost})(DeleteModal)
+export default connect(null, { deletePost })(DeleteModal);

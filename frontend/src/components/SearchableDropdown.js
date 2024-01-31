@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useHistory } from "react-router-dom"; // Import useHistory
 
 const SearchableDropdown = ({
   options,
@@ -9,6 +10,7 @@ const SearchableDropdown = ({
 }) => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const history = useHistory(); // Initialize useHistory
 
   const inputRef = useRef(null);
 
@@ -21,6 +23,7 @@ const SearchableDropdown = ({
     setQuery(() => "");
     handleChange(option[label]);
     setIsOpen((isOpen) => !isOpen);
+    history.push(`/user-info?user_id=${option.id}`); // Redirect to user info
   };
 
   function toggle(e) {

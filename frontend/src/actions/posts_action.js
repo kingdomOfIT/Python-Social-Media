@@ -85,17 +85,25 @@ export const loadPage = (callBack) => {
 }
 
 // get the user posts
-export const getUserPosts = (userId ,callBack) => {
+export const getUserPosts = (userId, callBack) => {
+    console.log("Calling function");
     return (dispatch) => {
-        axios.get(`posts/${userId}/get_user_posts`).then((res) => {
-            dispatch({
-                type : GET_USER_POSTS,
-                payload :res.data
-            })
-            callBack()
-        })
-    }
-}
+        try {
+            axios.get(`posts/${userId}/get_user_posts`).then((res) => {
+                dispatch({
+                    type: GET_USER_POSTS,
+                    payload: res.data
+                });
+                callBack();
+            });
+        } catch (error) {
+            // Handle the error here
+            console.error("Error fetching user posts:", error);
+            // You might want to dispatch an action to update the state with the error
+        }
+    };
+};
+
 
 /**************************************** COMMENTS ACTIONS  ********************************/
 

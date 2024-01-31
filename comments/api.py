@@ -6,8 +6,8 @@ from rest_framework.decorators import action
 from rest_framework import pagination
 from rest_framework import filters
 
-from .models import Comment ,Like 
-from .serializers import CommentSer ,CommentUpdateSer ,LikeSer ,LikeUpdateSer
+from .models import Comment ,Like, Save
+from .serializers import CommentSer ,CommentUpdateSer ,LikeSer ,LikeUpdateSer, SaveSerializer, SaveUpdateSerializer
 from posts.custom_permissions import isOwnerOrReadOnly
 from posts.models import Post
 from posts.serializers import PostSer
@@ -42,7 +42,6 @@ class CommentViewSet(viewsets.ModelViewSet):
         return Response( CommentSer(comments ,many = True).data )
 
 class LikeViewSet(viewsets.ModelViewSet):
-    print("EVO MENE EVO MENE, OVDJE SSAAAAAM")
     queryset = Like.objects.all()
     serializer_class = LikeSer
     permission_classes = [
@@ -79,6 +78,46 @@ class LikeViewSet(viewsets.ModelViewSet):
         post = like.post
         self.check_object_permissions(request , like)
         like.delete() 
+        return Response(PostSer(post).data)
+    
+
+class SaveViewSet(viewsets.ModelViewSet):
+    queryset = Save.objects.all()
+    serializer_class = SaveSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+        isOwnerOrReadOnly,
+    ]
+
+    def perform_create(self ,serializer):
+        return serializer.save(owner = self.request.user)
+
+    def create(self ,request , pk=None):
+        try:
+            serializer = self.get_serializer(data = request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(owner = self.request.user)
+            post_id = serializer.data["post"]
+            post = Post.objects.get(id = post_id)
+            return Response(PostSer(post).data)
+        except Exception as e:
+            print("Error from create like function")
+            print(e)
+
+    def update(self ,request , pk=None):
+        save = get_object_or_404(Save ,id = pk)
+        post = save.post
+        self.check_object_permissions(request , save)
+        serializer = SaveUpdateSerializer(save ,data = request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(PostSer(post).data)
+
+    def destroy(self ,request , pk=None):
+        save = get_object_or_404(Save ,id = pk)
+        post = save.post
+        self.check_object_permissions(request , save)
+        save.delete() 
         return Response(PostSer(post).data)
 
 
