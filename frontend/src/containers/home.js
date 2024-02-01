@@ -30,14 +30,14 @@ import DeleteModal from '../components/deleteModal'
 import EditModal from '../components/editModal'
 import CommentModal from '../components/comments/commentModal'
 import Likes from './post_likes'
-// import Save from './savePost.js'
+import Save from './save_post.js'
 import { loadPage } from "../actions/posts_action"
 import UserInfo from './anyUserInfo'
 import '../../static/frontend/mystyle.css';
 
 import { withRouter } from 'react-router-dom';
 import { getuserByUserID } from '../actions/auth_actions';
-import BookmarkBorderRoundedIcon from "@material-ui/icons/BookmarkBorderRounded";
+
 
 const useStyles = theme  =>  ({
     avatar: {
@@ -309,7 +309,7 @@ class Home extends Component {
                                 />
                                 </Grid>
                                 <Grid item>
-                                <Likes
+                                <Save
                                     post = {post}
                                     userId = {this.props.authReducer.user.id}
                                 />

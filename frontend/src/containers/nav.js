@@ -17,8 +17,6 @@ const Nav = (props) => {
     useEffect(() => {
         props.listUsers();
     }, [props.listUsers]);
-
-    console.log("Users: ", props.users);
     
 
     const renderNavBar = () => {

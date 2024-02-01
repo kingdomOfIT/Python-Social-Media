@@ -38,7 +38,6 @@ export default function(state = init , action) {
                 msg 
             }
 
-        case POST_CREATED_FAILED:
         case EDIT_POST_FAIL:
             msg = action.payload.non_field_errors.join()
             return {

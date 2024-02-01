@@ -5,6 +5,7 @@ import alertReducer from "./alert_reducer";
 import postsReducer from './posts_reducer';
 import commentsReducer from './comments_reducer';
 import userPostsReducer from "./userPosts_reducer";
+import user_saved_posts_reducer from "./user_saved_posts_reducer";
 import userReducer from "./userReducer";
 import usersReducer from "./usersReducer";
 
@@ -18,11 +19,12 @@ export default combineReducers({
     userPostsReducer,
     userReducer,
     usersReducer,
+    user_saved_posts_reducer,
     form: reduxformReducer.plugin({
         register: (state, action) => {
             switch (action.type) {
                 case CLEAR_REDUX_FORM:
-                    return undefined; // <--- blow away form data
+                    return undefined;
                 default:
                     return state;
             }

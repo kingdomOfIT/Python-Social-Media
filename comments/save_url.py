@@ -4,7 +4,7 @@ from . import api
 
 router = routers.DefaultRouter()
 
-router.register('' ,api.LikeViewSet ,basename='likes')
+router.register('' ,api.SaveViewSet ,basename='saves')
 
 urlpatterns = router.urls
  

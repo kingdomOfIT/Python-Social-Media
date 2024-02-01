@@ -10,6 +10,7 @@ import Home from '../containers/home'
 import  Register  from '../containers/auth/register/Register'
 import Alerts from "../containers/alerts"
 import UserInfo from "../containers/UserInformation"
+import SavedPost from "../containers/SavedPosts"
 import ColorChanger from "./colorChanger"
 
 import { getuser } from '../actions/auth_actions'
@@ -42,6 +43,7 @@ class App extends Component {
                         <Route exact path="/login" component={Login} />
                         <Route exact path="/register" component={Register} />
                         <PrivateRoute exact path="/user-info" component={UserInfo} />
+                        <PrivateRoute exact path="/saved" component={SavedPost} />
                     </Switch>
                 </HashRouter>
             </div>

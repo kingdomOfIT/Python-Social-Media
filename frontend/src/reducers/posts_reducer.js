@@ -1,6 +1,6 @@
 import {
     GET_POSTS, POST_CREATED, MAKE_LIKE, UPDATE_LIKE, DELETE_LIKE,
-    DELETE_POST, EDIT_POST, ADD_COMMENT, DELETE_COMMENT, GET_PAGE
+    DELETE_POST, EDIT_POST, ADD_COMMENT, DELETE_COMMENT, GET_PAGE, SAVE, DELETE_SAVE
 } from "../actions/types"
 
 const init = {
@@ -66,6 +66,8 @@ export default function (state = init, action) {
                 posts
             }
 
+        case SAVE:
+        case DELETE_SAVE:
         case MAKE_LIKE:
         case UPDATE_LIKE:
         case DELETE_LIKE:

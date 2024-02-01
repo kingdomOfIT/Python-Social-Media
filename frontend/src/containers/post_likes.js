@@ -23,7 +23,6 @@ function Likes({ post, userId, makeLike, updateLike, deleteLike }){
 
     // check if the user have like on this post 
     const like = post.likes.find((like) => userId === like.owner)
-    console.log("Ovo post: ", post)
 
     const makeLike2 = (like) => {
         const values = {
@@ -53,6 +52,7 @@ function Likes({ post, userId, makeLike, updateLike, deleteLike }){
                         className={classes.icon}
                         onClick={() => deleteLike(like.id)}
                     >
+                        {console.log("----deleteLike")}
                         {like ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
                         {like ? (
                         <Typography className={`${classes.number} ${classes.optional}`}>
@@ -73,6 +73,7 @@ function Likes({ post, userId, makeLike, updateLike, deleteLike }){
                     className={classes.icon}
                     onClick={() => updateLike2(true)}
                 >
+                    {console.log("updateLike")}
                     {like ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
                     {like ? (
                     <Typography className={`${classes.number} ${classes.optional}`}>
@@ -94,6 +95,7 @@ function Likes({ post, userId, makeLike, updateLike, deleteLike }){
                 className={classes.icon}
                 onClick={() => makeLike2(true)}
             >
+                {console.log("createLike")}
                 {like ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
                 {like ? (
                 <Typography className={`${classes.number} ${classes.optional}`}>

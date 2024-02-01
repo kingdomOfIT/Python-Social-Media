@@ -2,6 +2,7 @@ from .models import Post
 from rest_framework import serializers 
 from accounts.serializers import GetUserSerializer
 from comments.serializers import LikeSer
+from comments.serializers import SaveSerializer
 
 class PostSer(serializers.ModelSerializer):
     owner = serializers.SerializerMethodField()
@@ -9,6 +10,8 @@ class PostSer(serializers.ModelSerializer):
     likes_count = serializers.SerializerMethodField()
     delikes_count = serializers.SerializerMethodField()
     likes = serializers.SerializerMethodField()
+    saves = serializers.SerializerMethodField()
+
     class Meta():
         model = Post 
         fields = '__all__'
@@ -27,4 +30,7 @@ class PostSer(serializers.ModelSerializer):
 
     def get_likes(self,obj):
         return LikeSer(obj.likes ,many = True).data
+    
+    def get_saves(self,obj):
+        return SaveSerializer(obj.saves ,many = True).data
     

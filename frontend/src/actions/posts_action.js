@@ -4,7 +4,7 @@ import { setConfig } from './auth_actions'
 import {
     GET_POSTS, POST_CREATED, POST_CREATED_FAILED, GET_PAGE, GET_USER_POSTS,
     DELETE_POST, EDIT_POST, EDIT_POST_FAIL, GET_COMMENTS_FAIL,
-    GET_COMMENTS, ADD_COMMENT, DELETE_COMMENT, EDIT_COMMENT}
+    GET_COMMENTS, ADD_COMMENT, DELETE_COMMENT, EDIT_COMMENT, GET_USER_SAVED_POSTS}
 from './types'
 
 export const getPosts = (callBack) => {
@@ -100,6 +100,25 @@ export const getUserPosts = (userId, callBack) => {
             // Handle the error here
             console.error("Error fetching user posts:", error);
             // You might want to dispatch an action to update the state with the error
+        }
+    };
+};
+
+
+// get the user saved posts
+export const getUserSavedPosts = (userId, callBack) => {
+    console.log("Calling getUserSavedPosts function");
+    return (dispatch) => {
+        try {
+            axios.get(`save/${userId}/get_user_saved_posts`).then((res) => {
+                dispatch({
+                    type: GET_USER_SAVED_POSTS,
+                    payload: res.data
+                });
+                callBack();
+            });
+        } catch (error) {
+            console.error("Error fetching user saved posts:", error);
         }
     };
 };

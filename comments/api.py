@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import pagination
 from rest_framework import filters
+from django.contrib.auth.models import User
 
 from .models import Comment ,Like, Save
 from .serializers import CommentSer ,CommentUpdateSer ,LikeSer ,LikeUpdateSer, SaveSerializer, SaveUpdateSerializer
@@ -85,7 +86,7 @@ class SaveViewSet(viewsets.ModelViewSet):
     queryset = Save.objects.all()
     serializer_class = SaveSerializer
     permission_classes = [
-        permissions.IsAuthenticated,
+
         isOwnerOrReadOnly,
     ]
 
@@ -94,6 +95,7 @@ class SaveViewSet(viewsets.ModelViewSet):
 
     def create(self ,request , pk=None):
         try:
+            request.data['is_saved'] = True
             serializer = self.get_serializer(data = request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save(owner = self.request.user)
@@ -101,17 +103,8 @@ class SaveViewSet(viewsets.ModelViewSet):
             post = Post.objects.get(id = post_id)
             return Response(PostSer(post).data)
         except Exception as e:
-            print("Error from create like function")
+            print("Error from saving post function")
             print(e)
-
-    def update(self ,request , pk=None):
-        save = get_object_or_404(Save ,id = pk)
-        post = save.post
-        self.check_object_permissions(request , save)
-        serializer = SaveUpdateSerializer(save ,data = request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(PostSer(post).data)
 
     def destroy(self ,request , pk=None):
         save = get_object_or_404(Save ,id = pk)
@@ -119,6 +112,14 @@ class SaveViewSet(viewsets.ModelViewSet):
         self.check_object_permissions(request , save)
         save.delete() 
         return Response(PostSer(post).data)
+    
+    @action(detail = True)
+    def get_user_saved_posts(self , request ,pk = None):
+        owner = get_object_or_404(User , pk = pk)
+        owner_saved_posts = Save.objects.filter(owner = owner.id)
+        serializer = SaveSerializer(owner_saved_posts , many = True)
+        print("DATA: ", serializer.data)
+        return Response(serializer.data)
 
 
 
