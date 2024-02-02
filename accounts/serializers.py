@@ -124,7 +124,6 @@ class UpdateUserSer(serializers.ModelSerializer):
         user = User.objects.filter(email = data['email']).exclude(id = c_user_id)
         if user.exists() :
             raise serializers.ValidationError({'error' : 'user with this email already exists'})
-
         return data
 
 #Profile Update Serializer

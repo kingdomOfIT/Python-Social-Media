@@ -24,6 +24,7 @@ import { getuserByUserID } from '../actions/auth_actions'
 import { getUserPosts } from '../actions/posts_action'
 import '../../static/frontend/mystyle.css';
 import EditModal from '../components/editModal'
+import UserProfileMenu from '../components/userProfileMenu.js'
 import CommentModal from '../components/comments/commentModal'
 
 import CommentButton from "../components/comments/commentButton.js";
@@ -70,9 +71,25 @@ export class UserInfo extends Component {
                 sex: { value: user.profile.sex, edit: false, label: "gender", id: "sex" }
             },
             progress: false,
-            open: false
+            open: false,
+            isMenuOpen: false,
+            isDialogOpen: false
         }
     }
+
+    handleOpenMenu = () => {
+    // Open the menu directly without the "Open Menu" button
+        this.handleOpenDialog();
+    };
+    
+    handleOpenDialog = () => {
+        this.setState({ isDialogOpen: true });
+    };
+    
+    handleCloseDialog = () => {
+        this.setState({ isDialogOpen: false });
+    };
+
     componentDidMount() {
         const { location } = this.props;
         const params = new URLSearchParams(location.search);
@@ -83,6 +100,7 @@ export class UserInfo extends Component {
             this.props.getUserPosts(userId, () => {});
         }
     }
+    
 
     render() {
         const { progress, open } = this.state;
@@ -138,9 +156,11 @@ export class UserInfo extends Component {
                         </div>
                     </div>
 
-                    <Button className="follow-button" variant="contained" color="primary" fullWidth>
+                    <Button onClick={this.handleOpenMenu} className="follow-button" variant="contained" color="primary" fullWidth>
                         Follow
                     </Button>
+
+                    {this.state.isDialogOpen && <UserProfileMenu open={this.state.isDialogOpen} onClose={this.handleCloseDialog} />}
                     </Grid>
                 </Grid>
                 <div className="posts" maxWidth="lg">
@@ -162,56 +182,6 @@ export class UserInfo extends Component {
                 </Container>
           );
         };
-    //         <div className='user-info-box'>
-    //        <AnimatePage />
-    //             <UserPost open={open} user = {user} close={() => this.setState({open : false})}/>
-    //             <div className="container user-info-box-inner">
-    //                 <div className="user-info-header">
-    //                     <div className="user-image-wrap">
-    //                         <img src={user.profile.image_path} className="user-image" />
-    //                         <div className='change-image-box'>
-    //                             <label htmlFor='change-image-input' className='change-image-label'>
-    //                                 <i style = {{ color : "white" }} className='fa fa-camera fa-3x'>
-    //                                 </i></label>
-    //                             <input
-    //                                 className='radio-input' id='change-image-input' type='file'
-    //                                 onChange={(e) => this.ImageChanged(e)}
-    //                             />
-    //                         </div>
-    //                     </div>
-    //                     <div className="user-username">
-    //                         <p onClick={() => this.setState({ open : true})} style = {{ cursor : "pointer"}}>
-    //                          {user.username}
-    //                         </p>
-    //                     </div>
-    //                 </div>
-    //                 <div className="user-info-main">
-    //                     {this.renderValues()}
-    //                 </div>
-
-    //             </div>
-    //             <div className="modul hidden" ref='modul'>
-    //                 <div className="module-inner">
-    //                     <ReactCrop
-    //                         src={this.state.src}
-    //                         crop={this.state.crop}
-    //                         onImageLoaded={this.onImageLoaded}
-    //                         onComplete={this.onCropComplete}
-    //                         onChange={this.onCropChange}
-    //                     />
-    //                     <div>
-    //                         <button className="btn btn-secondary mt-2 mr-3" onClick={this.closeModul.bind(this)}>cancel</button>
-    //                         <button className="btn btn-outline-primary mt-2 mr-3"
-    //                             onClick={this.updateUserImageFunc}>
-    //                             update
-    //                         </button>
-    //                         {progress ? <CircularProgress /> : ""} 
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     )
-    // }
 
     renderPosts(){
         const { classes } = this.props
@@ -515,6 +485,12 @@ export class UserInfo extends Component {
 
     }
 
+
+
+
+
+    
+
     ImageChanged(e) {
         this.handleEdit()
         this.setState({ originImage: e.target.files[0] , progress : false })
@@ -531,8 +507,7 @@ export class UserInfo extends Component {
             );
             reader.readAsDataURL(e.target.files[0]);
         }
-    }
-        
+    }     
 
     onImageLoaded = image => {
         this.imageRef = image;
