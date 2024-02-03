@@ -1,6 +1,6 @@
 import {
     GET_USER_POSTS, MAKE_LIKE, UPDATE_LIKE, DELETE_LIKE,
-    DELETE_POST, EDIT_POST, ADD_COMMENT, DELETE_COMMENT, SAVE, DELETE_SAVE
+    DELETE_POST, EDIT_POST, ADD_COMMENT, DELETE_COMMENT, SAVE, DELETE_SAVE, GET_USER_SAVED_POSTS
 } from "../actions/types";
 
 export default function (state = { posts: [], savedPosts: [] }, action) {
@@ -67,6 +67,12 @@ export default function (state = { posts: [], savedPosts: [] }, action) {
             return {
                 ...state,
                 savedPosts: updatedSavedPosts,
+            };
+
+        case GET_USER_SAVED_POSTS:
+            return {
+                ...state,
+                savedPosts: action.payload,
             };
 
         default:

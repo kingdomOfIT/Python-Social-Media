@@ -76,10 +76,3 @@ class SaveSerializer(serializers.ModelSerializer):
 
         return data
 
-
-class SaveUpdateSerializer(serializers.ModelSerializer):
-    class Meta():
-        model = Save 
-        fields = '__all__'
-        read_only_fields = ['owner','post']
-

@@ -97,9 +97,7 @@ export const getUserPosts = (userId, callBack) => {
                 callBack();
             });
         } catch (error) {
-            // Handle the error here
             console.error("Error fetching user posts:", error);
-            // You might want to dispatch an action to update the state with the error
         }
     };
 };
@@ -108,15 +106,15 @@ export const getUserPosts = (userId, callBack) => {
 // get the user saved posts
 export const getUserSavedPosts = (userId, callBack) => {
     console.log("Calling getUserSavedPosts function");
-    return (dispatch) => {
+    return async (dispatch) => {
         try {
-            axios.get(`save/${userId}/get_user_saved_posts`).then((res) => {
-                dispatch({
-                    type: GET_USER_SAVED_POSTS,
-                    payload: res.data
-                });
-                callBack();
+            const res = await axios.get(`save/${userId}/get_user_saved_posts`);
+            
+            dispatch({
+                type: GET_USER_SAVED_POSTS,
+                payload: res.data
             });
+            callBack();
         } catch (error) {
             console.error("Error fetching user saved posts:", error);
         }

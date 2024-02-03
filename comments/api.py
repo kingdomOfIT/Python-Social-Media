@@ -8,7 +8,7 @@ from rest_framework import filters
 from django.contrib.auth.models import User
 
 from .models import Comment ,Like, Save
-from .serializers import CommentSer ,CommentUpdateSer ,LikeSer ,LikeUpdateSer, SaveSerializer, SaveUpdateSerializer
+from .serializers import CommentSer ,CommentUpdateSer ,LikeSer ,LikeUpdateSer, SaveSerializer
 from posts.custom_permissions import isOwnerOrReadOnly
 from posts.models import Post
 from posts.serializers import PostSer
@@ -113,13 +113,16 @@ class SaveViewSet(viewsets.ModelViewSet):
         save.delete() 
         return Response(PostSer(post).data)
     
-    @action(detail = True)
-    def get_user_saved_posts(self , request ,pk = None):
-        owner = get_object_or_404(User , pk = pk)
-        owner_saved_posts = Save.objects.filter(owner = owner.id)
-        serializer = SaveSerializer(owner_saved_posts , many = True)
-        print("DATA: ", serializer.data)
-        return Response(serializer.data)
+    @action(detail=True)
+    def get_user_saved_posts(self, request, pk=None):
+        user = get_object_or_404(User, pk=pk)
+        saved_posts = Save.objects.filter(owner=user)
+
+        post_ids = [save.post.id for save in saved_posts]
+        posts = Post.objects.filter(id__in=post_ids).order_by('-p_date')
+        post_data = PostSer(posts, many=True).data
+
+        return Response(post_data)
 
 
 

@@ -28,6 +28,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 
 import Likes from './post_likes'
+import { savePost } from '../actions/index.js';
 const styles = {
     card: {
         backgroundColor: '#19002f',
@@ -52,9 +53,9 @@ export class SavedPost extends Component {
         
         if (userId) {
             this.props.getuserByUserID(userId);
-            this.props.getUserSavedPosts(userId, () => {});
+            const savedPosts1 = this.props.getUserSavedPosts(userId, () => {});
+            console.log("BE1 Data: ", savedPosts1)
         }
-        console.log("BE Data: ", this.props.getUserSavedPosts(userId, () => {}))
     }
 
     render() {
@@ -99,6 +100,7 @@ export class SavedPost extends Component {
     renderPosts(){
         const { classes } = this.props
         const { user_saved_posts_reducer } = this.props;
+        // console.log("AuthRed User: ", this.props.authReducer.user)
 
         console.log("Post: ", user_saved_posts_reducer)
         console.log("SAVED POST: ", user_saved_posts_reducer.savedPosts)

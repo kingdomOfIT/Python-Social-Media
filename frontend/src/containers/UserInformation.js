@@ -3,10 +3,7 @@ import moment from "moment"
 import { connect } from 'react-redux'
 import _ from "lodash"
 import { withStyles } from '@material-ui/styles';
-import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import axios from "axios"
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { withRouter } from 'react-router-dom';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -15,9 +12,6 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 
-
-import AnimatePage from "../components/AnimatePage" 
-import UserPost from "./anyUserInfo"
 import { updateUserInfo } from "../actions/index"
 import { updateUserImage } from '../actions/index'
 import { getuserByUserID } from '../actions/auth_actions'
@@ -100,7 +94,6 @@ export class UserInfo extends Component {
             this.props.getUserPosts(userId, () => {});
         }
     }
-    
 
     render() {
         const { progress, open } = this.state;
@@ -298,149 +291,15 @@ export class UserInfo extends Component {
         })
     }
 
-    renderValues() {
-        const { progress } = this.state 
-        return _.map(this.state.user, (info) => {
-            if (info.edit && info.id === "sex") {
-                return (
-                    <div>
-                        <div className="user-info-input-wrap">
-                            <p className="user-info-input-slelect" value="male"
-                                onClick={this.onClose}>
-                                choose your Gender {progress ? <CircularProgress /> : ""} 
-                            </p>
-                        </div> 
-                        <div className="user-info-input-wrap">
-                            <p className="user-info-input-sex" value="male"
-                            onClick={this.sexChanged}> Male </p>
-                        </div> 
-                        <div className="user-info-input-wrap">
-                            <p className="user-info-input-sex" value="female"
-                            onClick={this.sexChanged}> Female </p>
-                        </div>
-                    </div>
-                )
-            }
-            else if (info.edit) {
-                return (
-                    <div className="user-info-input-wrap">
-                        <input
-                            className="user-info-input"
-                            value={info.value}
-                            onChange={(e) => this.inputChange(e.target.value, info.id)}
-                        />
-                        <div className="user-info-btn" onClick={() => this.onCheck(info.id)}>
-                            {progress ? <CircularProgress /> : <i className="fa fa-check"></i>}
-                        </div>
-                        <div className="user-info-btn" onClick={this.onClose}>
-                            <i className="fa fa-remove"></i>
-                        </div>
-                    </div>
-                )
-            }
-            else {
-                return (
-                    <div className="user-information" key={info.id}
-                        onClick={this.infoClicked.bind(this, info.id)}>
-                        <div className="label">{info.label}</div>
-                        <div className="content">{info.value}</div>
-                        <div className="edit-icon">
-                            <i className="fa fa-pencil"></i>
-                        </div>
-                    </div>
-                )
-            }
 
-        })
-    }
-
-    renderProfilePic() {
-        return(
-            <div className="user-image-wrap">
-                <Avatar className="avatar" alt="User Profile Picture" src={user.profile.image_path} style={{ width: '150px', height: '150px', marginBottom: '10px'}}/>
-                <img src={user.profile.image_path} className="user-image" />
-                <div className='change-image-box'>
-                    <label htmlFor='change-image-input' className='change-image-label'>
-                        <i style = {{ color : "white" }} className='fa fa-camera fa-3x'>
-                        </i></label>
-                    <input
-                        className='radio-input' id='change-image-input' type='file'
-                    onChange={(e) => this.ImageChanged(e)}
-                    />
-                </div>
-            </div>
-        )
-    }
     onOpenComments = (postId) => {
         this.setState({
             commentModalOpen: true, modalPostId: postId
         })
     }
 
-
-    infoClicked(id) {
-        // all the info rendred normal( no input fields )
-        this.handleEdit()
-
-        this.setState((preState, props) => {
-            const { user } = preState
-            return {
-                ...preState,
-                user: {
-                    ...user,
-                    [id]: { ...user[id], edit: true }
-                },
-                progress : false,
-            }
-
-        })
-
-    }
-
     handleModalClose = () => {
         this.setState({ modalOpen: false, editModalOpen: false, commentModalOpen : false })
-    }
-
-    inputChange(newValue, id) {
-        this.setState((preState, props) => {
-            return {
-                ...preState,
-                user: {
-                    ...preState.user,
-                    [id]: { ...preState.user[id], value: newValue }
-                }
-            }
-
-        })
-    }
-
-    onCheck(id) {
-        const { user } = this.props.authReducer
-        const content = {}
-
-        // render the circle waiting
-        this.setState({ progress : true})
-
-        for (let key in this.state.user) {
-            content[key] = this.state.user[key].value
-        }
-
-        // send new user info  to API endpoint
-        this.props.updateUserInfo(content, user.id, () => {
-            this.setState((preState, props) => {
-                const { user } = preState
-                return {
-                    ...preState,
-                    user: {
-                        ...user,
-                        [id]: { ...user[id], edit: false }
-                    }
-                }
-
-            })
-        } , () => {
-            this.setState({ progress : false })
-        })
     }
 
     onClose = () => {
@@ -464,109 +323,6 @@ export class UserInfo extends Component {
                 }
             }
         })
-    }
-
-    closeModul(e) {
-        const modul = this.refs.modul
-        modul.classList.add('hidden')
-
-    }
-
-    updateUserImageFunc = () => {
-        const { originImage } = this.state
-        const { id } = this.props.authReducer.user
-        this.setState({ progress : true})
-        const form = new FormData()
-        form.append('image', originImage)
-        this.props.updateUserImage(form , id ,() => {
-            const modul = this.refs.modul
-            modul.classList.add('hidden')  
-        })
-
-    }
-
-
-
-
-
-    
-
-    ImageChanged(e) {
-        this.handleEdit()
-        this.setState({ originImage: e.target.files[0] , progress : false })
-        this.refs.modul.classList.remove('hidden')
-        if (e.target.files && e.target.files.length > 0) {
-            const reader = new FileReader();
-            reader.addEventListener("load", () =>
-                this.setState(preState => {
-                    return {
-                        ...preState,
-                        src: reader.result
-                    }
-                })
-            );
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    }     
-
-    onImageLoaded = image => {
-        this.imageRef = image;
-    };
-
-    onCropComplete = crop => {
-        this.makeClientCrop(crop);
-    };
-
-    onCropChange = (crop, percentCrop) => {
-        // You could also use percentCrop:
-        // this.setState({ crop: percentCrop });
-        this.setState({ crop });
-    };
-
-    async makeClientCrop(crop) {
-        if (this.imageRef && crop.width && crop.height) {
-            const croppedImageUrl = await this.getCroppedImg(
-                this.imageRef,
-                crop,
-                "newFile.jpeg"
-            );
-            this.setState({ croppedImageUrl });
-        }
-    }
-
-    getCroppedImg(image, crop, fileName) {
-        const canvas = document.createElement("canvas");
-        const scaleX = image.naturalWidth / image.width;
-        const scaleY = image.naturalHeight / image.height;
-        canvas.width = crop.width;
-        canvas.height = crop.height;
-        const ctx = canvas.getContext("2d");
-
-        ctx.drawImage(
-            image,
-            crop.x * scaleX,
-            crop.y * scaleY,
-            crop.width * scaleX,
-            crop.height * scaleY,
-            0,
-            0,
-            crop.width,
-            crop.height
-        );
-
-        return new Promise((resolve, reject) => {
-            canvas.toBlob(blob => {
-                if (!blob) {
-                    //reject(new Error('Canvas is empty'));
-                    console.error("Canvas is empty");
-                    return;
-                }
-                blob.name = fileName;
-                window.URL.revokeObjectURL(this.fileUrl);
-                this.fileUrl = window.URL.createObjectURL(blob);
-                resolve(this.fileUrl);
-            }, "image/jpeg");
-        });
     }
 }
 

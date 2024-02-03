@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { updateUserInfo } from "../actions/index"
+import { updateUserImage } from "../actions/index"
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function UserProfileMenu({ open, onClose, authReducer, updateUserInfo }) {
+function UserProfileMenu({ open, onClose, authReducer, updateUserInfo, updateUserImage }) {
 
   const classes = useStyles();
   const [selectedOption, setSelectedOption] = useState(null);
@@ -49,6 +50,7 @@ function UserProfileMenu({ open, onClose, authReducer, updateUserInfo }) {
   const [selectedImage, setSelectedImage] = useState(authReducer.user.profile.image_path);
   const { user } = authReducer
   const [changesMade, setChangesMade] = useState(false);
+  const userId = authReducer.user.id;
 
   const handleFirstNameChange = (e) => {
     setEditedFirstName(e.target.value);
@@ -61,10 +63,6 @@ function UserProfileMenu({ open, onClose, authReducer, updateUserInfo }) {
   };
 
   const handlePersonalSave = (firstName, lastName) => {
-    console.log("====================================================")
-    console.log("First name: ", firstName)
-    console.log("Last name: ", lastName)
-    console.log("====================================================")
 
     const updatedUserInfo = {
         first_name: editedFirstName,
@@ -72,28 +70,30 @@ function UserProfileMenu({ open, onClose, authReducer, updateUserInfo }) {
         username: authReducer.user.username,
         email: authReducer.user.email,
         sex: authReducer.user.profile.sex
-        // Add other fields as needed
     };
 
-    // Get the user ID from the authReducer or wherever it's stored
-    const userId = authReducer.user.id;
 
-
-    // send new user info  to API endpoint
     updateUserInfo(updatedUserInfo, userId, () => {})
-
-      console.log("5")
+    handleCloseDialog()
+    window.location.reload();
   };
 
   const handleImageChange = (file) => {
-    console.log('Selected File:', file.name);
+    console.log('Selected File:', file);
 
-    setSelectedImage(file.name);
+    setSelectedImage(file);
   };
 
   const handleImageSave = () => {
-    console.log("Image change:", selectedImage);
+
+    const form = new FormData()
+    form.append('image', selectedImage)
+
+    updateUserImage(form, userId, () => {})
+
     setChangesMade(false);
+    handleCloseDialog()
+    window.location.reload();
   };
 
   const handleOptionClick = (option) => {
@@ -200,4 +200,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps,{updateUserInfo} )(UserProfileMenu);
+export default connect(mapStateToProps,{updateUserInfo, updateUserImage} )(UserProfileMenu);
