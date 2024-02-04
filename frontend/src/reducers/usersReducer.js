@@ -1,5 +1,5 @@
 import {
-  LIST_USERS
+  LIST_USERS, GET_USER_BY_USER_ID
 } from "../actions/types"
 
 const initialState = {

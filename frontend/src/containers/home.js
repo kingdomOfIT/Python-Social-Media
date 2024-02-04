@@ -36,7 +36,6 @@ import UserInfo from './anyUserInfo'
 import '../../static/frontend/mystyle.css';
 
 import { withRouter } from 'react-router-dom';
-import { getuserByUserID } from '../actions/auth_actions';
 
 
 const useStyles = theme  =>  ({
@@ -395,4 +394,4 @@ Home.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { loadPage, getuserByUserID })(withStyles(useStyles)(withRouter(Home)));
+export default connect(mapStateToProps, { loadPage })(withStyles(useStyles)(withRouter(Home)));

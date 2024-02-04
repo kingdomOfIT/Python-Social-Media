@@ -2,7 +2,7 @@ import axios from "axios"
 import { reset } from 'redux-form';
 
 import { GET_USER, LOGIN, USER_LOADING, LOGIN_ERROR,
-    GET_USER_ERROR, LOGOUT, REGISTER, REGISTER_ERROR, LIST_USERS}
+    GET_USER_ERROR, LOGOUT, REGISTER, REGISTER_ERROR, LIST_USERS, GET_USER_BY_USER_ID}
 from "./types"
 
 export const getuser = () => {
@@ -29,7 +29,7 @@ export const getuserByUserID = (userId) => {
         // Use the provided userId to construct the API endpoint
         axios.get(`auth/user/${userId}/`, config).then((res) => {
             dispatch({
-                type: GET_USER,
+                type: GET_USER_BY_USER_ID,
                 payload: res.data,
             });
         }, (err) => dispatch({

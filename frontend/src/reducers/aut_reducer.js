@@ -1,6 +1,6 @@
 import {
     LOGIN, GET_USER, USER_LOADING, UPDATE_USER_INFO,
-    GET_USER_ERROR, LOGOUT, REGISTER, UPDATE_IMAGE}
+    GET_USER_ERROR, LOGOUT, REGISTER, UPDATE_IMAGE, GET_USER_BY_USER_ID}
 from "../actions/types"
 const init = {
     token : localStorage.getItem("token"),

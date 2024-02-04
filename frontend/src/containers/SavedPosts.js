@@ -12,7 +12,6 @@ import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 
-import { getuserByUserID } from '../actions/auth_actions'
 import { getUserSavedPosts } from '../actions/posts_action'
 import '../../static/frontend/mystyle.css';
 import EditModal from '../components/editModal'
@@ -52,7 +51,6 @@ export class SavedPost extends Component {
         const userId = params.get('user_id');
         
         if (userId) {
-            this.props.getuserByUserID(userId);
             const savedPosts1 = this.props.getUserSavedPosts(userId, () => {});
             console.log("BE1 Data: ", savedPosts1)
         }
@@ -233,4 +231,4 @@ const mapStateToProps = (state) => ({
     user_saved_posts_reducer: state.user_saved_posts_reducer || { savedPosts: [] },
   });
   
-  export default withStyles(styles)(withRouter(connect(mapStateToProps, { getuserByUserID, getUserSavedPosts })(SavedPost)));
+  export default withStyles(styles)(withRouter(connect(mapStateToProps, { getUserSavedPosts })(SavedPost)));

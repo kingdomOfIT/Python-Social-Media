@@ -14,8 +14,8 @@ import Grid from '@material-ui/core/Grid';
 
 import { updateUserInfo } from "../actions/index"
 import { updateUserImage } from '../actions/index'
-import { getuserByUserID } from '../actions/auth_actions'
 import { getUserPosts } from '../actions/posts_action'
+import { getuserByUserID } from '../actions/auth_actions.js'
 import '../../static/frontend/mystyle.css';
 import EditModal from '../components/editModal'
 import UserProfileMenu from '../components/userProfileMenu.js'
@@ -45,10 +45,10 @@ const styles = {
 export class UserInfo extends Component {
     constructor(props) {
         super(props)
-        const { user } = props.authReducer 
+        // const { user } = "here"
         this.modulRef = React.createRef();
         this.state = {
-            originImage : "",
+            originImage: "",
             croppedImageUrl: "",
             module: false,
             src: "",
@@ -57,18 +57,14 @@ export class UserInfo extends Component {
                 width: 30,
                 aspect: 1 / 1
             },
-            user: {
-                username: { value: user.username, edit: false, label: "username", id: "username" },
-                email: { value: user.email, edit: false, label: "email", id: "email" },
-                first_name: { value: user.first_name, edit: false, label: "first name", id: "first_name" },
-                last_name: { value: user.last_name, edit: false, label: "last name", id: "last_name" },
-                sex: { value: user.profile.sex, edit: false, label: "gender", id: "sex" }
-            },
+            user2: {},
             progress: false,
             open: false,
             isMenuOpen: false,
-            isDialogOpen: false
-        }
+            isDialogOpen: false,
+            ownerIntId: null,
+            visitorIntId: null,
+        };
     }
 
     handleOpenMenu = () => {
@@ -84,26 +80,49 @@ export class UserInfo extends Component {
         this.setState({ isDialogOpen: false });
     };
 
-    componentDidMount() {
-        const { location } = this.props;
+    async componentDidMount() {
+        const { location, authReducer } = this.props;
         const params = new URLSearchParams(location.search);
-        const userId = params.get('user_id');
-        
+        const userId = params.get("user_id");
+    
         if (userId) {
-            this.props.getuserByUserID(userId);
-            this.props.getUserPosts(userId, () => {});
+            try {
+                this.props.getuserByUserID(userId, () => {});
+                this.props.getUserPosts(userId, () => {});
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
         }
+    
+        const ownerIntId = parseInt(userId, 10);
+        const visitorIntId = parseInt(authReducer.user.id, 10);
+        this.setState({ ownerIntId, visitorIntId });
     }
 
     render() {
-        const { progress, open } = this.state;
-        const { user } = this.props.authReducer;
-        const { userId } = this.props.location;
+
         let { userPostsReducer } = this.props;
-        const { classes, loadPosts} = this.props;
+        let { userReducer } = this.props;
+
+        console.log("UserReducer: ", userReducer)
+
+        const { ownerIntId,  visitorIntId} = this.state;
+
         const { modalOpen, editModalOpen, modalPostTitle, selectedUser,
             modalPostId, modalPostContent, commentModalOpen, userInfoOpen}
         = this.state
+
+
+        if (_.isEmpty(userReducer.userByUserId)) {
+            console.log('User2 is empty. Rendering loading state...');
+            return (
+                <Container style={{ paddingTop: '150px', align: "center" }}>
+                    <div>Loading...</div>
+                </Container>
+            );
+        }
+
+        const user2 = userReducer.userByUserId
 
         // Sort posts by posting date in descending order
         userPostsReducer = userPostsReducer.sort((a, b) => {
@@ -114,10 +133,10 @@ export class UserInfo extends Component {
             <Container style={{ paddingTop: '150px', align:"center"}}>
                 <Grid container spacing={3} justifyContent="center">
                     <Grid item xs={12} md={6} lg={4}>
-                    <Avatar className="avatar" alt="User Profile Picture" src={user.profile.image_path} style={{ width: '150px', height: '150px', marginBottom: '10px'}}/>
+                    <Avatar className="avatar" alt="User Profile Picture" src={user2.profile.image_path} style={{ width: '150px', height: '150px', marginBottom: '10px'}}/>
 
                     <Typography variant="h5" component="div" align="center" gutterBottom>
-                        {user.first_name} {user.last_name}
+                        {user2.first_name} {user2.last_name}
                     </Typography>
 
                     <div align="center" style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '10px' }}>
@@ -149,14 +168,22 @@ export class UserInfo extends Component {
                         </div>
                     </div>
 
+                    {ownerIntId === visitorIntId && (
                     <Button onClick={this.handleOpenMenu} className="follow-button" variant="contained" color="primary" fullWidth>
+                        Edit Your Profile
+                    </Button>
+                    )}
+                    {ownerIntId !== visitorIntId && (
+                    <Button className="follow-button" variant="contained" color="primary" fullWidth>
                         Follow
                     </Button>
+                    )}
+
 
                     {this.state.isDialogOpen && <UserProfileMenu open={this.state.isDialogOpen} onClose={this.handleCloseDialog} />}
                     </Grid>
                 </Grid>
-                <div className="posts" maxWidth="lg">
+                <div className="posts">
                         {this.renderPosts()}
                 </div>
                 <EditModal
@@ -270,7 +297,7 @@ export class UserInfo extends Component {
                         </Grid>
                         <Grid item>
                             <CardActions className={classes.actions}>
-                            <Grid container justify="space-around" wrap="nowrap">
+                            <Grid container justifyContent="space-around" wrap="nowrap">
                                 <Likes
                                 post = {post}
                                 userId = {this.props.authReducer.user.id}
@@ -329,8 +356,9 @@ export class UserInfo extends Component {
 const mapStateToProps = (state) => {
     return {
         authReducer: state.authReducer,
-        userPostsReducer: state.userPostsReducer || { posts: [] }, // Provide a default value for userPostsReducer
+        userPostsReducer: state.userPostsReducer || { posts: [] },
+        userReducer: state.userReducer
     };
 };
 
-export default withStyles(styles)(withRouter(connect(mapStateToProps, { updateUserInfo, updateUserImage, getuserByUserID, getUserPosts })(UserInfo)));
+export default withStyles(styles)(withRouter(connect(mapStateToProps, { updateUserInfo, updateUserImage, getUserPosts, getuserByUserID })(UserInfo)));

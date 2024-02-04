@@ -46,7 +46,7 @@ class LikeViewSet(viewsets.ModelViewSet):
     queryset = Like.objects.all()
     serializer_class = LikeSer
     permission_classes = [
-        permissions.IsAuthenticated,
+        # permissions.IsAuthenticated,
         isOwnerOrReadOnly,
     ]
 
@@ -81,12 +81,27 @@ class LikeViewSet(viewsets.ModelViewSet):
         like.delete() 
         return Response(PostSer(post).data)
     
+    @action(detail=True)
+    def get_user_liked_posts(self, request, pk=None):
+        try:
+            user = get_object_or_404(User, pk=pk)
+            liked_posts = Like.objects.filter(owner=user)
+            # print("Liked posts: ", liked_posts)
+
+            post_ids = [like.post.id for like in liked_posts]
+            posts = Post.objects.filter(id__in=post_ids).order_by('-p_date')
+            post_data = PostSer(posts, many=True).data
+
+            return Response(post_data)
+        except Exception as e:
+            print("Error running get_user_liked_posts: ", e)
+    
 
 class SaveViewSet(viewsets.ModelViewSet):
     queryset = Save.objects.all()
     serializer_class = SaveSerializer
     permission_classes = [
-
+        # permissions.IsAuthenticated,
         isOwnerOrReadOnly,
     ]
 

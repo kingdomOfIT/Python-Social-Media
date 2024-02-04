@@ -4,7 +4,7 @@ import { setConfig } from './auth_actions'
 import {
     GET_POSTS, POST_CREATED, POST_CREATED_FAILED, GET_PAGE, GET_USER_POSTS,
     DELETE_POST, EDIT_POST, EDIT_POST_FAIL, GET_COMMENTS_FAIL,
-    GET_COMMENTS, ADD_COMMENT, DELETE_COMMENT, EDIT_COMMENT, GET_USER_SAVED_POSTS}
+    GET_COMMENTS, ADD_COMMENT, DELETE_COMMENT, EDIT_COMMENT, GET_USER_SAVED_POSTS, GET_USER_LIKED_POSTS}
 from './types'
 
 export const getPosts = (callBack) => {
@@ -86,7 +86,6 @@ export const loadPage = (callBack) => {
 
 // get the user posts
 export const getUserPosts = (userId, callBack) => {
-    console.log("Calling function");
     return (dispatch) => {
         try {
             axios.get(`posts/${userId}/get_user_posts`).then((res) => {
@@ -105,7 +104,6 @@ export const getUserPosts = (userId, callBack) => {
 
 // get the user saved posts
 export const getUserSavedPosts = (userId, callBack) => {
-    console.log("Calling getUserSavedPosts function");
     return async (dispatch) => {
         try {
             const res = await axios.get(`save/${userId}/get_user_saved_posts`);
@@ -117,6 +115,24 @@ export const getUserSavedPosts = (userId, callBack) => {
             callBack();
         } catch (error) {
             console.error("Error fetching user saved posts:", error);
+        }
+    };
+};
+
+// get the user saved posts
+export const getUserLikedPosts = (userId, callBack) => {
+    console.log("Pritisni dugme, sedmi sprat");
+    return async (dispatch) => {
+        try {
+            const res = await axios.get(`likes/${userId}/get_user_liked_posts`);
+            
+            dispatch({
+                type: GET_USER_LIKED_POSTS,
+                payload: res.data
+            });
+            callBack();
+        } catch (error) {
+            console.error("Error fetching user liked posts:", error);
         }
     };
 };

@@ -1,6 +1,6 @@
 import {
     GET_POSTS, POST_CREATED, MAKE_LIKE, UPDATE_LIKE, DELETE_LIKE,
-    DELETE_POST, EDIT_POST, ADD_COMMENT, DELETE_COMMENT, GET_PAGE, SAVE, DELETE_SAVE
+    DELETE_POST, EDIT_POST, ADD_COMMENT, DELETE_COMMENT, GET_PAGE, SAVE, DELETE_SAVE, GET_USER_LIKED_POSTS
 } from "../actions/types"
 
 const init = {
@@ -99,6 +99,12 @@ export default function (state = init, action) {
                 nextPage: state.nextPage,
                 posts
             }
+
+        case GET_USER_LIKED_POSTS:
+            return {
+                ...state,
+                likedPosts: action.payload,
+            };
 
 
         default:

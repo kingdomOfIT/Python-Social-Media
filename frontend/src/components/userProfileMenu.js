@@ -50,6 +50,8 @@ function UserProfileMenu({ open, onClose, authReducer, updateUserInfo, updateUse
   const [selectedImage, setSelectedImage] = useState(authReducer.user.profile.image_path);
   const { user } = authReducer
   const [changesMade, setChangesMade] = useState(false);
+  // let {authReducer} = this.props;
+  console.log("AuthReducer: ", authReducer)
   const userId = authReducer.user.id;
 
   const handleFirstNameChange = (e) => {
@@ -111,7 +113,7 @@ function UserProfileMenu({ open, onClose, authReducer, updateUserInfo, updateUse
         {selectedOption ? (
           <Typography variant="h6">{selectedOption}</Typography>
         ) : (
-          'User Profile Menu'
+          'Edit Your Profile'
         )}
       </DialogTitle>
       <DialogContent className={classes.content}>
