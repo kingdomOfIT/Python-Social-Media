@@ -245,7 +245,7 @@ class Home extends Component {
                             <CardHeader
                             className={classes.header}
                             disableTypography
-                            avatar={<Avatar aria-label="Profile Photo" src={post.owner.profile.image_path} onClick={() => this.getUserInfo(post.owner.id)}/>}
+                            avatar={<Avatar aria-label="Profile Photo" src="https://picsum.photos/200" onClick={() => this.getUserInfo(post.owner.id)}/>}
                             style={{ padding: '16px 16px 10px 16px' }}
                             title={
                                 <div>

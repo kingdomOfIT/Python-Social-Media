@@ -6,6 +6,7 @@ import postsReducer from './posts_reducer';
 import commentsReducer from './comments_reducer';
 import userPostsReducer from "./userPosts_reducer";
 import user_saved_posts_reducer from "./user_saved_posts_reducer";
+import following_posts_reducer from "./follow_reducer";
 import userReducer from "./userReducer";
 import usersReducer from "./usersReducer";
 
@@ -19,6 +20,7 @@ export default combineReducers({
     userPostsReducer,
     userReducer,
     usersReducer,
+    following_posts_reducer,
     user_saved_posts_reducer,
     form: reduxformReducer.plugin({
         register: (state, action) => {

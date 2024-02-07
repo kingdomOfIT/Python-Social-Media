@@ -24,6 +24,7 @@ const SearchableDropdown = ({
     handleChange(option[label]);
     setIsOpen((isOpen) => !isOpen);
     history.push(`/user-info?user_id=${option.id}`); // Redirect to user info
+    window.location.reload();
   };
 
   function toggle(e) {

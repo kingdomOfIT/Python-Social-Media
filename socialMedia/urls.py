@@ -11,6 +11,7 @@ urlpatterns = [
     path('comments/',include('comments.urls')),
     path('likes/',include('comments.likes_url')),
     path('save/',include('comments.save_url')),
+    path('follow/',include('follow.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

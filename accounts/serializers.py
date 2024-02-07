@@ -1,6 +1,7 @@
 from rest_framework import serializers 
 from django.contrib.auth.models import User 
 from django.contrib.auth import authenticate
+# from ..follow.serializers import FollowSerializer
 
 from .models import Profile
 
@@ -9,7 +10,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     image_path = serializers.SerializerMethodField()
     class Meta:
         model = Profile
-        fields = ['user','image' ,'sex' ,'image_path' ,'id']
+        fields = ['user','image' ,'sex' ,'image_path' ,'id', 'followers_count', 'following_count']
         extra_kwargs = {
             'image': {
                 'write_only' : True,

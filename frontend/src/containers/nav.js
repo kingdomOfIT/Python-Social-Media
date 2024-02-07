@@ -24,6 +24,7 @@ const Nav = (props) => {
         // Check if the target path is different from the current location before pushing
         if (location.pathname + location.search !== targetPath) {
             history.push(targetPath);
+            window.location.reload();
         }
     };
 

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from 'react-redux'
 import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -15,6 +16,8 @@ import FlagOutlinedIcon from "@material-ui/icons/FlagOutlined";
 import EditModal from './editModal';
 import DeleteModal from './deleteModal';
 import commentModal from "./comments/commentModal";
+import { useDispatch, useSelector } from 'react-redux';
+import { createFollow, deleteFollow, getFollowingUsers } from '../actions/follow_action'; 
 
 const styles = theme => ({
   list: {
@@ -28,12 +31,18 @@ const styles = theme => ({
 
 function ResponsiveDialog(props) {
   const { classes, post, userId } = props;
-
+  const { following_posts_reducer } = props;
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [modalPostTitle, setModalPostTitle] = useState("");
   const [modalPostId, setModalPostId] = useState("");
+  const dispatch = useDispatch();
+  const followingList = following_posts_reducer.following;
+
+  useEffect(() => {
+    dispatch(getFollowingUsers({ userId }));
+  }, [dispatch, userId]);
 
   const handleModal = () => {
     setOpen(false);
@@ -54,7 +63,7 @@ function ResponsiveDialog(props) {
     setModalPostTitle(postTitle);
     setModalPostId(postId);
     setOpen(false);
-}
+  };
 
   const onEditPost = (postContent, postTitle, postId) => {
     setEditModalOpen(true);
@@ -69,6 +78,29 @@ function ResponsiveDialog(props) {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleFollow = () => {
+    if (isFollowing(post.owner.id)) {
+      dispatch(deleteFollow(userId, post.owner.id));
+      handleClose();
+      window.location.reload()
+    } else {
+      dispatch(createFollow({ targetUser: post.owner.id }));
+      handleClose();
+      window.location.reload()
+    }
+  };
+
+  const isFollowing = (targetUserId) => {
+    if (followingList) {
+      for (let i = 0; i < followingList.length; i++) {
+        if (followingList[i].id === targetUserId) {
+          return true;
+        }
+      }
+    }
+    return false;
   };
 
   if (post.owner.id === userId) {
@@ -127,12 +159,16 @@ function ResponsiveDialog(props) {
         >
           <DialogContent>
             <List className={classes.list}>
-              <ListItem button className={classes.listItem} onClick={handleClose}>
-                <ListItemIcon disableRipple>
+            <ListItem button className={classes.listItem} onClick={handleFollow}>
+              <ListItemIcon disableRipple>
+                {isFollowing(post.owner.id) ? (
+                  <VolumeOffOutlinedIcon />
+                ) : (
                   <PersonAddOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Follow @" + post.owner.username} />
-              </ListItem>
+                )}
+              </ListItemIcon>
+              <ListItemText primary={isFollowing(post.owner.id) ? "Unfollow @" + post.owner.username : "Follow @" + post.owner.username} />
+            </ListItem>
               <Divider />
               <ListItem button className={classes.listItem} onClick={handleClose}>
                 <ListItemIcon disableRipple>
@@ -155,4 +191,8 @@ function ResponsiveDialog(props) {
   }
 }
 
-export default withStyles(styles)(ResponsiveDialog);
+const mapStateToProps = (state) => ({
+  following_posts_reducer: state.following_posts_reducer,
+});
+
+export default withStyles(styles)((connect(mapStateToProps)(ResponsiveDialog)));

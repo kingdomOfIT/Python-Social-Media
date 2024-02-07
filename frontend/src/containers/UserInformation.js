@@ -143,7 +143,7 @@ export class UserInfo extends Component {
                         <div align="center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10px' }}>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <Typography variant="body1">
-                                <strong>883</strong>
+                                <strong>{user2.profile.followers_count}</strong>
                                 </Typography>
                             </div>
                             <Typography variant="caption">Followers</Typography>
@@ -152,7 +152,7 @@ export class UserInfo extends Component {
                             <div align="center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10px' }}>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <Typography variant="body1">
-                                <strong>823</strong>
+                                <strong>{user2.profile.following_count}</strong>
                                 </Typography>
                             </div>
                             <Typography variant="caption">Following</Typography>

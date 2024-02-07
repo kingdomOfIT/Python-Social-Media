@@ -26,6 +26,10 @@ const Sidebar = (props) => {
     history.push(`/liked?user_id=${userId}`);
   };
 
+  const getFollowingPosts = (userId) => {
+    history.push(`/following?user_id=${userId}`);
+  };
+
 
   return (
     <div className='sidebar'>
@@ -34,7 +38,7 @@ const Sidebar = (props) => {
 
             <div className="nav-button1" onClick={() => getUserInfo(props.authReducer.user.id)} ><i className="fas fa-palette"></i><span>My Profile</span></div>
             <div className="nav-button1" onClick={() => getSavedPosts(props.authReducer.user.id)}><i className="fas fa-bookmark"></i><span>Saved Posts</span></div>
-            <div className="nav-button1"><i className="fas fa-user-plus"></i><span>Following</span></div>
+            <div className="nav-button1" onClick={() => getFollowingPosts(props.authReducer.user.id)}><i className="fas fa-user-plus"></i><span>Following</span></div>
             <div className="nav-button1" onClick={() => getLikedPosts(props.authReducer.user.id)}><i className="fas fa-heart"></i><span>Liked Posts</span></div>
             <a href='#'>
               <div className="nav-button1"><i className="fas fa-chart-line"></i><span>Trending</span></div>

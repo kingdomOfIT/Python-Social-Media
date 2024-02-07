@@ -12,6 +12,7 @@ import Alerts from "../containers/alerts"
 import UserInfo from "../containers/UserInformation"
 import SavedPost from "../containers/SavedPosts"
 import LikedPost from "../containers/liked_posts"
+import FollowingPosts from "../containers/FollowingPosts"
 import ColorChanger from "./colorChanger"
 
 import { getuser } from '../actions/auth_actions'
@@ -46,6 +47,7 @@ class App extends Component {
                         <PrivateRoute exact path="/user-info" component={UserInfo} />
                         <PrivateRoute exact path="/saved" component={SavedPost} />
                         <PrivateRoute exact path="/liked" component={LikedPost} />
+                        <PrivateRoute exact path="/following" component={FollowingPosts} />
                     </Switch>
                 </HashRouter>
             </div>
