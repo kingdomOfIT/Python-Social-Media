@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useHistory } from "react-router-dom"; // Import useHistory
+import { useHistory } from "react-router-dom";
 
 const SearchableDropdown = ({
   options,
@@ -10,7 +10,7 @@ const SearchableDropdown = ({
 }) => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const history = useHistory(); // Initialize useHistory
+  const history = useHistory();
 
   const inputRef = useRef(null);
 

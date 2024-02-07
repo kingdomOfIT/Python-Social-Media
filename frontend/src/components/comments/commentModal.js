@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
         color: "#102016",
         padding: "1rem 0",
         marginBottom: "1.5rem",
-        borderBottom: "2px solid white", // Updated bottom border to white
+        borderBottom: "2px solid white",
         textAlign: "center",
     },
     button: {
@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
             borderBottom: '1px solid white',
         },
         '& .MuiFormLabel-root': {
-            color: 'white', // Set label color to white
+            color: 'white',
         },
     },
 }));

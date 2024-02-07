@@ -123,6 +123,9 @@ export class UserInfo extends Component {
         }
 
         const user2 = userReducer.userByUserId
+        const imagePath = user2.profile ? user2.profile.image_path : "https://picsum.photos/200";
+        const followers_count = user2.profile ? user2.profile.followers_count : 5;
+        const following_count = user2.profile ? user2.profile.following_count : 5;
 
         // Sort posts by posting date in descending order
         userPostsReducer = userPostsReducer.sort((a, b) => {
@@ -133,7 +136,7 @@ export class UserInfo extends Component {
             <Container style={{ paddingTop: '150px', align:"center"}}>
                 <Grid container spacing={3} justifyContent="center">
                     <Grid item xs={12} md={6} lg={4}>
-                    <Avatar className="avatar" alt="User Profile Picture" src={user2.profile.image_path} style={{ width: '150px', height: '150px', marginBottom: '10px'}}/>
+                    <Avatar className="avatar" alt="User Profile Picture" src={imagePath} style={{ width: '150px', height: '150px', marginBottom: '10px'}}/>
 
                     <Typography variant="h5" component="div" align="center" gutterBottom>
                         {user2.first_name} {user2.last_name}
@@ -143,7 +146,7 @@ export class UserInfo extends Component {
                         <div align="center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10px' }}>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <Typography variant="body1">
-                                <strong>{user2.profile.followers_count}</strong>
+                                <strong>{followers_count}</strong>
                                 </Typography>
                             </div>
                             <Typography variant="caption">Followers</Typography>
@@ -152,7 +155,7 @@ export class UserInfo extends Component {
                             <div align="center" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '10px' }}>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <Typography variant="body1">
-                                <strong>{user2.profile.following_count}</strong>
+                                <strong>{following_count}</strong>
                                 </Typography>
                             </div>
                             <Typography variant="caption">Following</Typography>
@@ -208,6 +211,7 @@ export class UserInfo extends Component {
         let { userPostsReducer } = this.props;
         return userPostsReducer.map(post => {
             const p_date = moment(post.p_date).format('DD/MM/YYYY, HH:mm');
+            const ownerImagePath = post.owner.profile ? post.owner.profile.image_path : "https://picsum.photos/200";
             const PostTime = ({ postDate }) => {
                 const [timeAgo, setTimeAgo] = useState('');
               
@@ -247,7 +251,7 @@ export class UserInfo extends Component {
                             <CardHeader
                             className={classes.header}
                             disableTypography
-                            avatar={<Avatar aria-label="Profile Photo" src={post.owner.profile.image_path} onClick={() => this.getUserInfo(post.owner.id)}/>}
+                            avatar={<Avatar aria-label="Profile Photo" src={ownerImagePath} onClick={() => this.getUserInfo(post.owner.id)}/>}
                             style={{ padding: '16px 16px 10px 16px' }}
                             title={
                                 <div>
