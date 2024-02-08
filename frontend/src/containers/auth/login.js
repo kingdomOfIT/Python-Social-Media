@@ -3,12 +3,13 @@ import { Redirect ,Link } from 'react-router-dom'
 import { connect } from "react-redux"
 import AnimatePage from "../../components/AnimatePage" 
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Popover from '@material-ui/core/Popover';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 import { login } from "../../actions/auth_actions"
 
-
 function provider_login_url(provider) {
-    // Replace this with your actual implementation
     if (provider === 'google') {
         return '/account/google/login';
     } else {
@@ -20,11 +21,24 @@ class Login extends Component {
     state = {
         username : "",
         password : "",
-        progress : false
+        progress : false,
+        anchorEl: null
     }
+
+    handleClick = (event) => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
+
+    handleClose = () => {
+        this.setState({ anchorEl: null });
+    };
+
     render() {
         const { isAuthenticated } = this.props.authReducer
-        const  { progress} = this.state
+        const  { progress, anchorEl } = this.state
+        const open = Boolean(anchorEl);
+        const id = open ? 'simple-popover' : undefined;
+
         const image_url = "/media/images/book.png"
         if ( isAuthenticated ){
             return <Redirect to='/'/>
@@ -34,8 +48,9 @@ class Login extends Component {
                 <AnimatePage />
                 <div className="login-page-content">
                     <div className="login-page-content-inner">
-                        <form onSubmit={this.onFormSubmit.bind(this)} className="form-box animated bounceIn">
-                            <img src={image_url} class="center-login-image" />
+                        <div className="form-box animated bounceIn">
+                        <form onSubmit={this.onFormSubmit.bind(this)} >
+                            <img src={image_url} className="center-login-image" />
                             <div className="form-group">
                                 <input
                                 value = {this.state.username}
@@ -46,25 +61,41 @@ class Login extends Component {
                                 placeholder = "Username"
                                 />
                             </div>
-                                <div className="form-group">
-                                    <input
-                                    value={this.state.password}
-                                    className="form-control custom-input"
-                                    name="password"
-                                    type="password"
-                                    onChange={this.onInputChange.bind(this)}
-                                    placeholder="Password"
-                                    />
-                                </div>
+                            <div className="form-group">
+                                <input
+                                value={this.state.password}
+                                className="form-control custom-input"
+                                name="password"
+                                type="password"
+                                onChange={this.onInputChange.bind(this)}
+                                placeholder="Password"
+                                />
+                            </div>
                             <button style={{ marginRight : "5px"}} className="btn btn-general btn-login"> Login </button>
                             <CircularProgress style={progress ? { display: "inline-block" } : { display: "none" }} />
-                            <p className="text-helper">
-                                New to Writer? <Link className="nav-item" to="/register"> Sign Up</Link>
-                            </p>
-                            <a className="text-helper">
+                            {/* <a className="text-helper">
                                 New to Writer? <a className="nav-item" href={provider_login_url('google')}> Google</a>
-                            </a>
+                            </a> */}
                         </form>
+                        <button style={{ marginRight : "5px", marginTop:"10px"}} className="btn btn-general btn-login" aria-describedby={id} variant="contained" onClick={this.handleClick}>
+                        Continue with Google
+                        </button>
+                        <Popover
+                            id={id}
+                            open={open}
+                            anchorEl={anchorEl}
+                            onClose={this.handleClose}
+                            anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                            }}
+                        >
+                            <Typography sx={{ p: 2 }}>As soon as Google validates the app, it will be available. 💛</Typography>
+                        </Popover>
+                        <p className="text-helper">
+                            New to Writer? <Link className="nav-item" to="/register"> Sign Up</Link>
+                        </p>
+                        </div>
                     </div>
                 </div>
             </div>

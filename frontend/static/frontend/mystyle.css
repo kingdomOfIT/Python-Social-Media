@@ -829,6 +829,7 @@ user profile
 
 .login-page .form-box {
     padding: 20px;
+    padding-bottom: 0px
 }
 
 .login-page .form-legend {
@@ -847,8 +848,6 @@ user profile
     border-left: none;
     padding: 0px 50px 10px 120px;
 }
-
-/* ostao sam saaam */
 
 .input-label {
     font-weight: 600;
