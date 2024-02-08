@@ -127,7 +127,7 @@ class ActivationAPI(generics.GenericAPIView):
             
             return render(request, 'confirm.html')
         else:
-            messages.error(request, "Activation link is invalid!")
+            print()
 
         return Response("")
 

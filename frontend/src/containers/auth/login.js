@@ -6,6 +6,16 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { login } from "../../actions/auth_actions"
 
+
+function provider_login_url(provider) {
+    // Replace this with your actual implementation
+    if (provider === 'google') {
+        return '/account/google/login';
+    } else {
+        return '/';
+    }
+}
+
 class Login extends Component {
     state = {
         username : "",
@@ -51,6 +61,9 @@ class Login extends Component {
                             <p className="text-helper">
                                 New to Writer? <Link className="nav-item" to="/register"> Sign Up</Link>
                             </p>
+                            <a className="text-helper">
+                                New to Writer? <a className="nav-item" href={provider_login_url('google')}> Google</a>
+                            </a>
                         </form>
                     </div>
                 </div>
