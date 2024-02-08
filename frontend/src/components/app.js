@@ -13,7 +13,6 @@ import UserInfo from "../containers/UserInformation"
 import SavedPost from "../containers/SavedPosts"
 import LikedPost from "../containers/liked_posts"
 import FollowingPosts from "../containers/FollowingPosts"
-import ColorChanger from "./colorChanger"
 
 import { getuser } from '../actions/auth_actions'
 import { getPosts } from '../actions/posts_action' 
@@ -36,7 +35,6 @@ class App extends Component {
         return (
             <div className="main2">
                 <HashRouter >
-                    <ColorChanger />
                     <Nav />
                     <Alerts />
                     <Switch >

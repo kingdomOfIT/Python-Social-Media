@@ -19,7 +19,6 @@ import EditModal from './editModal'
 import CommentModal from './comments/commentModal'
 import Likes from '../containers/post_likes'
 import Save from '../containers/save_post.js'
-import UserInfo from '../containers/anyUserInfo'
 import '../../static/frontend/mystyle.css';
 
 const Post = ({
@@ -105,10 +104,6 @@ const onEditePost = (postContent, postTitle, postId) => {
     }));
 }
 
-const closeUserInfo = () => {
-    setState({ userInfoOpen : false })
-}
-
 const getUserInfo = (userId) => {
 
     history.push(`/user-info?user_id=${userId}`);
@@ -163,7 +158,7 @@ return posts.map((post) => {
                         <div>
                         <Typography
                             className="ownerName"
-                            variant="title"
+                            variant="h6"
                             display="inline"
                         >
                         {post.owner.first_name} {post.owner.last_name}
@@ -188,7 +183,7 @@ return posts.map((post) => {
                 <Grid item>
                     <CardContent className= "postTitle" style={{ paddingBottom: '5px' }}>
                     <Typography
-                        variant="title1"
+                        variant="h5"
                         gutterBottom
                         className={classes.title}
                     > {post.title}
@@ -229,7 +224,6 @@ return posts.map((post) => {
                     </CardActions>
                 </Grid>
             </Grid>
-            <UserInfo open={userInfoOpen} close={closeUserInfo} user={selectedUser}/>
             <DeleteModal
                 open={modalOpen}
                 handleClose={handleModalClose}

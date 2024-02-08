@@ -57,9 +57,8 @@ class Home extends Component {
                     </div>
                     </div>
                 <div className={classes.pc}>
-
-                    {this.props.posts.posts && <AnimatePage />}
-                    <Container maxWidth="lg">
+                    <AnimatePage />
+                    <Container>
                         <Post
                             posts={posts}
                             userID={userID}
