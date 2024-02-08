@@ -2,8 +2,19 @@ from django.contrib.auth.models import User
 from rest_framework import generics ,permissions
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth import get_user_model
+from django.shortcuts import redirect
+from django.http import JsonResponse
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.shortcuts import render
 
 from knox.models import AuthToken
+from .email_verification import Email
+from .token import account_activation_token
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib import messages
 
 
 from .serializers import (
@@ -74,20 +85,52 @@ class LoginAPI(generics.GenericAPIView):
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
-    def post(self ,request , *args ,**kwargs):
-        profile_data = {"image":request.data["image"] ,"sex" : request.data["sex"]}
-        user_serializer = self.get_serializer(data = request.data)
+    def post(self, request, *args, **kwargs):
+        profile_data = {"image": request.data["image"], "sex": request.data["sex"]}
+        user_serializer = self.get_serializer(data=request.data)
         user_serializer.is_valid(raise_exception=True)
         user = user_serializer.save()
+
+        # Set user as inactive upon registration
+        User = get_user_model()
+        User.objects.filter(pk=user.pk).update(is_active=False)
+
         profile_data["user"] = user.id
-        prfile_serialize = ProfileSerializer(data = profile_data)
+        prfile_serialize = ProfileSerializer(data=profile_data)
         prfile_serialize.is_valid(raise_exception=True)
         prfile_serialize.save()
 
+        print("This is the user obj: ", GetUserSerializer(user).data)
+        print("This is the profile obj: ", prfile_serialize.data)
+
+        email_to = user.email
+
+        Email.send_activation_email(request, user, email_to)
+
         return Response({
-            'user' : GetUserSerializer(user).data,
-            'token' : AuthToken.objects.create(user)[1]
+            'user': GetUserSerializer(user).data
         })
+    
+class ActivationAPI(generics.GenericAPIView):
+
+    def get(self, request, uidb64, token):
+        User = get_user_model()
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            
+            return render(request, 'confirm.html')
+        else:
+            messages.error(request, "Activation link is invalid!")
+
+        return Response("")
+
 
 class ProfileAPI(generics.CreateAPIView):
     queryset = Profile.objects.all()

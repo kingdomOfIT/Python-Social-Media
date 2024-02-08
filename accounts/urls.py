@@ -12,5 +12,6 @@ urlpatterns = [
     path('profile/',api.ProfileAPI.as_view() ,name='profile'),
     path('validation/',api.userValidtaionApi.as_view() ,name="validation"),
     path('update-user/<int:id>/',api.UpdateUserApi.as_view() ,name='update-user'),
-    path('update-image/<int:id>/',api.UpdateProfileImageApi.as_view() ,name="update-user-image")
+    path('update-image/<int:id>/',api.UpdateProfileImageApi.as_view() ,name="update-user-image"),
+    path('activate/<uidb64>/<token>/', api.ActivationAPI.as_view(), name='activate'),
 ]
