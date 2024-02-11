@@ -17,8 +17,7 @@ const useStyles = makeStyles(theme => ({
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: '80vmin',
-      backgroundColor: '#19002f',
-      border: '2px solid #000',
+      backgroundColor: '#1c1c1c',
       boxShadow: theme.shadows[5],
       padding: theme.spacing(4),
       color: '#ccc',
@@ -27,7 +26,6 @@ const useStyles = makeStyles(theme => ({
     title: {
       padding: '1rem 0',
       marginBottom: '1.5rem',
-      borderBottom: '2px solid white',
       color: 'white'
     },
     form: {
@@ -35,26 +33,44 @@ const useStyles = makeStyles(theme => ({
       flexDirection: 'column',
       alignItems: 'center',
     },
+    textFieldLabel: {
+      color: '#ffffff', // Set label text color to white
+    },
+    textFieldInput: {
+        color: '#ffffff', // Set input text color to white
+        borderBottom: '2px solid white'
+    },
     textField: {
         margin: '1rem 0',
         '& input': {
-          color: 'white',
-          borderBottom: '2px solid white'
+          color: '#ffffff'
         },
         '& label': {
-          color: 'white',
+          color: '#ffffff',
         },
         '&::placeholder': {
-          color: 'white',
+          color: '#ffffff',
         },
     },
-    button: {
-      margin: theme.spacing(2),
-      color: 'white',
+    yellowButton: {
+        backgroundColor: '#eafb36',
+        color: 'black',
+        '&:hover': {
+          color: "#eafb36",
+          backgroundColor: "transparent"
+        },
     },
-    rightIcon: {
-      marginLeft: theme.spacing(1),
-      color: 'white', // Set text color to white
+  
+    button: {
+      maxHeight: "30px",
+      marginLeft: "10px",
+      border: "1px solid #eafb36",
+      borderRadius: "12px",
+      cursor: "pointer",
+      backgroundColor:"#eafb36",
+      color: "#0e0e0e",
+      textAlign: "center",
+      justifyContent: "center"
     },
     circularProgress: {
       display: 'inline-block',
@@ -111,6 +127,7 @@ function EditModal({ open, handleClose, postTitle, postContent, postId, editPost
                 onClose={onCloseModal}
             >
                 <div className={classes.paper}>
+                {console.log("samo <3")}
                     <h2 className={classes.title} id="title">Update your post</h2>
                     <form className={classes.form} id="description" onSubmit={onFormSubmit}>
                         <TextField
@@ -122,6 +139,12 @@ function EditModal({ open, handleClose, postTitle, postContent, postId, editPost
                             onChange={onInputChange}
                             fullWidth={true}
                             className={classes.textField}
+                            InputLabelProps={{
+                              className: classes.textFieldLabel // Add this class for label color
+                            }}
+                            InputProps={{
+                                className: classes.textFieldInput // Add this class for input color
+                            }}
                         />
                         <TextField
                             required
@@ -132,15 +155,20 @@ function EditModal({ open, handleClose, postTitle, postContent, postId, editPost
                             onChange={onInputChange}
                             margin="normal"
                             fullWidth={true}
+                            InputLabelProps={{
+                              className: classes.textFieldLabel // Add this class for label color
+                            }}
+                            InputProps={{
+                                className: classes.textFieldInput // Add this class for input color
+                            }}
                             className={classes.textField}
                         />
                         <div className={classes.btnDiv}>
-                            <Button className={classes.cancel} onClick={onCloseModal} variant="contained">
+                            <Button className={`${classes.button} ${classes.yellowButton}`} onClick={onCloseModal} variant="contained">
                                 Cancel
                             </Button>
-                            <Button type='submit' variant="contained" color="primary" className={classes.button}>
+                            <Button type='submit' variant="contained" color="primary" className={`${classes.button} ${classes.yellowButton}`}>
                                 Update
-                                <Icon className={classes.rightIcon}></Icon>
                             </Button>
                             <CircularProgress style={ progress ? {display : "inline-block"} : {display : "none"}}/>
                         </div>

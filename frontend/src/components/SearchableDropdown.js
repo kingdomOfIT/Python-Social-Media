@@ -51,6 +51,7 @@ const SearchableDropdown = ({
           <input
             ref={inputRef}
             type="text"
+            placeholder="Explore..."
             value={getDisplayValue()}
             name="searchTerm"
             onChange={(e) => {

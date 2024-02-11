@@ -27,7 +27,15 @@ const useStyles = theme  =>  ({
 class Home extends Component {
 
     state = {
-        progress : false
+        progress : false,
+        open : false
+    }
+
+    handleModal = () => {
+        this.setState({open : false })
+    }
+    onOpenModal = () => {
+        this.setState({open : true})
     }
 
     render() {
@@ -76,39 +84,39 @@ class Home extends Component {
                 </div>
                 <div class="box3">
                     <div className = "container-card">
-                        <h2>Top Creators</h2>
+                        <h2>Top Writers</h2>
                         <div class="row">
                             <div className="card-container">
-                            <img className="round" src={"../../static/frontend/profile-placeholder.svg"} alt="user" />
+                            <img className="round" src={"../../static/frontend/profile_1.jpg"} alt="user" />
                             <h3>Amir Kahriman</h3>
                             <h6>@amirkahriman</h6>
                         </div>
                         <div className="card-container">
-                            <img className="round" src={"../../static/frontend/profile-placeholder.svg"} alt="user" />
+                            <img className="round" src={"../../static/frontend/profile_2.jpg"} alt="user" />
                             <h3>Amir Kahriman</h3>
                             <h6>@amirkahriman</h6>
                         </div>
                         </div>
                         <div className="row">
                             <div className="card-container">
-                            <img className="round" src={"../../static/frontend/profile-placeholder.svg"} alt="user" />
+                            <img className="round" src={"../../static/frontend/profile_3.jpg"} alt="user" />
                             <h3>Amir Kahriman</h3>
                             <h6>@amirkahriman</h6>
                         </div>
                         <div className="card-container">
-                            <img className="round" src={"../../static/frontend/profile-placeholder.svg"} alt="user" />
+                            <img className="round" src={"../../static/frontend/profile_4.jpg"} alt="user" />
                             <h3>Amir Kahriman</h3>
                             <h6>@amirkahriman</h6>
                         </div>
                         </div>
                         <div className="row">
                             <div className="card-container">
-                            <img className="round" src={"../../static/frontend/profile-placeholder.svg"} alt="user" />
+                            <img className="round" src={"../../static/frontend/profile_5.jpg"} alt="user" />
                             <h3>Amir Kahriman</h3>
                             <h6>@amirkahriman</h6>
                         </div>
                         <div className="card-container">
-                            <img className="round" src={"../../static/frontend/profile-placeholder.svg"} alt="user" />
+                            <img className="round" src={"../../static/frontend/profile_6.jpg"} alt="user" />
                             <h3>Amir Kahriman</h3>
                             <h6>@amirkahriman</h6>
                         </div>

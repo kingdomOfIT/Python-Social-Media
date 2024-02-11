@@ -71,15 +71,15 @@ class Login extends Component {
                                 placeholder="Password"
                                 />
                             </div>
-                            <button style={{ marginRight : "5px"}} className="btn btn-general btn-login"> Login </button>
+                            <button style={{ marginRight : "5px"}} className="btn btn-general btn-login"> Log In </button>
                             <CircularProgress style={progress ? { display: "inline-block" } : { display: "none" }} />
                             {/* <a className="text-helper">
                                 New to Writer? <a className="nav-item" href={provider_login_url('google')}> Google</a>
                             </a> */}
                         </form>
-                        <button style={{ marginRight : "5px", marginTop:"10px"}} className="btn btn-general btn-login" aria-describedby={id} variant="contained" onClick={this.handleClick}>
+                        {/* <button style={{ marginRight : "5px", marginTop:"10px"}} className="btn btn-general btn-login" aria-describedby={id} variant="contained" onClick={this.handleClick}>
                         Continue with Google
-                        </button>
+                        </button> */}
                         <Popover
                             id={id}
                             open={open}

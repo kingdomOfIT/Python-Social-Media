@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Modal } from '@material-ui/core';
+import { Modal, Backdrop } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
         width: "95vmin",
         maxHeight : "50%",
         overflowY: 'scroll',
-        backgroundColor: "#19002f",
+        backgroundColor: "#1c1c1c",
         border: '2px solid #000',
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
@@ -35,8 +35,38 @@ const useStyles = makeStyles(theme => ({
         borderBottom: "2px solid white",
         textAlign: "center",
     },
+    yellowButton: {
+        backgroundColor: '#eafb36',
+        color: 'black',
+        '&:hover': {
+          color: "#eafb36",
+          backgroundColor: "transparent"
+        },
+    },
+
+    textField: {
+        margin: '1rem 0',
+        '& input': {
+          color: '#ffffff'
+        },
+        '& label': {
+          color: '#ffffff',
+        },
+        '&::placeholder': {
+          color: '#ffffff',
+        },
+    },
+  
     button: {
-        margin: theme.spacing(1),
+      maxHeight: "30px",
+      marginLeft: "10px",
+      border: "1px solid #eafb36",
+      borderRadius: "12px",
+      cursor: "pointer",
+      backgroundColor:"#eafb36",
+      color: "#0e0e0e",
+      textAlign: "center",
+      justifyContent: "center"
     },
     rightIcon: {
         marginLeft: theme.spacing(1),
@@ -66,10 +96,8 @@ function CommentModal({open, handleClose, postId, addComment, getComments , comm
         content: ""
     })
 
-    // state to control the progress waiting component
     const [progress, setProgress] = useState(false)
     const [progress2, setProgress2] = useState(true)
-    // get the comments from the state whene the component mount
     useEffect(() => {
         if (open) {
             getComments(postId, () => setProgress2(false))
@@ -104,6 +132,7 @@ function CommentModal({open, handleClose, postId, addComment, getComments , comm
                 onClose={onCloseModal}
             >
                 <div className={classes.paper}>
+                    {console.log("second")}
                     <form className={classes.form} id="description" onSubmit = {onFormSubmit}>
                         <TextField
                             required
@@ -115,15 +144,15 @@ function CommentModal({open, handleClose, postId, addComment, getComments , comm
                             fullWidth={true}
                             maxRows="4"
                             multiline = {true}
+                            className={classes.textField}
                         />
                         <div className={classes.btnDiv}>
-                            <Button className={classes.cancel} onClick={onCloseModal} variant="contained">
+                            <Button className={`${classes.button} ${classes.yellowButton}`}  onClick={onCloseModal} variant="contained">
                                 Cancel
                             </Button>
                             <Button type='submit' variant="contained" color="primary"
-                                className={classes.button}>
-                                Create
-                                <Icon className={classes.rightIcon}></Icon>
+                                className={`${classes.button} ${classes.yellowButton}`} >
+                                Comment
                             </Button>
                             <CircularProgress style={progress ? { display: "inline-block" } : { display: "none" }} />
                         </div>

@@ -66,8 +66,8 @@ const useStyles = makeStyles(theme => ({
 
 function CommentItem({ user, comment, editComment }) {
     const classes = useStyles();
-    const p_date = moment(comment.p_date).format("DD/MM/YYYY ,HH:mm")
-    const u_date = moment(comment.u_date).format("DD/MM/YYYY ,HH:mm")
+    const p_date = moment(comment.p_date).format("DD/MM/YYYY - HH:mm")
+    const u_date = moment(comment.u_date).format("DD/MM/YYYY - HH:mm")
 
     // use ref to access the form
     const myForm = useRef()
@@ -151,7 +151,7 @@ function CommentItem({ user, comment, editComment }) {
             <CardContent className={classes.cardContent}>
                 {displayContent()}
                 <Typography variant="overline" color="textSecondary" component="p" className={classes.textS}>
-                    Latest update : {u_date}
+                    Last updated: {u_date}
                 </Typography>
                 { edit && 
                 <div className={classes.iconHolder}>

@@ -58,10 +58,15 @@ export class FollowingPosts extends Component {
                 <div className={classes.pc}>
                     <AnimatePage />
                     <Container>
-                        <Post
-                            posts={posts}
-                            userID={userID}
-                        />
+                        {posts.length === 0 ? (
+                            <div align="center" style={{color:"#5292f6"}}>
+                                <p>Start following someone plese.</p>
+                                {/* <img className="round" src={"../../static/frontend/papersE.png"} alt="user" /> */}
+
+                            </div>
+                        ) : (
+                            <Post posts={posts} userID={userID} />
+                        )}
                         <div className={classes.load}>
                             { nextPage &&
                             <Button variant="outlined" size="medium" color="primary"
@@ -75,7 +80,7 @@ export class FollowingPosts extends Component {
                 </div>
                 <div class="box3">
                     <div className = "container-card">
-                        <h2>Top Creators</h2>
+                        <h2>Top Writers</h2>
                         <div class="row">
                             <div className="card-container">
                             <img className="round" src={"../../static/frontend/profile-placeholder.svg"} alt="user" />

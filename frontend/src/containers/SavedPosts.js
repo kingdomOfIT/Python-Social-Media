@@ -23,21 +23,34 @@ export class SavedPost extends Component {
     }
 
     render() {
-
         const posts = this.props.user_saved_posts_reducer.savedPosts;
         const userID = this.props.authReducer.user.id;
 
-        return (
-            <Container style={{ paddingTop: '80px', align:"center"}}>
-                <div align="center">
-                    <h1>Saved Posts</h1>
-                </div>
-                <div className="posts" maxWidth="lg">
-                    <Post posts={posts} userID={userID} />
-                </div>
+        if (posts.length=== 0) {
+            return (
+                <Container style={{ paddingTop: '100px', align:"center"}}>
+                    <div align="center">
+                        <h4>Looks like this treasure chest is waiting for you to fill it with your favorite gems! Start saving posts and watch your collection sparkle.</h4>
+                        {/* <img className="round" src={"../../static/frontend/papersE.png"} alt="user" /> */}
+
+                    </div>
                 </Container>
-          );
-        };
+            );
+        }
+        else {
+            return (
+                <Container style={{ paddingTop: '80px', align:"center"}}>
+                    <div align="left">
+                        <h2>Whispers of Affinity</h2>
+                    </div>
+                    <div className="posts" maxWidth="lg">
+                        <Post posts={posts} userID={userID} />
+                    </div>
+                </Container>
+            );
+        }
+    
+    };    
 }
 
 const mapStateToProps = (state) => ({

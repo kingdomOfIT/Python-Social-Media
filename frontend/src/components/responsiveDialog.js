@@ -10,6 +10,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
 import VolumeOffOutlinedIcon from "@material-ui/icons/VolumeOffOutlined";
 import FlagOutlinedIcon from "@material-ui/icons/FlagOutlined";
@@ -106,8 +107,12 @@ function ResponsiveDialog(props) {
   if (post.owner.id === userId) {
     return (
       <div>
-        <IconButton onClick={handleClickOpen}>
-          <ExpandMoreIcon />
+        <IconButton 
+        onClick={handleClickOpen}
+        aria-label="fingerprint" 
+        color="primary"
+        >
+          <MoreHorizIcon />
         </IconButton>
         <Dialog
           open={open}
@@ -149,8 +154,12 @@ function ResponsiveDialog(props) {
   } else {
     return (
       <div>
-        <IconButton onClick={handleClickOpen}>
-          <ExpandMoreIcon />
+        <IconButton 
+        onClick={handleClickOpen}
+        aria-label="fingerprint" 
+        color="primary"
+        >
+          <MoreHorizIcon />
         </IconButton>
         <Dialog
           open={open}

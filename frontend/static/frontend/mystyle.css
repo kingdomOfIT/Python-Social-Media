@@ -23,7 +23,7 @@ html {
 }
 
 :root {
-    --user-bg: linear-gradient(to right, #10001e 0%, #10001e 100%);
+    --user-bg: linear-gradient(to right, #0e0e0e 0%, #0e0e0e 100%);
     --user-bg2: linear-gradient(to right, #92fe9d 0%, #00c9ff 100%);
     --body-bg: linear-gradient(to top, #fa0000 0%, #ff0000 100%);
     --user-br: rgb(255, 0, 0);
@@ -51,7 +51,6 @@ DROPDOWN SEARCH
 /*
 user profile
 */
-/* Add this CSS to your component's styles or a separate stylesheet */
 
 .card {
     width: 300px;
@@ -104,46 +103,35 @@ user profile
     position: relative;
     color: #333;
     cursor: default;
-  }
-  
-  .dropdown .arrow {
-    border-color: #999 transparent transparent;
-    border-style: solid;
-    border-width: 5px 5px 0;
-    content: " ";
-    display: block;
-    height: 0;
-    margin-top: 0.3rem;
-    position: absolute;
-    right: 10px;
-    top: 14px;
-    width: 0;
-  }
-  
-  .dropdown .arrow.open {
-    border-color: transparent transparent #999;
-    border-width: 0 5px 5px;
+    width: 90%;
   }
   
   .dropdown .selected-value input {
     line-height: 1.5;
     font-size: 1rem;
-    background-color: #fff;
+    background-color: #222222;
+    color: #5c5c5c;
     border: 1px solid #ccc;
-    border-radius: 12px;
+    border-color: #222222;
+    border-radius: 17px;
     box-sizing: border-box;
     cursor: default;
     outline: none;
     padding: 8px 52px 8px 10px;
     transition: all 200ms ease;
-    width: 100%;
+    width: 90%;
     height: 50%;
   }
+
+  .dropdown:focus-within .selected-value input,
+    .dropdown:active .selected-value input {
+        border-radius: 0px;
+        color: #ffffff;
+    }
   
   .dropdown .options {
     display: none;
-    background-color: #fff;
-    border: 1px solid #ccc;
+    background-color: #222222;
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
     box-sizing: border-box;
     margin-top: -1px;
@@ -151,7 +139,7 @@ user profile
     overflow-y: auto;
     position: absolute;
     top: 100%;
-    width: 100%;
+    width: 90%;
     z-index: 1000;
     -webkit-overflow-scrolling: touch;
   }
@@ -162,7 +150,7 @@ user profile
   
   .dropdown .option {
     box-sizing: border-box;
-    color: rgba(51, 51, 51, 0.8);
+    color: #ffffff;
     cursor: pointer;
     display: block;
     padding: 8px 10px;
@@ -181,9 +169,9 @@ user profile
 .profile-container {
     display: flex;
     align-items: center;
-    background-color: #19002f;
+    background-color: #1c1c1c;
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
@@ -203,17 +191,17 @@ user profile
   
   .text-field {
     flex: 1;
-    border: 1px solid #ccc;
-    border-radius: 20px;
+    border: 1px solid;
+    border-radius: 10px;
     padding: 8px;
     font-size: 16px;
-    border-color: #ffffff;
-    color: white;
-    background-color: transparent; 
+    border-color: #222222;
+    color: #4b4b4b;
+    background-color: #222222; 
   }
 
   .text-field::placeholder {
-    color: white;
+    color: #4b4b4b;
   }
   
   .text-field:focus {
@@ -302,6 +290,7 @@ user profile
 	margin: 5px 0;
 	text-transform: uppercase;
     font-size: 0.6rem;
+    color: #4b4b4b;
 }
 
 .box3 p {
@@ -338,9 +327,12 @@ user profile
 }
 
 .card-container .round {
-	border: 1px solid #03BFCB;
-	border-radius: 50%;
-	padding: 7px;
+    border: 1px solid #eafb36;
+    border-radius: 50%;
+    padding: 7px;
+    width: 70px; /* Set your desired width */
+    height: 70px; /* Set your desired height */
+    object-fit: cover; /* Ensures the image covers the specified dimensions */
 }
 
 /* Navbar.css */
@@ -354,15 +346,15 @@ user profile
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-right: 40px;
-    padding-left : 40px;
-    padding-top : 10px;
-    padding-bottom : 10px;
-    margin-bottom : 30px;
-    background-color: #19002f;
+    padding: 0px 40px; /* Shorthand for padding */
+    margin-bottom: 30px;
+    background-color: rgba(14, 14, 14, 0.5); /* Semi-transparent black background */
+    backdrop-filter: blur(10px); /* Blurred background */
     color: white;
+}
 
-  }
+
+
   
   /* Left side styles */
   .left-side {
@@ -391,20 +383,21 @@ user profile
     max-height: 30px;
     margin-left: 10px;
     padding: 8px 15px;
-    border: 2px solid white;
-    border-radius: 5px;
+    border: 1px solid #eafb36;
+    border-radius: 12px;
     cursor: pointer;
-    background-color: transparent;
-    color: white;
+    background-color: #eafb36;
+    color: #0e0e0e;
     text-align: center;
     display: flex;
     justify-content: center;
-    align-items: center; /* Center vertically */
+    align-items: center;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .button:hover {
-    background-color: white;
-    color: black;
+    color: #eafb36;
+    background-color: transparent;
 }
 
 
@@ -650,10 +643,21 @@ user profile
     z-index: 1;
     transition: color .2s;
   }
-  
-  .nav-button1:hover {
-    transition: opacity 1s;
-  }
+  .nav-button1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #eafb36;
+    transition: width 0.5s ease;
+    transform: translateX(-50%);
+}
+
+.nav-button1:hover::after {
+    width: 90%;
+}
   
   .nav-button1 .fas {
     transition: min-width .2s;
@@ -679,7 +683,7 @@ user profile
 *******************************************/
 
 .navbar-custom-color{
-    color: #b586f8a4;
+    color: #eafb36;
     font-size:16px;
 }
 
@@ -695,7 +699,7 @@ user profile
 }
 
 .nav-item a {
-    color: #b586f8a4 !important;
+    color: #eafb36 !important;
     font-size: 16px !important;
 }
 
@@ -739,7 +743,7 @@ user profile
   }
 
 .nav-item {
-    color: #b586f8a4 !important;
+    color: #eafb36 !important;
 }
 
 .nav-item:hover {
@@ -753,7 +757,7 @@ user profile
 *******************************************/
 
 .register-page {
-    color: #b586f8a4;
+    color: #ffffff;
     width: 100%;
     height: max-content;
     background-image: var(--user-bg);
@@ -769,6 +773,7 @@ user profile
     align-content: center;
     height: 100%;
     margin: 0 auto;
+    padding-top: 50px;
 }
 
 .register-page-photo{
@@ -805,14 +810,15 @@ user profile
 }
 
 .btn-login {
-    border: 2px solid #b586f8a4;
-    color: #b586f8a4;
+    border: 1px solid #eafb36;
+    color: #eafb36;
     width: 100%;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .btn-login:hover {
-    color: #ffffff;
-    background-color: #b586f8a4;
+    color: #0e0e0e;
+    background-color: #eafb36;
 }
 
 
@@ -825,6 +831,7 @@ user profile
     font-size: 30px;
     font-weight: 700;
     text-transform: uppercase;
+    color: #dfdfdf;
 }
 
 .login-page .form-box {
@@ -834,7 +841,7 @@ user profile
 
 .login-page .form-legend {
     border-bottom: none !important;
-    background-color: #b586f8a4;
+    background-color: #dfdfdf;
     margin-top: 10px;
     padding: 20px 30px;
     font-size: 24px;
@@ -869,12 +876,13 @@ user profile
 .custom-input {
     border-radius: 4px;
     border: 1px solid #4b4e4e;
-    color: #4b4e4e;
+    color: #fefefe;
+    background-color: #1c1c1c;
 }
 
 .custom-input:hover,
 .custom-input:focus {
-    color: #4b4e4e;
+    color: #6b6d79;
 }
 
 .form-box form {
@@ -883,20 +891,18 @@ user profile
 }
 
 .login-page .custom-input {
-    border-bottom: 2px solid #067067;
-    border-top: none;
-    border-right: none;
-    border-left: none;
+    /* border-bottom: 2px solid #067067; */
+    border: none;
+
 }
 
 .login-page .custom-input:hover,
 .login-page .custom-input:focus {
-    border-bottom: 2px solid #fff;
-    -webkit-box-shadow: none;
     box-shadow: none;
     border-top: none;
     border-right: none;
     border-left: none;
+    background-color: #1c1c1c;
 }
 
 /*================= input file =======*/
@@ -914,7 +920,7 @@ user profile
 .file-input-label {
     font-size: 1.25em;
     font-weight: 700;
-    color: white;
+    color: black;
     padding: 5px 10px;
     display: block;
     width: max-content;
@@ -923,7 +929,7 @@ user profile
 }
 
 .file-input-desc {
-    color: #b586f8a4;
+    color: #89d2fe;
     font-size: 1.25em;
     font-weight: 700;
     margin-top: 5px;
@@ -935,7 +941,7 @@ user profile
 .file-input-label,
 .inputfile,
 .file-input-label:hover {
-    background-color: #b586f8a4;
+    background-color: #89d2fe;
 }
 
 .inputfile,
@@ -1007,7 +1013,7 @@ user profile
 }
 
 .text-helper {
-    color: #ffffff;
+    color: #747683;
     font-size: 14px;
     margin: 10px 2px;
     opacity: .6;

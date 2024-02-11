@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 
 import moment from "moment"
@@ -14,8 +14,6 @@ import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
 import { Typography } from '@material-ui/core'
 
-import DeleteModal from './deleteModal.js'
-import EditModal from './editModal'
 import CommentModal from './comments/commentModal'
 import Likes from '../containers/post_likes'
 import Save from '../containers/save_post.js'
@@ -51,18 +49,15 @@ const useStyles = theme  =>  ({
 
 const [state, setState] = useState({
     modalOpen: false,
-    editModalOpen: false,
     commentModalOpen: false,
     modalPostTitle: '',
     modalPostId: '',
     modalPostContent: '',
     progress: false,
-    userInfoOpen: false,
     selectedUser: null,
 });
 
-const { modalOpen, editModalOpen, modalPostTitle, progress, selectedUser,
-    modalPostId, modalPostContent, commentModalOpen, userInfoOpen} = state;
+const {modalPostId,commentModalOpen} = state;
 
 const classes = useStyles();
 const history = useHistory();
@@ -80,29 +75,10 @@ const handleModalClose = () => {
     setState(prevState => ({
         ...prevState,
         modalOpen: false,
-        editModalOpen: false,
         commentModalOpen : false
     }));
 }
 
-const onDeletePost = (postTitle ,postId) => {
-    setState(prevState => ({
-        ...prevState,
-        modalOpen: true,
-        modalPostTitle: postTitle,
-        modalPostId: postId
-    }));
-}
-
-const onEditePost = (postContent, postTitle, postId) => {
-    setState(prevState => ({
-        ...prevState,
-        editModalOpen: true,
-        modalPostTitle: postTitle,
-        modalPostId: postId,
-        modalPostContent: postContent
-    }));
-}
 
 const getUserInfo = (userId) => {
 
@@ -146,7 +122,7 @@ return posts.map((post) => {
         return <span>{timeAgo}</span>;
       };
     return (
-        <Card className={classes.card} raised style={{ backgroundColor:"#19002f", color:"white", marginTop:"10px"}}>
+        <Card className={classes.card} raised style={{ backgroundColor:"#1c1c1c", color:"white", marginTop:"10px", borderRadius:"20px"}}>
             <Grid container direction="column">
                 <Grid item>
                     <CardHeader
@@ -155,28 +131,21 @@ return posts.map((post) => {
                     avatar={<Avatar aria-label="Profile Photo" src={ownerImagePath} onClick={() => getUserInfo(post.owner.id)}/>}
                     style={{ padding: '16px 16px 10px 16px' }}
                     title={
-                        <div>
+                    <div>
                         <Typography
                             className="ownerName"
-                            variant="h6"
+                            variant="h7"
                             display="inline"
                         >
-                        {post.owner.first_name} {post.owner.last_name}
+                        {post.owner.first_name} {post.owner.last_name} 
                         </Typography>
-                        <Typography variant="subtitle1" style={{color:"#808080", fontSize:"16px"}}>
+                        <Typography variant="subtitle1" style={{color:"#eafb36", fontSize:"14px"}}>
                             <p><PostTime postDate={p_date} /></p>
                         </Typography>
                     </div>
                     }
                     action={
-                        <IconButton
-                        aria-label="settings"
-                        disableRipple
-                        disableTouchRipple
-                        style={{ color: 'white' }}
-                        >
                         <ResponsiveDialog post={post} userId={userID}/>
-                        </IconButton>
                     }
                     />
                 </Grid>
@@ -224,21 +193,6 @@ return posts.map((post) => {
                     </CardActions>
                 </Grid>
             </Grid>
-            <DeleteModal
-                open={modalOpen}
-                handleClose={handleModalClose}
-                postTitle={modalPostTitle} 
-                postId={modalPostId}
-            />
-
-            <EditModal
-                open={editModalOpen}
-                handleClose={handleModalClose}
-                postTitle={modalPostTitle}
-                postContent = {modalPostContent}
-                postId={modalPostId}
-            />
-
             <CommentModal
                 open={commentModalOpen}
                 handleClose={handleModalClose}

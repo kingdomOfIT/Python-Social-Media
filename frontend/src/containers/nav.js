@@ -8,7 +8,7 @@ import '../../static/frontend/mystyle.css';
 import SearchableDropdown from "../components/SearchableDropdown";
 
 const Nav = (props) => {
-    const [value, setValue] = useState("Search...");
+    const [value, setValue] = useState("");
     const history = useHistory();
     const location = useLocation();
     
@@ -41,7 +41,7 @@ const Nav = (props) => {
                 <div className="navbar">
                     <div className="left-side">
                         <a href="#">
-                        <img src={"../../static/frontend/profile-placeholder.svg"} alt="Logo" className="logo" />
+                            <img src={"../../static/frontend/profile-placeholder.svg"} alt="Logo" className="logo" />
                         </a>
                         <div className="Appp">
                             <SearchableDropdown
@@ -53,6 +53,7 @@ const Nav = (props) => {
                             />
                         </div>
                     </div>
+                    <p className="welcome-text" style={{ fontSize: '25px', textAlign: 'left', fontFamily: 'cursive', marginRight: '80px', paddingTop: '10px' }}>Hope springs eternal...</p>
                     <div className="right-side">
                         <button onClick={() => getUserInfo(props.authReducer.user.id)} className="button">My Profile</button>
                         <button onClick={props.logout} className="button" to="/">Logout</button>
@@ -67,7 +68,7 @@ const Nav = (props) => {
                         <div className="collapse navbar-collapse">  
                         <ul className="navbar-nav ml-auto">
                             <li className="nav-item">
-                                <Link className="nav-link" to="/login">Login</Link>
+                                <Link className="nav-link" to="/login">Log In</Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to="/register">Sign Up</Link>

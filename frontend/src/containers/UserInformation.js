@@ -75,6 +75,11 @@ export class UserInfo extends Component {
         const followers_count = user2.profile ? user2.profile.followers_count : 5;
         const following_count = user2.profile ? user2.profile.following_count : 5;
         const posts = this.props.userPostsReducer;
+        console.log("Postare: ", posts)
+        posts.forEach(post => {
+            post.p_date = new Date(post.p_date);
+          });
+        posts.sort((a, b) => b.p_date - a.p_date);
         const userID = this.props.authReducer.user.id;
 
 
@@ -133,7 +138,15 @@ export class UserInfo extends Component {
                     </Grid>
                 </Grid>
                 <div className="posts">
-                    <Post posts={posts} userID={userID} />
+                    {posts.length === 0 ? (
+                        <div align="center" style={{color:"#5292f6"}}>
+                            <p>This profile is ready and waiting to share its first post! Stay tuned for updates from {user2.first_name}.</p>
+                            {/* <img className="round" src={"../../static/frontend/papersE.png"} alt="user" /> */}
+
+                        </div>
+                    ) : (
+                        <Post posts={posts} userID={userID} />
+                    )}
                 </div>
                 </Container>
           );

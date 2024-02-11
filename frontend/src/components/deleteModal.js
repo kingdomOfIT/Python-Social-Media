@@ -14,8 +14,7 @@ const useStyles = makeStyles(theme => ({
       left: '50%',
       transform: 'translate(-50%, -50%)',
       width: '80vmin',
-      backgroundColor: '#19002f',
-      border: '2px solid #000',
+      backgroundColor: '#1c1c1c',
       boxShadow: theme.shadows[5],
       padding: theme.spacing(4),
       color: '#ccc',
@@ -45,10 +44,26 @@ const useStyles = makeStyles(theme => ({
           color: 'white',
         },
     },
-    button: {
-      margin: theme.spacing(2),
-      color: 'white',
-    },
+    yellowButton: {
+      backgroundColor: '#eafb36',
+      color: 'black',
+      '&:hover': {
+        color: "#eafb36",
+        backgroundColor: "transparent"
+      },
+  },
+
+  button: {
+    maxHeight: "30px",
+    marginLeft: "10px",
+    border: "1px solid #eafb36",
+    borderRadius: "12px",
+    cursor: "pointer",
+    backgroundColor:"#eafb36",
+    color: "#0e0e0e",
+    textAlign: "center",
+    justifyContent: "center"
+  },
     rightIcon: {
       marginLeft: theme.spacing(1),
       color: 'white',
@@ -91,11 +106,11 @@ const useStyles = makeStyles(theme => ({
               <h2 className={classes.title} id="title">
                 Please confirm your action
               </h2>
-              <Button variant="contained" color="primary" className={classes.button} onClick={onDeleteClicked}>
-                Delete
-              </Button>
-              <Button variant="contained" color="primary" className={classes.button} onClick={cancelDelete}>
+              <Button variant="contained" color="primary" className={`${classes.button} ${classes.yellowButton}`}  onClick={cancelDelete}>
                 Cancel
+              </Button>
+              <Button variant="contained" color="primary" className={`${classes.button} ${classes.yellowButton}`}  onClick={onDeleteClicked}>
+                Delete
               </Button>
               <CircularProgress
                 className={classes.circularProgress}
