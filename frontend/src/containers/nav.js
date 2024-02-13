@@ -41,7 +41,7 @@ const Nav = (props) => {
                 <div className="navbar">
                     <div className="left-side">
                         <a href="#">
-                            <img src={"../../static/frontend/profile-placeholder.svg"} alt="Logo" className="logo" />
+                            <img src={"../../../media/img/SMLogo.png"} alt="Logo" className="logo" />
                         </a>
                         <div className="Appp">
                             <SearchableDropdown
@@ -56,7 +56,7 @@ const Nav = (props) => {
                     <p className="welcome-text" style={{ fontSize: '25px', textAlign: 'left', fontFamily: 'cursive', marginRight: '80px', paddingTop: '10px' }}>Hope springs eternal...</p>
                     <div className="right-side">
                         <button onClick={() => getUserInfo(props.authReducer.user.id)} className="button">My Profile</button>
-                        <button onClick={props.logout} className="button" to="/">Logout</button>
+                        <button onClick={props.logout} className="button" to="/">Log Out</button>
                     </div>
                 </div>
             );
@@ -90,7 +90,6 @@ const mapStateToProps = ({ authReducer, usersReducer }) => {
     return {
         users: usersReducer.users,
         authReducer: authReducer
-        // ... other mappings
     };
 }
 

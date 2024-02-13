@@ -14,8 +14,10 @@ import { updateUserInfo } from "../actions/index"
 import { updateUserImage } from '../actions/index'
 import { getUserPosts } from '../actions/posts_action'
 import { getuserByUserID } from '../actions/auth_actions.js'
-import '../../static/frontend/mystyle.css';
+// import '../../static/frontend/mystyle.css';
 import UserProfileMenu from '../components/userProfileMenu.js'
+import PropTypes from 'prop-types';
+import { createFollow, deleteFollow, getFollowingUsers } from '../actions/follow_action'; 
 
 import Post from '../components/posts.js';
 
@@ -38,8 +40,28 @@ export class UserInfo extends Component {
         this.setState({ isDialogOpen: false });
     };
 
+    isFollowing = (targetUserId, followingArray) => {
+        if (followingArray) {
+            for (let i = 0; i < followingArray.length; i++) {
+                if (followingArray[i].id === targetUserId) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+    handleFollow = (ownerIntId, userId, followingArray) => {
+        if (this.isFollowing(ownerIntId, followingArray)) {
+          this.props.deleteFollow(userId, ownerIntId, () => {});
+          window.location.reload()
+        } else {
+          this.props.createFollow({ targetUser: ownerIntId }, () => {});
+          window.location.reload()
+        }
+      };
+
     async componentDidMount() {
-        const { location, authReducer } = this.props;
+        const { location, authReducer, following_posts_reducer } = this.props;
         const params = new URLSearchParams(location.search);
         const userId = params.get("user_id");
     
@@ -54,13 +76,15 @@ export class UserInfo extends Component {
     
         const ownerIntId = parseInt(userId, 10);
         const visitorIntId = parseInt(authReducer.user.id, 10);
-        this.setState({ ownerIntId, visitorIntId });
+        this.props.getFollowingUsers(visitorIntId, () => {});
+        const followingList = following_posts_reducer.following;
+        this.setState({ ownerIntId, visitorIntId, followingList });
     }
 
     render() {
         let { userReducer } = this.props;
 
-        const { ownerIntId,  visitorIntId} = this.state;
+        const { ownerIntId,  visitorIntId, followingList} = this.state;
 
         if (_.isEmpty(userReducer.userByUserId)) {
             console.log('User2 is empty. Rendering loading state...');
@@ -75,7 +99,7 @@ export class UserInfo extends Component {
         const followers_count = user2.profile ? user2.profile.followers_count : 5;
         const following_count = user2.profile ? user2.profile.following_count : 5;
         const posts = this.props.userPostsReducer;
-        console.log("Postare: ", posts)
+        const followingArray = this.props.following_posts_reducer.following;
         posts.forEach(post => {
             post.p_date = new Date(post.p_date);
           });
@@ -128,8 +152,9 @@ export class UserInfo extends Component {
                     </Button>
                     )}
                     {ownerIntId !== visitorIntId && (
-                    <Button className="follow-button" variant="contained" color="primary" fullWidth>
-                        Follow
+                    <Button className="follow-button" variant="contained" color="primary" fullWidth 
+                    onClick={() => this.handleFollow(ownerIntId, visitorIntId, followingArray)}>
+                        {this.isFollowing(ownerIntId, followingArray) ? "Unfollow" : "Follow"}
                     </Button>
                     )}
 
@@ -140,7 +165,7 @@ export class UserInfo extends Component {
                 <div className="posts">
                     {posts.length === 0 ? (
                         <div align="center" style={{color:"#5292f6"}}>
-                            <p>This profile is ready and waiting to share its first post! Stay tuned for updates from {user2.first_name}.</p>
+                            <p>This profile is ready and waiting to share its first post!</p>
                             {/* <img className="round" src={"../../static/frontend/papersE.png"} alt="user" /> */}
 
                         </div>
@@ -153,12 +178,17 @@ export class UserInfo extends Component {
         };
 }
 
+UserInfo.propTypes = {
+    followingList: PropTypes.array.isRequired
+};
+
 const mapStateToProps = (state) => {
     return {
         authReducer: state.authReducer,
         userPostsReducer: state.userPostsReducer || { posts: [] },
-        userReducer: state.userReducer
+        userReducer: state.userReducer,
+        following_posts_reducer: state.following_posts_reducer
     };
 };
 
-export default withRouter(connect(mapStateToProps, { updateUserInfo, updateUserImage, getUserPosts, getuserByUserID })(UserInfo));
+export default withRouter(connect(mapStateToProps, {createFollow, deleteFollow, updateUserInfo, updateUserImage, getUserPosts, getuserByUserID, getFollowingUsers })(UserInfo));

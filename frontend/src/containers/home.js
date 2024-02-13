@@ -8,13 +8,14 @@ import { Container } from "@material-ui/core"
 import { withStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { listUsers } from '../actions/auth_actions';
 
 import AnimatePage from "../components/AnimatePage" 
 import Post from '../components/posts.js'
 import { loadPage } from "../actions/posts_action"
 import '../../static/frontend/mystyle.css';
 
-import { withRouter } from 'react-router-dom';
+import { withRouter} from 'react-router-dom';
 
 
 const useStyles = theme  =>  ({
@@ -38,12 +39,21 @@ class Home extends Component {
         this.setState({open : true})
     }
 
+    async componentDidMount() {
+        this.props.listUsers(() => {});
+    }
+
     render() {
         const { classes, loadPosts} = this.props
         const { nextPage } = this.props.posts
         const { progress} = this.state
         const posts = this.props.posts.posts ? this.props.posts.posts : this.props.posts;
         const userID = this.props.authReducer.user.id;
+        const sortedUsers = this.props.users
+        .filter(user => user.profile !== null)
+        .sort((a, b) => b.profile.followers_count - a.profile.followers_count)
+        .slice(0, 6);
+        // this.renderList(sortedUsers);
         
         if (loadPosts){
             return <div style={{ textAlign: "center", marginTop: "50px" }} > <CircularProgress /></div>
@@ -84,44 +94,9 @@ class Home extends Component {
                 </div>
                 <div class="box3">
                     <div className = "container-card">
-                        <h2>Top Writers</h2>
-                        <div class="row">
-                            <div className="card-container">
-                            <img className="round" src={"../../static/frontend/profile_1.jpg"} alt="user" />
-                            <h3>Amir Kahriman</h3>
-                            <h6>@amirkahriman</h6>
-                        </div>
-                        <div className="card-container">
-                            <img className="round" src={"../../static/frontend/profile_2.jpg"} alt="user" />
-                            <h3>Amir Kahriman</h3>
-                            <h6>@amirkahriman</h6>
-                        </div>
-                        </div>
-                        <div className="row">
-                            <div className="card-container">
-                            <img className="round" src={"../../static/frontend/profile_3.jpg"} alt="user" />
-                            <h3>Amir Kahriman</h3>
-                            <h6>@amirkahriman</h6>
-                        </div>
-                        <div className="card-container">
-                            <img className="round" src={"../../static/frontend/profile_4.jpg"} alt="user" />
-                            <h3>Amir Kahriman</h3>
-                            <h6>@amirkahriman</h6>
-                        </div>
-                        </div>
-                        <div className="row">
-                            <div className="card-container">
-                            <img className="round" src={"../../static/frontend/profile_5.jpg"} alt="user" />
-                            <h3>Amir Kahriman</h3>
-                            <h6>@amirkahriman</h6>
-                        </div>
-                        <div className="card-container">
-                            <img className="round" src={"../../static/frontend/profile_6.jpg"} alt="user" />
-                            <h3>Amir Kahriman</h3>
-                            <h6>@amirkahriman</h6>
-                        </div>
-                        </div>
-                    </div>                                          
+                    <h2>Top Writers</h2>
+                        {this.renderList(sortedUsers)} 
+                    </div>                                      
                 </div>
 
             </div>
@@ -136,14 +111,46 @@ class Home extends Component {
             this.setState({progress : false})
         })
     }
+    renderList = (sortedUsers) => {
+        const pairs = [];
+        for (let i = 0; i < sortedUsers.length; i += 2) {
+            if (i + 1 < sortedUsers.length) {
+                pairs.push([sortedUsers[i], sortedUsers[i + 1]]);
+            } else {
+                pairs.push([sortedUsers[i]]);
+            }
+        }
+    
+        return pairs.map((pair, index) => (
+            <div key={index} className="row">
+                {pair.map((user, innerIndex) => {
+                    const username = user.username;
+                    const first_name = user.first_name;
+                    const last_name = user.last_name;
+                    const profileImage = user.profile ? user.profile.image_path : "https://picsum.photos/200";
+                    return (
+                        <div key={innerIndex} className="card-container">
+                            <img className="round" src={profileImage} alt="user" />
+                            <h3>{first_name} {last_name}</h3>
+                            <h6>@{username}</h6>
+                        </div>
+                    );
+                })}
+            </div>
+        ));
+    }
+    
 }
 
 const mapStateToProps = (state) => {
-    return { authReducer : state.authReducer }
+    return { 
+        authReducer : state.authReducer,
+        users: state.usersReducer.users
+    }
 }
 
 Home.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { loadPage })(withStyles(useStyles)(withRouter(Home)));
+export default connect(mapStateToProps, { loadPage, listUsers })(withStyles(useStyles)(withRouter(Home)));

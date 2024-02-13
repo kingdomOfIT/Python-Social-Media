@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 import moment from "moment"
 import CommentButton from "./comments/commentButton.js";
@@ -7,7 +7,6 @@ import ResponsiveDialog from "./responsiveDialog.js";
 
 import Grid from "@material-ui/core/Grid";
 import Card from '@material-ui/core/Card';
-import IconButton from "@material-ui/core/IconButton";
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
@@ -61,9 +60,11 @@ const {modalPostId,commentModalOpen} = state;
 
 const classes = useStyles();
 const history = useHistory();
+const location = useLocation();
+const currentPath = location.pathname
+console.log("Current Path:", currentPath);
 
 const onOpenComments = (postId) => {
-    console.log("Okinut")
     setState(prevState => ({
         ...prevState,
         commentModalOpen: true,

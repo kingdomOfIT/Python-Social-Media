@@ -88,10 +88,6 @@ user profile
     margin-bottom: 10px;
   }
   
-  .follow-button {
-    display: block;
-    margin: 20px auto;
-  }
   
 
 
@@ -738,8 +734,8 @@ user profile
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 25%;
-    margin-bottom: 20px;
+    width: 35%;
+    margin-bottom: 10px;
   }
 
 .nav-item {
@@ -1033,30 +1029,33 @@ user profile
                 Alert
 *******************************************/
 .error-alert {
-    background-color: #f7b0b0;
-    color: #960b0b;
+    background-color: #ffcccc;
+    color: #ff3333;
 }
 
 .success-alert {
-    background-color: #a7e68a;
-    color: #065c55;
+    background-color: #ccffcc;
+    color: #33cc33;
 }
 
 .alert {
     position: fixed;
-    top: 50px;
-    letter-spacing: .5px;
-    font-size: 14px;
-    font-weight: 200;
+    top: 70px;
+    letter-spacing: 0.5px;
+    font-size: 16px;
+    font-weight: 400; 
     padding: 5px 5px;
-    border-radius: 0px;
-    border: 2px solid rgb(224, 219, 219);
-    width: 500px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    width: 90%;
+    max-width: 500px;
     text-align: center;
-    right: calc(50% - 250px);
-    left: calc(50% - 250px);
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 
 /******************************************
                 UserInfo

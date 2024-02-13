@@ -132,7 +132,6 @@ function CommentModal({open, handleClose, postId, addComment, getComments , comm
                 onClose={onCloseModal}
             >
                 <div className={classes.paper}>
-                    {console.log("second")}
                     <form className={classes.form} id="description" onSubmit = {onFormSubmit}>
                         <TextField
                             required

@@ -31,8 +31,11 @@ class Register extends Component {
     render() {
         const image_url = this.state.page === 3 ? "/media/img/remove.png" : "/media/img/remove.png"
         const { isAuthenticated } = this.props.authReducer
+        console.log("Khm: ",this.props.authReducer)
         if ( isAuthenticated){
             return <Redirect to="/" />
+        } else if (!isAuthenticated && this.props.authReducer.user !== null){
+            return <Redirect to="/login" />
         }
         return (
                 <div className="register-page">

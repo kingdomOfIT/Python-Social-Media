@@ -71,6 +71,7 @@ export const createFollow = (values) => {
 
 export const deleteFollow = (followerId, followeeId) => {
     return async (dispatch, getState) => {
+        console.log("Halo brate, ili uđi ili izađi samo....")
         const config = setConfig(getState);
         try {
             const res = await axios.post('follow/delete_follow/', { user_id: followerId, target_user_id: followeeId }, config);

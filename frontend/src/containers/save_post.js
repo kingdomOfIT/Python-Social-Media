@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from "@material-ui/core/IconButton";
@@ -16,20 +16,33 @@ const useStyles = makeStyles(theme => ({
 function Save({ post, userId, savePost, deleteSave }) {
     const classes = useStyles();
 
-    const isSaved = post.saves.some(save => userId === save.owner);
+    // State to track if the post is saved by the current user
+    const [isSaved, setIsSaved] = useState(false);
 
-    const performeSave = () => {
-        const values = {
-            post: post.id,
-            save: true
-        };
-        savePost(values);
-    };
+    // Effect to update the isSaved state when the component mounts or post changes
+    useEffect(() => {
+        const savedPost = post.saves.find(save => userId === save.owner);
+        setIsSaved(!!savedPost); // Convert savedPost to boolean
+    }, [post, userId]);
 
-    const performeDelete = () => {
-        // Assuming you have a way to get the ID of the saved post
-        const saveId = post.saves.find(save => userId === save.owner).id;
-        deleteSave(saveId);
+    // Function to handle save/unsave action
+    const handleSave = () => {
+        if (!isSaved) {
+            // If not saved, save the post
+            const values = {
+                post: post.id,
+                save: true
+            };
+            savePost(values);
+            setIsSaved(true); // Update local state
+        } else {
+            // If saved, find the save ID and delete it
+            const savedPost = post.saves.find(save => userId === save.owner);
+            if (savedPost) {
+                deleteSave(savedPost.id);
+            }
+            setIsSaved(false); // Update local state
+        }
     };
 
     return (
@@ -39,7 +52,7 @@ function Save({ post, userId, savePost, deleteSave }) {
                 disableRipple
                 color="inherit"
                 className={classes.icon}
-                onClick={isSaved ? performeDelete : performeSave}
+                onClick={handleSave}
             >
                 {isSaved ? <BookmarkBorderRoundedIcon color="error" /> : <BookmarkRoundedIcon />}
             </IconButton>

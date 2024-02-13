@@ -58,7 +58,7 @@ export const validate = (values) => {
 
     //sex validation
     if (!sex) {
-        errors.sex = "Please select your gender."
+        errors.last_name = "Please select your gender."
     } 
 
     //image validation

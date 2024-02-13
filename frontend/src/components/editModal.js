@@ -127,7 +127,6 @@ function EditModal({ open, handleClose, postTitle, postContent, postId, editPost
                 onClose={onCloseModal}
             >
                 <div className={classes.paper}>
-                {console.log("samo <3")}
                     <h2 className={classes.title} id="title">Update your post</h2>
                     <form className={classes.form} id="description" onSubmit={onFormSubmit}>
                         <TextField

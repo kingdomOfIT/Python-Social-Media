@@ -177,21 +177,7 @@ function ResponsiveDialog(props) {
                 )}
               </ListItemIcon>
               <ListItemText primary={isFollowing(post.owner.id) ? "Unfollow @" + post.owner.username : "Follow @" + post.owner.username} />
-            </ListItem>
-              <Divider />
-              <ListItem button className={classes.listItem} onClick={handleClose}>
-                <ListItemIcon disableRipple>
-                  <VolumeOffOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Mute @" + post.owner.username} />
-              </ListItem>
-              <Divider />
-              <ListItem button className={classes.listItem} onClick={handleClose}>
-                <ListItemIcon disableRipple>
-                  <FlagOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText primary="Report Post" />
-              </ListItem>{" "}
+            </ListItem> 
             </List>
           </DialogContent>
         </Dialog>

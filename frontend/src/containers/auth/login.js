@@ -39,7 +39,7 @@ class Login extends Component {
         const open = Boolean(anchorEl);
         const id = open ? 'simple-popover' : undefined;
 
-        const image_url = "/media/images/book.png"
+        const image_url = "/media/img/SMLogo.png"
         if ( isAuthenticated ){
             return <Redirect to='/'/>
         }

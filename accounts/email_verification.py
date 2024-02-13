@@ -19,6 +19,7 @@ class Email:
                 "protocol": 'https' if request.is_secure() else 'http'
             })
             email = EmailMessage(mail_subject, message, to=[to_email])
+            email.content_subtype = "html"
             email.send()
         except Exception as e:
             print("Error sending activation email:", e)

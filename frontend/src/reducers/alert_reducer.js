@@ -1,5 +1,5 @@
 import { CLOSEALERT, LOGIN_ERROR, REGISTER_ERROR,
-    UPDATE_USER_ERROR, POST_CREATED_FAILED, DELETE_POST, EDIT_POST_FAIL ,
+    UPDATE_USER_ERROR, POST_CREATED_FAILED, DELETE_POST, EDIT_POST_FAIL , REGISTER,
     EDIT_POST, UPDATE_USER_INFO, UPDATE_IMAGE}
 from "../actions/types"
 
@@ -23,7 +23,7 @@ export default function(state = init , action) {
             if(action.payload.non_field_errors) {
                 msg = action.payload.non_field_errors
             } else {
-                msg = "Provide Your username and your password"
+                msg = "Oops! Don't forget your username and password! 🚀"
             }
             return {
                 ...state,
@@ -32,7 +32,7 @@ export default function(state = init , action) {
             }
         
         case REGISTER_ERROR:
-            msg = "the file you/'ve choosen isn't an image ,provide an image for your profile please"
+            msg = "Oops! Looks like that file isn't an image. 🖼️ Please upload an image for your profile!"
             return {
                 type: "error",
                 msg 
@@ -46,7 +46,14 @@ export default function(state = init , action) {
             }
 
         case DELETE_POST:
-            msg = 'Post has been deleted succefully'
+            msg = "Mission Accomplished: Post Deleted! ✨"
+            return {
+                type: "success",
+                msg
+            }
+        
+        case REGISTER:
+            msg = "Hey there! 📩 Time to double-check your inbox and give that email a thumbs-up! 📬✅"
             return {
                 type: "success",
                 msg
@@ -57,7 +64,7 @@ export default function(state = init , action) {
 
         case UPDATE_USER_INFO:
         case UPDATE_IMAGE:
-            msg = `${action.payload.username} your Profile information has been updated succesfully.`
+            msg = `🚀 Boom! ${action.payload.username}, your profile has been turbocharged! Update complete. 🌟`
             return {
                 type: "success",
                 msg

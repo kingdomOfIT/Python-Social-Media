@@ -44,7 +44,7 @@ const Sidebar = (props) => {
               <div className="nav-button1"><i className="fas fa-chart-line"></i><span>Trending</span></div>
             </a>
             <hr/>
-            <div className="nav-button1" onClick={() => handleGiveStarClick('https://www.buymeacoffee.com/amirkahriman')}><i className="fas fa-gem"></i><span>Writer Pro</span></div>
+            <div className="nav-button1" onClick={() => handleGiveStarClick('https://www.buymeacoffee.com/amirkahriman')}><i className="fas fa-gem"></i><span>Support my work</span></div>
             <div className='nav-button1' onClick={() => handleGiveStarClick('https://github.com/kingdomOfIT/Python-Social-Media')}><i className='fas fa-star'></i><span>Give a Star</span></div>
             {/* <div className="nav-content-highlight"></div> */}
         </div><input id="nav-footer-toggle" type="checkbox" />
