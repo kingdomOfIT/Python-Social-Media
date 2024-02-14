@@ -3,6 +3,8 @@ from rest_framework import generics ,permissions
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.utils.encoding import force_bytes, force_str
+from rest_framework.decorators import api_view
+from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.http import JsonResponse
@@ -86,30 +88,36 @@ class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
     def post(self, request, *args, **kwargs):
-        profile_data = {"image": request.data["image"], "sex": request.data["sex"]}
-        user_serializer = self.get_serializer(data=request.data)
-        user_serializer.is_valid(raise_exception=True)
-        user = user_serializer.save()
+        try:
+            profile_data = {"image": request.data["image"], "sex": request.data["sex"]}
+            user_serializer = self.get_serializer(data=request.data)
+            user_serializer.is_valid(raise_exception=True)
+            user = user_serializer.save()
 
-        # Set user as inactive upon registration
-        User = get_user_model()
-        User.objects.filter(pk=user.pk).update(is_active=False)
+            # Set user as inactive upon registration
+            User = get_user_model()
+            User.objects.filter(pk=user.pk).update(is_active=False)
 
-        profile_data["user"] = user.id
-        prfile_serialize = ProfileSerializer(data=profile_data)
-        prfile_serialize.is_valid(raise_exception=True)
-        prfile_serialize.save()
+            profile_data["user"] = user.id
+            prfile_serialize = ProfileSerializer(data=profile_data)
+            prfile_serialize.is_valid(raise_exception=True)
+            prfile_serialize.save()
 
-        print("This is the user obj: ", GetUserSerializer(user).data)
-        print("This is the profile obj: ", prfile_serialize.data)
+            # print("This is the user obj: ", GetUserSerializer(user).data)
+            # print("This is the profile obj: ", prfile_serialize.data)
 
-        email_to = user.email
+            email_to = user.email
 
-        Email.send_activation_email(request, user, email_to)
+            Email.send_activation_email(request, user, email_to)
 
-        return Response({
-            'user': GetUserSerializer(user).data
-        })
+            return Response({
+                'user': GetUserSerializer(user).data
+            })
+        except Exception as e:
+            print("Exception: ", e)
+            return Response({
+                "da"
+            })
     
 class ActivationAPI(generics.GenericAPIView):
 
@@ -133,21 +141,25 @@ class ActivationAPI(generics.GenericAPIView):
 
 
 class ProfileAPI(generics.CreateAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+    try:
+        queryset = Profile.objects.all()
+        serializer_class = ProfileSerializer
+    except Exception as e: 
+        print("Exception: ", e)
 
 #api to check the unique username and email
 class userValidtaionApi(generics.GenericAPIView):
     serializer_class = UserValidationSer
     queryset = User.objects.all()
 
-    def post(self ,request ,*args ,**kwargs):
-        serializer = self.get_serializer(data = request.data)
-        serializer.is_valid(raise_exception=True)
-        return Response({
-            "success" : True
-        })
-        
+    @api_view(['POST'])
+    def user_validtaion_api(request):
+        if request.method == 'POST':
+            serializer = UserValidationSer(data=request.data)
+            if serializer.is_valid():
+                return Response({"success": True}, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 #Update User and Profile Api
 class UpdateUserApi(generics.GenericAPIView):
     serializer_class = UpdateUserSer
@@ -159,27 +171,36 @@ class UpdateUserApi(generics.GenericAPIView):
 
     def post(self ,request ,*args ,**kwargs):
         # get the profile chaned data
-        sex = request.data.pop('sex')
-        profile_data = {}
-        profile_data['sex'] = sex
-        # get the user
-        user = get_object_or_404(User, id = kwargs['id'])
-        # check if the authenticated user is the same
-        # of the targeted user ( the ones we want to change his information)
-        self.check_object_permissions(request, user)
-        user_serializer = self.get_serializer(user ,data = request.data)
-        # validation
-        profile_serializer = UpdateProfileSer(user.profile ,data=profile_data)
-        user_serializer.is_valid(raise_exception=True)
-        profile_serializer.is_valid(raise_exception = True)
+        try:
+            print("Request: ", request.data)
+            request_data_copy = request.data.copy()
+            sex = request_data_copy.pop('sex')
+            print("Sex: ", sex)
+            profile_data = {}
+            profile_data['sex'] = sex
+            # get the user
+            user = get_object_or_404(User, id = kwargs['id'])
+            # check if the authenticated user is the same
+            # of the targeted user ( the ones we want to change his information)
+            self.check_object_permissions(request, user)
+            user_serializer = self.get_serializer(user ,data = request.data)
+            # validation
+            profile_serializer = UpdateProfileSer(user.profile ,data=profile_data)
+            user_serializer.is_valid(raise_exception=True)
+            profile_serializer.is_valid(raise_exception = True)
 
-        # if validation succed change information
-        user_instance = user_serializer.save()
-        profile_serializer.save()
+            # if validation succed change information
+            user_instance = user_serializer.save()
+            profile_serializer.save()
 
-        return Response(
-            GetUserSerializer(user_instance).data
-        )
+            return Response(
+                GetUserSerializer(user_instance).data
+            )
+        except Exception as e: 
+            print("Exxx: ", e)
+            return Response(
+                "faIL"
+            )
 
 class UpdateProfileImageApi(generics.GenericAPIView):
     queryset = User.objects.all()

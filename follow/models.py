@@ -12,7 +12,6 @@ class Follow(models.Model):
 
     def create(self, *args, **kwargs):
         ''' On create, update timestamps '''
-        print("Danijela calling")
         if not self.id:
             self.createdAt = timezone.now()
         self.updatedAt = timezone.now()

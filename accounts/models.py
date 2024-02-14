@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     image = models.ImageField(upload_to="images" ,blank = True)
     sex = models.CharField(max_length = 112)
-    user = models.OneToOneField(User , on_delete=models.CASCADE)
+    user = models.OneToOneField(User , on_delete=models.CASCADE, related_name='profile')
     followers_count = models.IntegerField(default=0)
     following_count = models.IntegerField(default=0)
 

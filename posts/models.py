@@ -12,6 +12,6 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''
         if not self.id:
-            self.p_date = timezone.now()
-        self.u_date = timezone.now()
+            self.p_date = timezone.now().replace(microsecond=0)
+        self.u_date = timezone.now().replace(microsecond=0) 
         return super(Post, self).save(*args, **kwargs)

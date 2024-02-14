@@ -33,7 +33,6 @@ class GetUserSerializer(serializers.ModelSerializer):
             return ProfileSerializer(profile).data
         except :
             return None
-        
 
 class ListUserSerializer(serializers.ModelSerializer):
     profile = serializers.SerializerMethodField()
@@ -48,7 +47,6 @@ class ListUserSerializer(serializers.ModelSerializer):
             return ProfileSerializer(profile).data
         except Profile.DoesNotExist:
             return None
-
 
 #login serializer
 class LoginSerializer(serializers.Serializer):
@@ -74,7 +72,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         write_only_fields = ['password']
     
     def validate(self ,data):
-        print(data)
         users_qs = User.objects.filter(email = data['email'])
         if users_qs.exists():
             raise serializers.ValidationError('user with this email already exists')
