@@ -7,8 +7,8 @@ class Follow(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     requesterUser = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
     targetUser = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
-    createdAt = models.DateTimeField(editable=False, null=True)
-    updatedAt = models.DateTimeField(null=True)
+    createdAt = models.DateTimeField(auto_now_add=True, editable=False, null=True)
+    updatedAt = models.DateTimeField(auto_now_add=True, null=True)
 
     def create(self, *args, **kwargs):
         ''' On create, update timestamps '''

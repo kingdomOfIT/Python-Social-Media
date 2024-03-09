@@ -22,5 +22,5 @@ class ProfileModelTest(TestCase):
         self.assertEqual(saved_profile.image, 'test/image.jpg')
         self.assertEqual(saved_profile.sex, 'male')
         self.assertEqual(saved_profile.user, self.user)
-        self.assertEqual(saved_profile.followers_count, 0)
-        self.assertEqual(saved_profile.following_count, 0)
+        self.assertEqual(saved_profile.followersCount, 0)
+        self.assertEqual(saved_profile.followingCount, 0)

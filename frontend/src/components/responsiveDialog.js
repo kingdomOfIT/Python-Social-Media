@@ -122,13 +122,13 @@ function ResponsiveDialog(props) {
           <DialogContent>
             <List className={classes.list}>
               <ListItem button className={classes.listItem} onClick={onOpenModal}>
-                <ListItemIcon disableRipple>
+                <ListItemIcon>
                   <FlagOutlinedIcon />
                 </ListItemIcon>
                 <ListItemText primary="Update Post" />
               </ListItem>{" "}
               <ListItem button className={classes.listItem} onClick={(e) => onDeletePost(post.title ,post.id)}>
-                <ListItemIcon disableRipple>
+                <ListItemIcon>
                   <VolumeOffOutlinedIcon />
                 </ListItemIcon>
                 <ListItemText primary="Delete Post" />
@@ -169,7 +169,7 @@ function ResponsiveDialog(props) {
           <DialogContent>
             <List className={classes.list}>
             <ListItem button className={classes.listItem} onClick={handleFollow}>
-              <ListItemIcon disableRipple>
+              <ListItemIcon>
                 {isFollowing(post.owner.id) ? (
                   <VolumeOffOutlinedIcon />
                 ) : (

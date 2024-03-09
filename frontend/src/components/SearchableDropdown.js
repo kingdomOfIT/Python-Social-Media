@@ -23,7 +23,7 @@ const SearchableDropdown = ({
     setQuery(() => "");
     handleChange(option[label]);
     setIsOpen((isOpen) => !isOpen);
-    history.push(`/user-info?user_id=${option.id}`); // Redirect to user info
+    history.push(`/user-info?user_id=${option.id}`);
     window.location.reload();
   };
 

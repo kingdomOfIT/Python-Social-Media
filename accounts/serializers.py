@@ -1,40 +1,38 @@
 from rest_framework import serializers 
+from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.models import User 
 from django.contrib.auth import authenticate
+
+import logging
 # from ..follow.serializers import FollowSerializer
 
 from .models import Profile
 
-#ProfileSerializer
 class ProfileSerializer(serializers.ModelSerializer):
-    image_path = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField(source='get_image_url')
+
     class Meta:
         model = Profile
-        fields = ['user','image' ,'sex' ,'image_path' ,'id', 'followers_count', 'following_count']
+        fields = ['user', 'image', 'sex', 'image_url', 'id', 'followersCount', 'followingCount']
         extra_kwargs = {
             'image': {
-                'write_only' : True,
+                'write_only': True,
             }
         }
     
-    def get_image_path(self ,obj):
+    def get_image_url(self, obj):
+        """
+        Get the URL of the profile image.
+
+        Parameters:
+        - obj: The Profile instance.
+
+        Returns:
+        - str: The URL of the profile image.
+        """
         return obj.image.url
 
-#userInfoSerializer
-class GetUserSerializer(serializers.ModelSerializer):
-    profile = serializers.SerializerMethodField()
-    class Meta:
-        model = User 
-        fields = ['id','username' ,'email' ,'first_name' ,'last_name','profile']
-
-    def get_profile(self ,obj):
-        try :
-            profile = obj.profile
-            return ProfileSerializer(profile).data
-        except :
-            return None
-
-class ListUserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     profile = serializers.SerializerMethodField()
 
     class Meta:
@@ -43,56 +41,67 @@ class ListUserSerializer(serializers.ModelSerializer):
 
     def get_profile(self, obj):
         try:
-            profile = obj.profile
-            return ProfileSerializer(profile).data
-        except Profile.DoesNotExist:
-            return None
+            profile = getattr(obj, 'profile', None)
+            if profile:
+                return ProfileSerializer(profile).data
+        except Exception as e:
+            # Handle specific exceptions, if any
+            # Log the exception for debugging purposes
+            logging.Logger.exception("Error occurred while serializing profile: %s", e)
+        return None
 
 #login serializer
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
 
-    def validate(self ,data):
-        user = authenticate(**data)
+    def validate(self, data):
+        username = data.get('username')
+        password = data.get('password')
+
+        user = authenticate(username=username, password=password)
         if not user:
-            raise serializers.ValidationError("Make sure that email and password are correct and verified.")
-        
-        return data 
+            raise AuthenticationFailed("Incorrect username or password. Please try again.")
+
+        if not user.is_active:
+            raise AuthenticationFailed("Your account is not active. Please verify your email to activate your account.")
+
+        return data
 
 #Register Serializer
 class RegisterSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(required = True)
+    email = serializers.EmailField(required=True)
     image = serializers.ImageField()
-    sex = serializers.CharField(required = True)
+    sex = serializers.CharField(required=True)
 
     class Meta:
         model = User 
-        fields = ['username' ,'password','email' ,'first_name' ,'last_name' ,'image','sex']
+        fields = ['username', 'password', 'email', 'first_name', 'last_name', 'image', 'sex']
         write_only_fields = ['password']
     
-    def validate(self ,data):
-        users_qs = User.objects.filter(email = data['email'])
-        if users_qs.exists():
-            raise serializers.ValidationError('user with this email already exists')
-        else :
-            return data
+    def validate(self, data):
+        # Check if a user with the given email already exists
+        if User.objects.filter(email=data['email']).exists():
+            raise serializers.ValidationError('User with this email already exists')
+        return data
 
-    def create(self ,data):
+    def create(self, validated_data):
+        # Create the user instance with validated data
         user = User.objects.create_user(
-            username = data['username'],
-            email = data['email'],
-            first_name = data['first_name'],
-            last_name = data['last_name']
+            username=validated_data['username'],
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            password=validated_data['password'],  # Password should be hashed automatically
         )
-
-        user.set_password(data['password'])
+        # Set additional fields if necessary
+        user.sex = validated_data['sex']
+        user.image = validated_data['image']
         user.save()
-
         return user
 
 #userVerificationSerializer
-class UserValidationSer(serializers.Serializer):
+class UserValidationSerializer(serializers.Serializer):
     username = serializers.CharField()
     email = serializers.CharField()
 
@@ -108,7 +117,7 @@ class UserValidationSer(serializers.Serializer):
         return data
     
 #User Update Serializer
-class UpdateUserSer(serializers.ModelSerializer):
+class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username' ,'email' ,'first_name' ,'last_name','id']
@@ -125,12 +134,12 @@ class UpdateUserSer(serializers.ModelSerializer):
         return data
 
 #Profile Update Serializer
-class UpdateProfileSer(serializers.ModelSerializer):
+class UpdateProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['sex',]
 
-class UpdateImageProfileSer(serializers.ModelSerializer):
+class UpdateImageProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['image',]

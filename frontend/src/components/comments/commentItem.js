@@ -66,8 +66,8 @@ const useStyles = makeStyles(theme => ({
 
 function CommentItem({ user, comment, editComment }) {
     const classes = useStyles();
-    const p_date = moment(comment.p_date).format("DD/MM/YYYY - HH:mm")
-    const u_date = moment(comment.u_date).format("DD/MM/YYYY - HH:mm")
+    const createdAt = moment(comment.createdAt).format("DD/MM/YYYY - HH:mm")
+    const updatedAt = moment(comment.updatedAt).format("DD/MM/YYYY - HH:mm")
 
     // use ref to access the form
     const myForm = useRef()
@@ -144,14 +144,14 @@ function CommentItem({ user, comment, editComment }) {
             onMouseLeave={() => setShow(false)}
         >
             <CardHeader className={classes.cardHead}
-                avatar={<Avatar alt="" src={comment.owner.profile.image_path} className={classes.avatar} />}
+                avatar={<Avatar alt="" src={comment.owner.profile.image_url} className={classes.avatar} />}
                 title={<p className={classes.owner}>{comment.owner.first_name} {comment.owner.last_name}</p>}
-                subheader={p_date}
+                subheader={createdAt}
             />
             <CardContent className={classes.cardContent}>
                 {displayContent()}
                 <Typography variant="overline" color="textSecondary" component="p" className={classes.textS}>
-                    Last updated: {u_date}
+                    Last updated: {updatedAt}
                 </Typography>
                 { edit && 
                 <div className={classes.iconHolder}>

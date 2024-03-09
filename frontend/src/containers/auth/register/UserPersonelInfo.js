@@ -5,7 +5,6 @@ import { validate } from "./validate"
 
 export class UserPersonalInfo extends Component {
     render() {
-        console.log(this.props)
         const { nextPage  ,previousPage} = this.props
         const { handleSubmit } = this.props
         return (
@@ -28,7 +27,7 @@ export class UserPersonalInfo extends Component {
                         />
                         <Field
                             name="sex"
-                            label="media/images/man_gender.png"
+                            label="media/img/man_gender.png"
                             type="radio"
                             gender="Male"
                             value="male"
@@ -37,7 +36,7 @@ export class UserPersonalInfo extends Component {
                         />
                         <Field
                             name="sex"
-                            label="media/images/women_gender.png"
+                            label="media/img/women_gender.png"
                             gender="Female"
                             type="radio"
                             value="female"

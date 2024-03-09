@@ -42,7 +42,6 @@ export default function (state = initialState, action) {
         case MAKE_LIKE:
         case DELETE_LIKE:
             postIndex = posts.findIndex((post) => (post.id === action.payload.id))
-            console.log("Ero s onog: ", postIndex)
             if (postIndex !== -1 ) {
                 posts.splice(postIndex, 1, action.payload)
             } 

@@ -15,8 +15,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'frontend',
     'accounts',
-    'posts',
-    'comments',
+    'post',
+    'comment',
     'follow',
     "django.contrib.sites",
     "allauth",
@@ -27,8 +27,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'webpack_loader',
-
-    'core'
 ]
 SITE_ID = 2
 

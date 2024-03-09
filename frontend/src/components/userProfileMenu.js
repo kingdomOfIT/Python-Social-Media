@@ -47,11 +47,10 @@ function UserProfileMenu({ open, onClose, authReducer, updateUserInfo, updateUse
   const [selectedOption, setSelectedOption] = useState(null);
   const [editedFirstName, setEditedFirstName] = useState(authReducer.user.first_name);
   const [editedLastName, setEditedLastName] = useState(authReducer.user.last_name);
-  const [selectedImage, setSelectedImage] = useState(authReducer.user.profile.image_path);
+  const [selectedImage, setSelectedImage] = useState(authReducer.user.profile.image_url);
   const { user } = authReducer
   const [changesMade, setChangesMade] = useState(false);
   // let {authReducer} = this.props;
-  console.log("AuthReducer: ", authReducer)
   const userId = authReducer.user.id;
 
   const handleFirstNameChange = (e) => {
@@ -81,8 +80,6 @@ function UserProfileMenu({ open, onClose, authReducer, updateUserInfo, updateUse
   };
 
   const handleImageChange = (file) => {
-    console.log('Selected File:', file);
-
     setSelectedImage(file);
   };
 
@@ -111,7 +108,7 @@ function UserProfileMenu({ open, onClose, authReducer, updateUserInfo, updateUse
     <Dialog open={open} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
       <DialogTitle className={classes.title}>
         {selectedOption ? (
-          <Typography variant="h6">{selectedOption}</Typography>
+          <Typography variant="subtitle">{selectedOption}</Typography>
         ) : (
           'Edit Your Profile'
         )}
@@ -162,7 +159,7 @@ function UserProfileMenu({ open, onClose, authReducer, updateUserInfo, updateUse
             {/* Display current profile picture */}
             <img
               className={classes.profileImage}
-              src={authReducer.user.profile.image_path}
+              src={authReducer.user.profile.image_url}
               alt="Profile"
             />
 

@@ -7,12 +7,12 @@ import Login from "../containers/auth/login"
 import Nav from "../containers/nav"
 import PrivateRoute from '../containers/auth/PrivateRoute'
 import Home from '../containers/home'
-import  Register  from '../containers/auth/register/Register'
+import Register  from '../containers/auth/register/Register'
 import Alerts from "../containers/alerts"
-import UserInfo from "../containers/UserInformation"
-import SavedPost from "../containers/SavedPosts"
-import LikedPost from "../containers/liked_posts"
-import FollowingPosts from "../containers/FollowingPosts"
+import UserInfo from "../containers/profile"
+import SavedPost from "../containers/saved"
+import LikedPost from "../containers/liked"
+import FollowingPosts from "../containers/following"
 
 import { getuser } from '../actions/auth_actions'
 import { getPosts } from '../actions/posts_action' 

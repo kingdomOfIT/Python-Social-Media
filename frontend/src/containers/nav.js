@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { connect } from 'react-redux';
-import { logout } from '../actions/auth_actions';
-import { profile } from '../actions/auth_actions';
-import { listUsers } from '../actions/auth_actions';
+import { logout, listUsers } from '../actions/auth_actions';
 import '../../static/frontend/mystyle.css';
 import SearchableDropdown from "../components/SearchableDropdown";
 
@@ -17,9 +15,6 @@ const Nav = (props) => {
 
     const getUserInfo = (userId) => {
         const targetPath = `/user-info?user_id=${userId}`;
-
-        console.log("Current Path:", location.pathname + location.search);
-        console.log("Target Path:", targetPath);
 
         // Check if the target path is different from the current location before pushing
         if (location.pathname + location.search !== targetPath) {

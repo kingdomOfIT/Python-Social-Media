@@ -121,7 +121,6 @@ export const getUserSavedPosts = (userId, callBack) => {
 
 // get the user saved posts
 export const getUserLikedPosts = (userId, callBack) => {
-    console.log("Pritisni dugme, sedmi sprat");
     return async (dispatch) => {
         try {
             const res = await axios.get(`likes/${userId}/get_user_liked_posts`);

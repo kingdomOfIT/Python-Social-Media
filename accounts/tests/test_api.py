@@ -12,6 +12,8 @@ from io import BytesIO
 from django.contrib.auth import get_user_model
 from django.test import Client
 from ..token import account_activation_token
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
 
 class GetUserAPITest(TestCase):
     def setUp(self):
@@ -52,7 +54,7 @@ class GetUserAPITest(TestCase):
         self.assertEqual(response.data[0]['username'], 'testuser')
         self.assertEqual(response.data[1]['username'], 'testuser2')
         # Add more assertions as needed
-
+        
 class TestLoginAPI(TestCase):
     def setUp(self):
         self.client = APIClient()

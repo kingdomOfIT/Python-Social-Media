@@ -1,21 +1,25 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+// External Libraries
+import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import moment from "moment";
 
-import moment from "moment"
-import CommentButton from "./comments/commentButton.js";
-import ResponsiveDialog from "./responsiveDialog.js";
-
-import Grid from "@material-ui/core/Grid";
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
+// Material-UI Components
 import Avatar from '@material-ui/core/Avatar';
-import { Typography } from '@material-ui/core'
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Grid from "@material-ui/core/Grid";
+import Typography from '@material-ui/core/Typography';
 
-import CommentModal from './comments/commentModal'
-import Likes from '../containers/post_likes'
-import Save from '../containers/save_post.js'
+// Internal Components
+import CommentButton from "./comments/commentButton.js";
+import CommentModal from './comments/commentModal';
+import Likes from './likePost.js';
+import ResponsiveDialog from "./responsiveDialog.js";
+import Saves from './savePost.js';
+
+// CSS
 import '../../static/frontend/mystyle.css';
 
 const Post = ({
@@ -62,7 +66,6 @@ const classes = useStyles();
 const history = useHistory();
 const location = useLocation();
 const currentPath = location.pathname
-console.log("Current Path:", currentPath);
 
 const onOpenComments = (postId) => {
     setState(prevState => ({
@@ -86,10 +89,9 @@ const getUserInfo = (userId) => {
     history.push(`/user-info?user_id=${userId}`);
 }
 
-console.log("Ovo mapiram: ", posts)
 return posts.map((post) => {
-    const p_date = moment(post.p_date).format('DD/MM/YYYY, HH:mm');
-    const ownerImagePath = post.owner.profile ? post.owner.profile.image_path : "https://picsum.photos/200";
+    const createdAt = moment(post.createdAt).format('DD/MM/YYYY, HH:mm');
+    const ownerImagePath = post.owner.profile ? post.owner.profile.image_url : "https://picsum.photos/200";
     const PostTime = ({ postDate }) => {
         const [timeAgo, setTimeAgo] = useState('');
       
@@ -123,25 +125,25 @@ return posts.map((post) => {
         return <span>{timeAgo}</span>;
       };
     return (
-        <Card className={classes.card} raised style={{ backgroundColor:"#1c1c1c", color:"white", marginTop:"10px", borderRadius:"20px"}}>
+        <Card key={post.id} className={classes.card} raised style={{ backgroundColor:"#1c1c1c", color:"white", marginTop:"10px", borderRadius:"20px"}}>
             <Grid container direction="column">
                 <Grid item>
                     <CardHeader
                     className={classes.header}
                     disableTypography
-                    avatar={<Avatar aria-label="Profile Photo" src={ownerImagePath} onClick={() => getUserInfo(post.owner.id)}/>}
-                    style={{ padding: '16px 16px 10px 16px' }}
+                    avatar={<Avatar aria-label="Profile Photo" src={ownerImagePath} style={{cursor: "pointer"}} onClick={() => getUserInfo(post.owner.id)}/>}
+                    style={{ padding: '16px 16px 10px 16px'}}
                     title={
                     <div>
                         <Typography
                             className="ownerName"
-                            variant="h7"
+                            variant="subtitle1"
                             display="inline"
                         >
                         {post.owner.first_name} {post.owner.last_name} 
                         </Typography>
                         <Typography variant="subtitle1" style={{color:"#eafb36", fontSize:"14px"}}>
-                            <p><PostTime postDate={p_date} /></p>
+                            <p><PostTime postDate={createdAt} /></p>
                         </Typography>
                     </div>
                     }
@@ -185,7 +187,7 @@ return posts.map((post) => {
                         />
                         </Grid>
                         <Grid item>
-                        <Save
+                        <Saves
                             post = {post}
                             userId = {userID}
                         />

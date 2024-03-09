@@ -36,7 +36,7 @@ class TestUrls(SimpleTestCase):
 
     def test_validation_url(self):
         url = reverse('validation')
-        self.assertEquals(resolve(url).func.view_class, userValidtaionApi)
+        self.assertEquals(resolve(url).func.view_class, UserValidationAPI)
 
     def test_update_user_url(self):
         id = 123

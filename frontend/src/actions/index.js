@@ -59,7 +59,6 @@ export const clearForm = () => {
  export const makeLike = (values) => {
     return (dispatch ,getState) => {
         const config = setConfig(getState)
-        console.log("Calling code 7")
         axios.post("likes/",values,config)
         .then((res)=> {
             dispatch({
@@ -73,23 +72,9 @@ export const clearForm = () => {
     }
 }
 
-export const updateLike = (values,id) => {
-    return (dispatch, getState) => {
-        const config = setConfig(getState)
-        console.log("Calling code 8")
-        axios.put(`likes/${id}/`, values, config).then((res) => {
-            dispatch({
-                type: UPDATE_LIKE,
-                payload: res.data
-            })
-        })
-    }
-}
-
 export const deleteLike = (id) => {
     return (dispatch, getState) => {
         const config = setConfig(getState)
-        console.log("Calling code 9")
         axios.delete(`likes/${id}/`, config).then((res) => {
             dispatch({
                 type: DELETE_LIKE,
@@ -106,7 +91,6 @@ export const deleteLike = (id) => {
 export const savePost = (values) => {
     return (dispatch ,getState) => {
         const config = setConfig(getState)
-        console.log("Calling code 1")
         axios.post("save/",values,config)
         .then((res)=> {
             dispatch({
@@ -123,7 +107,6 @@ export const savePost = (values) => {
 export const deleteSave = (id) => {
     return (dispatch, getState) => {
         const config = setConfig(getState)
-        console.log("Calling code 3")
         axios.delete(`save/${id}/`, config).then((res) => {
             dispatch({
                 type: DELETE_SAVE,

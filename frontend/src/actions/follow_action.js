@@ -14,7 +14,6 @@ import {
 
 export const fetchFollowingPosts = (values) => {
     return async (dispatch, getState) => {
-        console.log("Pozivam 🫡")
         const config = setConfig(getState);
         try {
             const res = await axios.get('follow/following_posts/', { params: values }, config);
@@ -33,8 +32,6 @@ export const fetchFollowingPosts = (values) => {
 
 export const getFollowingUsers = (values) => {
     return async (dispatch, getState) => {
-        console.log("Pozivam -2 🫡")
-        console.log("Values: ",values)
         const config = setConfig(getState);
         try {
             const res = await axios.get('follow/following_users/', { params: values }, config);
@@ -71,11 +68,9 @@ export const createFollow = (values) => {
 
 export const deleteFollow = (followerId, followeeId) => {
     return async (dispatch, getState) => {
-        console.log("Halo brate, ili uđi ili izađi samo....")
         const config = setConfig(getState);
         try {
             const res = await axios.post('follow/delete_follow/', { user_id: followerId, target_user_id: followeeId }, config);
-            console.log("Resdata: ", res.data)
             dispatch({
                 type: DELETE_FOLLOW_SUCCESS,
                 payload: res.data

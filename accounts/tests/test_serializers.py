@@ -22,19 +22,18 @@ class ProfileSerializerTest(TestCase):
             user=self.user,
             sex='M',
             image=SimpleUploadedFile('test.jpg', image_file.read(), content_type='image/jpeg'),
-            followers_count=10,
-            following_count=20
+            followersCount=10,
+            followingCount=20
         )
         self.serializer = ProfileSerializer(instance=self.profile)
         
     def test_contains_expected_fields(self):
         data = self.serializer.data
-        self.assertEqual(set(data.keys()), set(['user', 'sex', 'image_path', 'id', 'followers_count', 'following_count']))
+        self.assertEqual(set(data.keys()), set(['user', 'sex', 'image_url', 'id', 'followersCount', 'followingCount']))
 
     def test_image_path_field_content(self):
         data = self.serializer.data
-        self.assertEqual(data['image_path'], self.profile.image.url)
-
+        self.assertEqual(data['image_url'], self.profile.image.url)
 
 class GetUserSerializerTest(TestCase):
     def setUp(self):
@@ -50,7 +49,7 @@ class GetUserSerializerTest(TestCase):
             user=self.user,
             image=SimpleUploadedFile('test.jpg', image_file.read(), content_type='image/jpeg')  # Attach the image file here
         )
-        self.serializer = GetUserSerializer(instance=self.user)
+        self.serializer = UserSerializer(instance=self.user)
         
     def test_contains_expected_fields(self):
         data = self.serializer.data
@@ -59,7 +58,6 @@ class GetUserSerializerTest(TestCase):
     def test_profile_field_content(self):
         data = self.serializer.data
         self.assertEqual(data['profile'], ProfileSerializer(self.profile).data)
-
 
 class ListUserSerializerTest(TestCase):
     def setUp(self):
@@ -79,8 +77,8 @@ class ListUserSerializerTest(TestCase):
         )
         
         # Create serializers for both users
-        self.serializer1 = ListUserSerializer(instance=self.user1)
-        self.serializer2 = ListUserSerializer(instance=self.user2)
+        self.serializer1 = UserSerializer(instance=self.user1)
+        self.serializer2 = UserSerializer(instance=self.user2)
         
     def test_contains_expected_fields(self):
         data1 = self.serializer1.data
@@ -107,7 +105,6 @@ class ListUserSerializerTest(TestCase):
         # Check if profile data is None for user2
         self.assertIsNone(data2['profile'])
 
-
 class MockRequest:
     def __init__(self, data):
         self.data = data
@@ -130,9 +127,9 @@ class LoginSerializerTest(TestCase):
             'username': 'testuser',
             'password': 'wrongpassword'
         }
-        with self.assertRaises(ValidationError) as context:
+        with self.assertRaises(AuthenticationFailed) as context:
             self.serializer.validate(data)
-        self.assertEqual(str(context.exception.detail[0]), "Make sure that email and password are correct and verified.")
+        self.assertEqual(str(context.exception.detail), "Incorrect username or password. Please try again.")
 
 User = get_user_model()
 
@@ -160,7 +157,7 @@ class RegisterSerializerTest(TestCase):
         with self.assertRaises(ValidationError) as context:
             self.serializer.validate(self.valid_data)
         
-        self.assertEqual(str(context.exception.detail[0]), 'user with this email already exists')
+        self.assertEqual(str(context.exception.detail[0]), 'User with this email already exists')
 
     def test_create_user(self):
         # Ensure that a new user is created when calling the create method
@@ -171,12 +168,11 @@ class RegisterSerializerTest(TestCase):
         self.assertEqual(user.first_name, self.valid_data['first_name'])
         self.assertEqual(user.last_name, self.valid_data['last_name'])
 
-
 class UserValidationSerTest(TestCase):
     def setUp(self):
         # Create a user for testing
         self.existing_user = User.objects.create_user(username='existing_user', email='existing@example.com')
-        self.serializer = UserValidationSer()
+        self.serializer = UserValidationSerializer()
 
     def test_valid_data(self):
         data = {
@@ -206,13 +202,12 @@ class UserValidationSerTest(TestCase):
             self.serializer.validate(data)
         self.assertEqual(context.exception.detail, {"email": "Uh-oh! This email is already taken. How about trying a unique one?"})
 
-
 class UpdateProfileSerTest(TestCase):
     def setUp(self):
         # Create a user and profile for testing
         self.user = User.objects.create_user(username='testuser', email='test@example.com')
         self.profile = Profile.objects.create(user=self.user, sex='M')
-        self.serializer = UpdateProfileSer(instance=self.profile)
+        self.serializer = UpdateProfileSerializer(instance=self.profile)
 
     def test_valid_data(self):
         data = {
@@ -236,7 +231,7 @@ class UpdateImageProfileSerTest(TestCase):
         # Create a user and profile for testing
         self.user = User.objects.create_user(username='testuser', email='test@example.com')
         self.profile = Profile.objects.create(user=self.user, image='path/to/image.jpg')
-        self.serializer = UpdateImageProfileSer(instance=self.profile)
+        self.serializer = UpdateImageProfileSerializer(instance=self.profile)
 
     def test_valid_data(self):
         data = {

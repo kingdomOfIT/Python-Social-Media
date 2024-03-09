@@ -1,95 +1,114 @@
-from django.contrib.auth.models import User 
-from rest_framework import generics ,permissions
-from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from django.utils.encoding import force_bytes, force_str
-from rest_framework.decorators import api_view
-from rest_framework import status
-from django.contrib.auth import get_user_model
-from django.shortcuts import redirect
-from django.http import JsonResponse
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.shortcuts import render
-
+import logging
 from knox.models import AuthToken
+
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
+from django.http import HttpResponseBadRequest
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
+from django.db import transaction
+
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+
+from .custom_permissions import IsTheSameUser
 from .email_verification import Email
+from .models import Profile
+from .serializers import *
 from .token import account_activation_token
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib import messages
-
-
-from .serializers import (
-    GetUserSerializer,
-    RegisterSerializer,
-    LoginSerializer,
-    ProfileSerializer,
-    UserValidationSer,
-    UpdateUserSer,
-    UpdateProfileSer,
-    UpdateImageProfileSer,
-    ListUserSerializer
-
-)
-from .models import Profile 
-from .custom_permissions import isTheSameUser
 
 
 class GetUserAPI(generics.RetrieveAPIView):
     queryset = User.objects.all()
-    serializer_class = GetUserSerializer
+    serializer_class = UserSerializer
     permission_classes = [
         permissions.IsAuthenticated,
     ]
 
     def get_object(self):
-        # Get the user_id from the URL parameter
+        """
+        Retrieve the user object based on the user_id URL parameter.
+
+        If user_id is provided, attempt to retrieve the user by ID. 
+        If not found, raise a 404 error.
+        If user_id is not provided, return the currently authenticated user.
+
+        Returns:
+            User instance: The requested user object.
+        """
         user_id = self.kwargs.get('user_id', None)
 
-        # Check if user_id is provided and valid
         if user_id is not None:
-            try:
-                # Retrieve the user by user_id
-                user = User.objects.get(id=user_id)
-                return user
-            except User.DoesNotExist:
-                pass
+            user = get_object_or_404(User, id=user_id)
+            return user
 
-        # If user_id is not provided or the user is not found, default to the currently authenticated user
+        # If user_id is not provided, return the currently authenticated user
         return self.request.user
     
 class ListUsersAPI(generics.ListAPIView):
     queryset = User.objects.all()
-    serializer_class = ListUserSerializer
+    serializer_class = UserSerializer
 
     def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
+        """
+        Retrieve a list of users.
 
-        # Convert ordered dict to list of dicts
-        serialized_data = list(map(dict, response.data))
-
-        return response
+        Returns:
+            Response: A Response object containing the list of users.
+        """
+        try:
+            response = super().list(request, *args, **kwargs)
+            serialized_data = list(map(dict, response.data))
+            return response
+        except Exception as e:
+            # Log the exception and return an appropriate error response
+            logging.Logger.exception("Failed to retrieve list of users: %s", e)
+            return Response({'error': 'Failed to retrieve list of users'},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class LoginAPI(generics.GenericAPIView):
+    """
+    API endpoint for user login.
+    """
     serializer_class = LoginSerializer
 
     def post(self ,request , *args ,**kwargs):
+        """
+        Handle POST request for user login.
+        """
         serializer = self.get_serializer(data = request.data)
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data['username']
         user = User.objects.get(username=username)
+        token = AuthToken.objects.create(user)[1]
 
         return Response({
-            'user' : GetUserSerializer(user).data,
-            'token' : AuthToken.objects.create(user)[1]
+            'user' : UserSerializer(user).data,
+            'token' : token
         })
 
 class RegisterAPI(generics.GenericAPIView):
+    """
+    API endpoint for user registration.
+    """
     serializer_class = RegisterSerializer
 
     def post(self, request, *args, **kwargs):
+        """
+        Handle user registration.
+        
+        :param request: HTTP request object
+        :param args: Additional positional arguments
+        :param kwargs: Additional keyword arguments
+        :return: HTTP response
+        """
         try:
+            # Extract profile data from request
             profile_data = {"image": request.data["image"], "sex": request.data["sex"]}
+
+            # Serialize user data and validate
             user_serializer = self.get_serializer(data=request.data)
             user_serializer.is_valid(raise_exception=True)
             user = user_serializer.save()
@@ -98,125 +117,192 @@ class RegisterAPI(generics.GenericAPIView):
             User = get_user_model()
             User.objects.filter(pk=user.pk).update(is_active=False)
 
+            # Associate profile data with the user and save
             profile_data["user"] = user.id
             prfile_serialize = ProfileSerializer(data=profile_data)
             prfile_serialize.is_valid(raise_exception=True)
             prfile_serialize.save()
 
-            # print("This is the user obj: ", GetUserSerializer(user).data)
-            # print("This is the profile obj: ", prfile_serialize.data)
+            # Send activation email to the user
+            Email.send_activation_email(request, user, user.email)
 
-            email_to = user.email
-
-            Email.send_activation_email(request, user, email_to)
-
+            # Return successful response
             return Response({
-                'user': GetUserSerializer(user).data
+                'user': UserSerializer(user).data
             })
         except Exception as e:
-            print("Exception: ", e)
-            return Response({
-                "da"
-            })
+            # Log the exception and return appropriate error response
+            logging.Logger.exception("Exception during user registration: %s", e)
+            return Response({"error": "Failed to register user"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 class ActivationAPI(generics.GenericAPIView):
+    """
+    Activate user account based on the activation token.
+    """
 
     def get(self, request, uidb64, token):
+        """
+        Activate user account using the provided activation token.
+
+        Args:
+            request: HTTP request object.
+            uidb64 (str): Base64 encoded user ID.
+            token (str): Activation token.
+
+        Returns:
+            HttpResponse: Confirmation page on successful activation.
+            HttpResponseBadRequest: Error message if activation fails.
+        """
+
+        # Retrieve the User model
         User = get_user_model()
         try:
+            # Decode the base64 encoded user ID
             uid = force_str(urlsafe_base64_decode(uidb64))
+            # Retrieve the user based on the decoded ID
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            # Handle invalid or missing user ID
             user = None
 
+        # Check if the user exists and the activation token is valid
         if user is not None and account_activation_token.check_token(user, token):
+            # Activate the user account
             user.is_active = True
             user.save()
             
+            # Render the confirmation page
             return render(request, 'confirm.html')
         else:
-            print()
-
-        return Response("")
-
+            # Return an error response if activation fails
+            return HttpResponseBadRequest("Invalid activation link")
 
 class ProfileAPI(generics.CreateAPIView):
-    try:
-        queryset = Profile.objects.all()
-        serializer_class = ProfileSerializer
-    except Exception as e: 
-        print("Exception: ", e)
+    """
+    API endpoint to create a new profile.
+    
+    This endpoint allows clients to create a new profile by providing profile data.
+    """
+    queryset = Profile.objects.all()  # Queryset to retrieve all profiles (unused in this endpoint)
+    serializer_class = ProfileSerializer  # Serializer class to serialize/deserialize profile data
 
-#api to check the unique username and email
-class userValidtaionApi(generics.GenericAPIView):
-    serializer_class = UserValidationSer
+    def __init__(self, *args, **kwargs):
+        """
+        Initialize the ProfileAPI view.
+        
+        This method sets the queryset and serializer_class attributes. It's invoked when
+        the ProfileAPI view is instantiated.
+        """
+        try:
+            super().__init__(*args, **kwargs)  # Call the superclass's constructor
+        except Exception as e:
+            # Log an error if there's an exception during initialization
+            logging.Logger.error("Failed to initialize ProfileAPI: %s", e)
+            raise  # Re-raise the exception to propagate it further
+
+class UserValidationAPI(generics.GenericAPIView):
+    serializer_class = UserValidationSerializer
     queryset = User.objects.all()
 
-    @api_view(['POST'])
-    def user_validtaion_api(request):
-        if request.method == 'POST':
-            serializer = UserValidationSer(data=request.data)
-            if serializer.is_valid():
-                return Response({"success": True}, status=status.HTTP_200_OK)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#Update User and Profile Api
+    def post(self ,request ,*args ,**kwargs):
+        serializer = self.get_serializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response({
+            "success" : True
+        })
+
 class UpdateUserApi(generics.GenericAPIView):
-    serializer_class = UpdateUserSer
+    """
+    API endpoint to update user information.
+
+    This endpoint allows an authenticated user to update their own information.
+
+    Request Parameters:
+    - id: The ID of the user to be updated.
+
+    Permissions:
+    - User must be authenticated.
+    - User must have permission to update their own profile.
+
+    Serializer:
+    - UpdateUserSer: Serializer for updating user information.
+    """
+    serializer_class = UpdateUserSerializer
     queryset = User.objects.all()
     permission_classes = [
         permissions.IsAuthenticated,
-        isTheSameUser,
+        IsTheSameUser,
     ]
 
     def post(self ,request ,*args ,**kwargs):
-        # get the profile chaned data
+        """
+        Handles POST requests to update user information.
+
+        If the request is successful, returns a JSON response with the updated user data.
+        If the request fails due to validation errors or other issues, returns an appropriate error response.
+        """
         try:
-            print("Request: ", request.data)
             request_data_copy = request.data.copy()
             sex = request_data_copy.pop('sex')
-            print("Sex: ", sex)
             profile_data = {}
             profile_data['sex'] = sex
-            # get the user
+
             user = get_object_or_404(User, id = kwargs['id'])
-            # check if the authenticated user is the same
-            # of the targeted user ( the ones we want to change his information)
             self.check_object_permissions(request, user)
+
             user_serializer = self.get_serializer(user ,data = request.data)
-            # validation
-            profile_serializer = UpdateProfileSer(user.profile ,data=profile_data)
-            user_serializer.is_valid(raise_exception=True)
-            profile_serializer.is_valid(raise_exception = True)
+            profile_serializer = UpdateProfileSerializer(user.profile ,data=profile_data)
 
-            # if validation succed change information
-            user_instance = user_serializer.save()
-            profile_serializer.save()
+            with transaction.atomic():
+                user_serializer.is_valid(raise_exception=True)
+                profile_serializer.is_valid(raise_exception=True)
+                user_instance = user_serializer.save()
+                profile_serializer.save()
 
-            return Response(
-                GetUserSerializer(user_instance).data
-            )
-        except Exception as e: 
-            print("Exxx: ", e)
-            return Response(
-                "faIL"
-            )
+            return Response(UserSerializer(user_instance).data)
+        except Exception as e:
+            print("Exception: ", e)  # Log the exception for debugging
+            return Response("Failed to update user information.", status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateProfileImageApi(generics.GenericAPIView):
+    """
+    API endpoint to update a user's profile image.
+    """
     queryset = User.objects.all()
-    serializer_class = UpdateImageProfileSer
+    serializer_class = UpdateImageProfileSerializer
     permission_classes = [
         permissions.IsAuthenticated,
-        isTheSameUser
+        IsTheSameUser
     ]
 
     def post(self ,request ,*args ,**kwargs):
+        """
+        Handle POST request to update user's profile image.
+
+        Parameters:
+        - request: The HTTP request object.
+        - *args: Additional positional arguments.
+        - **kwargs: Additional keyword arguments containing URL parameters.
+
+        Returns:
+        - Response containing updated user data with profile image.
+        """
+
+        # Retrieve the user object based on the provided user ID
         user = get_object_or_404(User ,id = kwargs["id"])
-        u_profile = user.profile 
+
+        # Retrieve the user's profile
+        user_profile = user.profile 
+
+        # Check permissions to ensure the authenticated user can update the profile image
         self.check_object_permissions(request , user)
-        p_serializer = self.get_serializer(u_profile ,data = request.data)
-        p_serializer.is_valid(raise_exception = True)
-        p_serializer.save()
-        return Response({
-            "user" : GetUserSerializer(user).data
-        })
+
+        # Serialize and validate the new profile image data
+        profile_serializer = self.get_serializer(user_profile ,data = request.data)
+        profile_serializer.is_valid(raise_exception = True)
+
+        # Save the updated profile image
+        profile_serializer.save()
+
+        # Return response with updated user data including profile image
+        return Response({"user": UserSerializer(user).data})
