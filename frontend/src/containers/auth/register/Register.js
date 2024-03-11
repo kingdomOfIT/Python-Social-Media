@@ -1,102 +1,96 @@
-import React, { Component } from 'react'
-import { connect } from "react-redux"
-import { Redirect } from "react-router-dom"
-import _ from "lodash"
+import React, { useState, useEffect, useCallback } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import _ from 'lodash';
 
+import UserInfo from './UserInfo';
+import UserPersonelInfo from './UserPersonelInfo';
+import UserImage from './UserImage';
+import { register } from '../../../actions/auth_actions';
+import { clearForm } from '../../../actions/index';
+import AnimatePage from '../../../components/AnimatePage';
 
-import UserInfo from "./UserInfo"
-import UserPersonelInfo from "./UserPersonelInfo"
-import UserImage from "./UserImage"
-import { register } from "../../../actions/auth_actions"
-import { clearForm } from '../../../actions/index'
-import AnimatePage from "../../../components/AnimatePage" 
+const Register = ({ authReducer, register, clearForm }) => {
+  const [page, setPage] = useState(1);
+  const [progress, setProgress] = useState(false);
 
-class Register extends Component {
-    constructor(props){
-        super(props)
-        this.getNext = this.getNext.bind(this)
-        this.getPrevious = this.getPrevious.bind(this)
-        this.onFormSubmit = this.onFormSubmit.bind(this)
+  useEffect(() => {
+    return () => {
+      clearForm();
+    };
+  }, [clearForm]);
 
-        this.state = {
-            page: 1,
-            progress : false
+  const getNext = useCallback(() => {
+    setPage((prevPage) => prevPage + 1);
+  }, []);
+
+  const getPrevious = useCallback(() => {
+    setPage((prevPage) => prevPage - 1);
+  }, []);
+
+  const onFormSubmit = useCallback(
+    (initValues) => {
+      const { password2, ...userInfo } = initValues;
+      setProgress(true);
+
+      let userForm = new FormData();
+      for (let key in userInfo) {
+        if (key === 'image') {
+          userForm.append(key, userInfo[key][0]);
+        } else {
+          userForm.append(key, userInfo[key]);
         }
-    }
+      }
 
-    componentWillUnmount(){
-        this.props.clearForm()
-    }
+      register(userForm, () => {
+        setProgress(false);
+      });
+    },
+    [register]
+  );
 
-    render() {
-        const image_url = this.state.page === 3 ? "/media/img/remove.png" : "/media/img/remove.png"
-        const { isAuthenticated } = this.props.authReducer
-        if ( isAuthenticated){
-            return <Redirect to="/" />
-        } else if (!isAuthenticated && this.props.authReducer.user !== null){
-            return <Redirect to="/login" />
-        }
+  const renderForm = () => {
+    switch (page) {
+      case 1:
+        return <UserInfo nextPage={getNext} />;
+      case 2:
+        return <UserPersonelInfo nextPage={getNext} previousPage={getPrevious} />;
+      case 3:
         return (
-                <div className="register-page">
-                <AnimatePage />
-                    <div className="register-page-content">
-                        <div className="register-page-photo">
-                        <img src={image_url} alt='register'/>
-                        </div>
-                        <div>
-                            {this.renderForm()}
-                        </div>  
-                    </div>
-                </div>
-        )
+          <UserImage
+            onFormSubmit={onFormSubmit}
+            previousPage={getPrevious}
+            progress={progress}
+          />
+        );
+      default:
+        return null;
     }
-    getNext(){
-        this.setState({page : this.state.page + 1})
-    }
+  };
 
-    getPrevious() {
-        this.setState({page: this.state.page - 1 })
-    }
+  const { isAuthenticated, user } = authReducer;
 
-    onFormSubmit(initValues){
-        const { password2, ...userInfo } = initValues
-        this.setState({ progress : true})
-        let userForm = new FormData()
-        for (let key in userInfo){
-            if ( key === "image"){
-                userForm.append(key, userInfo[key][0])
-            } else {
-                userForm.append(key, userInfo[key])
-            }
-        }
+  if (isAuthenticated) {
+    return <Redirect to="/" />;
+  } else if (!isAuthenticated && user !== null) {
+    return <Redirect to="/login" />;
+  }
 
-        this.props.register(userForm , () => {
-            this.setState({ progress : false})
-        })
-
-    }
-
-    renderForm(){
-        switch(this.state.page){
-            case 1:
-                return  <UserInfo nextPage = {this.getNext}/>
-            case 2 :
-                return <UserPersonelInfo
-                        nextPage={this.getNext}
-                        previousPage={this.getPrevious}
-                        />
-            case 3 :
-                return <UserImage 
-                        onFormSubmit={this.onFormSubmit}
-                        previousPage={this.getPrevious}
-                        progress={this.state.progress}
-                        />
-        }
-    }
-}
+  return (
+    <div className="register-page">
+      <AnimatePage />
+      <div className="register-page-content">
+        <div className="register-page-photo">
+          <img src={page === 3 ? '/media/img/remove.png' : '/media/img/remove.png'} alt="register" />
+        </div>
+        <div>{renderForm()}</div>
+      </div>
+    </div>
+  );
+};
 
 const mapStateToProps = ({ authReducer }) => {
-    return { authReducer }
-}
+  return { authReducer };
+};
 
-export default connect(mapStateToProps, { register, clearForm })(Register)
+export default connect(mapStateToProps, { register, clearForm })(Register);

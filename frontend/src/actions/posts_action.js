@@ -9,7 +9,7 @@ from './types'
 
 export const getPosts = (callBack) => {
     return (dispatch) => {
-        axios.get('posts/').then( (res) => {
+        axios.get('post/').then( (res) => {
             dispatch({
                 type: GET_POSTS,
                 payload : res.data
@@ -22,7 +22,7 @@ export const getPosts = (callBack) => {
 export const addPost = (values , callBack) => {
     return (dispatch ,getState ) => {
         const config = setConfig(getState)
-        axios.post('posts/',values ,config).then((res) => {
+        axios.post('post/',values ,config).then((res) => {
             dispatch({
                 type : POST_CREATED,
                 payload : res.data
@@ -40,7 +40,7 @@ export const addPost = (values , callBack) => {
 export const deletePost = (id ,callBack) => {
     return (dispatch , getState) => {
         const config = setConfig(getState)
-        axios.delete(`posts/${id}/`,config).then( () => {
+        axios.delete(`post/${id}/`,config).then( () => {
             dispatch ({
                 type: DELETE_POST,
                 payload : id
@@ -54,7 +54,7 @@ export const deletePost = (id ,callBack) => {
 export const editPost = (values ,id, callBack) => {
     return (dispatch, getState) => {
         const config = setConfig(getState)
-        axios.put(`posts/${id}/`,values , config).then((res) => {
+        axios.put(`post/${id}/`,values , config).then((res) => {
             dispatch({
                 type: EDIT_POST,
                 payload: res.data
@@ -86,15 +86,16 @@ export const loadPage = (callBack) => {
 
 // get the user posts
 export const getUserPosts = (userId, callBack) => {
-    return (dispatch) => {
+    return async (dispatch) => {
         try {
-            axios.get(`posts/${userId}/get_user_posts`).then((res) => {
-                dispatch({
-                    type: GET_USER_POSTS,
-                    payload: res.data
-                });
-                callBack();
+            const res = await axios.get(`post/${userId}/get_user_posts`);
+            dispatch({
+                type: GET_USER_POSTS,
+                payload: res.data
             });
+            if (callBack && typeof callBack === 'function') {
+                callBack();
+            }
         } catch (error) {
             console.error("Error fetching user posts:", error);
         }
@@ -123,7 +124,7 @@ export const getUserSavedPosts = (userId, callBack) => {
 export const getUserLikedPosts = (userId, callBack) => {
     return async (dispatch) => {
         try {
-            const res = await axios.get(`likes/${userId}/get_user_liked_posts`);
+            const res = await axios.get(`like/${userId}/get_user_liked_posts`);
             
             dispatch({
                 type: GET_USER_LIKED_POSTS,
@@ -144,7 +145,7 @@ export const getUserLikedPosts = (userId, callBack) => {
 export const getComments = (id ,callBack) => {
     return (dispatch, getState) => {
         const config = setConfig(getState)
-        axios.get(`comments/${id}/get_comments/`, config).then((res) => {
+        axios.get(`comment/${id}/get_comments/`, config).then((res) => {
             dispatch({
                 type: GET_COMMENTS,
                 payload: res.data
@@ -163,7 +164,7 @@ export const getComments = (id ,callBack) => {
 export const addComment = (values, callBack) => {
     return (dispatch , getState) => {
         const config = setConfig(getState)
-        axios.post("comments/", values ,config).then((res) => {
+        axios.post("comment/", values ,config).then((res) => {
             dispatch({
                 type: ADD_COMMENT,
                 payload: res.data    
@@ -177,7 +178,7 @@ export const addComment = (values, callBack) => {
 export const deleteComment = (id, postId) => {
     return (dispatch, getState) => {
         const config = setConfig(getState)
-        axios.delete(`comments/${id}/`, config).then((res) => {
+        axios.delete(`comment/${id}/`, config).then((res) => {
             dispatch({
                 type: DELETE_COMMENT,
                 payload: {
@@ -193,7 +194,7 @@ export const deleteComment = (id, postId) => {
 export const editComment = (values ,id ,callBack) => {
     return (dispatch , getState) => {
         const config = setConfig(getState)
-        axios.put(`comments/${id}/`, values, config).then((res) => {
+        axios.put(`comment/${id}/`, values, config).then((res) => {
             dispatch({
                 type : EDIT_COMMENT,
                 payload : res.data

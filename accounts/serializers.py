@@ -32,6 +32,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         """
         return obj.image.url
 
+    def create(self, validated_data):
+        validated_data.pop('followersCount', None)
+        validated_data.pop('followingCount', None)
+        return super().create(validated_data)
+
 class UserSerializer(serializers.ModelSerializer):
     profile = serializers.SerializerMethodField()
 

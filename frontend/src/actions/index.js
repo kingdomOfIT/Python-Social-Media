@@ -59,7 +59,7 @@ export const clearForm = () => {
  export const makeLike = (values) => {
     return (dispatch ,getState) => {
         const config = setConfig(getState)
-        axios.post("likes/",values,config)
+        axios.post("like/",values,config)
         .then((res)=> {
             dispatch({
                 type : MAKE_LIKE,
@@ -75,7 +75,7 @@ export const clearForm = () => {
 export const deleteLike = (id) => {
     return (dispatch, getState) => {
         const config = setConfig(getState)
-        axios.delete(`likes/${id}/`, config).then((res) => {
+        axios.delete(`like/${id}/`, config).then((res) => {
             dispatch({
                 type: DELETE_LIKE,
                 payload: res.data

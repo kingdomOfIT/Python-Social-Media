@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'webpack_loader',
+    "drf_spectacular",
 ]
 SITE_ID = 2
 
@@ -44,11 +45,14 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'knox.auth.TokenAuthentication',
-    ]
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Django DRF Social Media',
 }
 
 MIDDLEWARE = [
