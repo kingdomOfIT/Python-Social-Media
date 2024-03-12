@@ -9,7 +9,7 @@ export const getuser = () => {
     return (dispatch ,getState) => {
         const config = setConfig(getState)
         dispatch({ type: USER_LOADING })
-        axios.get("auth/user/",config).then( (res) => {
+        axios.get("user/",config).then( (res) => {
             dispatch({
                 type : GET_USER,
                 payload : res.data
@@ -27,7 +27,7 @@ export const getuserByUserID = (userId) => {
         dispatch({ type: USER_LOADING });
 
         // Use the provided userId to construct the API endpoint
-        axios.get(`auth/user/${userId}/`, config).then((res) => {
+        axios.get(`user/${userId}/`, config).then((res) => {
             dispatch({
                 type: GET_USER_BY_USER_ID,
                 payload: res.data,
@@ -45,7 +45,7 @@ export const listUsers = () => {
   
       dispatch({ type: USER_LOADING });
   
-      axios.get('auth/users/', config).then(
+      axios.get('users/', config).then(
         (res) => {
           dispatch({
             type: LIST_USERS,  // Change the action type to LIST_USERS

@@ -10,6 +10,8 @@ from .models import Post
 from .serializers import PostSer
 from .custom_permissions import IsOwnerOrReadOnly
 from .pagination import CustomPagination
+from comment.models import Comment
+from comment.serializers import CommentSerializer
 
 class PostViewSet(viewsets.ModelViewSet):
     """
@@ -27,17 +29,17 @@ class PostViewSet(viewsets.ModelViewSet):
         Override method to associate the post with the authenticated user.
         """
         serializer.save(owner=self.request.user)
-
+    
     @action(detail=True)
-    def get_user_posts(self, request, pk=None):
+    def comments(self, request, pk=None):
         """
-        Retrieve posts for a specific user.
+        Retrieve comments for a specific post.
         """
         try:
-            owner = get_object_or_404(User, pk=pk)
-            owner_posts = Post.objects.filter(owner=owner.id)
-            serializer = PostSer(owner_posts, many=True)
-            return Response(serializer.data)
+            post = get_object_or_404(Post, pk=pk)
+            comments = Comment.objects.filter(post=post).order_by('-createdAt')
+            serialized_comments = CommentSerializer(comments, many=True).data
+            return Response(serialized_comments)
         except Http404 as e:
             return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:

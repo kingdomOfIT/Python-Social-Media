@@ -88,7 +88,7 @@ export const loadPage = (callBack) => {
 export const getUserPosts = (userId, callBack) => {
     return async (dispatch) => {
         try {
-            const res = await axios.get(`post/${userId}/get_user_posts`);
+            const res = await axios.get(`/user/${userId}/posts/`)
             dispatch({
                 type: GET_USER_POSTS,
                 payload: res.data
@@ -107,7 +107,7 @@ export const getUserPosts = (userId, callBack) => {
 export const getUserSavedPosts = (userId, callBack) => {
     return async (dispatch) => {
         try {
-            const res = await axios.get(`save/${userId}/get_user_saved_posts`);
+            const res = await axios.get(`user/${userId}/saved_posts`);
             
             dispatch({
                 type: GET_USER_SAVED_POSTS,
@@ -124,7 +124,7 @@ export const getUserSavedPosts = (userId, callBack) => {
 export const getUserLikedPosts = (userId, callBack) => {
     return async (dispatch) => {
         try {
-            const res = await axios.get(`like/${userId}/get_user_liked_posts`);
+            const res = await axios.get(`user/${userId}/liked_posts`);
             
             dispatch({
                 type: GET_USER_LIKED_POSTS,
@@ -145,7 +145,7 @@ export const getUserLikedPosts = (userId, callBack) => {
 export const getComments = (id ,callBack) => {
     return (dispatch, getState) => {
         const config = setConfig(getState)
-        axios.get(`comment/${id}/get_comments/`, config).then((res) => {
+        axios.get(`post/${id}/comments/`, config).then((res) => {
             dispatch({
                 type: GET_COMMENTS,
                 payload: res.data

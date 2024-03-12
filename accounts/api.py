@@ -3,21 +3,29 @@ from knox.models import AuthToken
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, Http404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.db import transaction
 
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, filters, viewsets
 from rest_framework.response import Response
+from rest_framework.decorators import action
+
+from comment.serializers import LikeSerializer, SaveSerializer
 
 from .custom_permissions import IsTheSameUser
 from .email_verification import Email
 from .models import Profile
+from post.models import Post
+from comment.models import Like, Save
+from post.serializers import PostSer
 from .serializers import *
 from .token import account_activation_token
+from post.custom_permissions import IsOwnerOrReadOnly
+from post.pagination import CustomPagination
 
 
 class GetUserAPI(generics.RetrieveAPIView):
@@ -38,7 +46,7 @@ class GetUserAPI(generics.RetrieveAPIView):
         Returns:
             User instance: The requested user object.
         """
-        user_id = self.kwargs.get('user_id', None)
+        user_id = self.kwargs.get('id', None)
 
         if user_id is not None:
             user = get_object_or_404(User, id=user_id)
@@ -306,3 +314,129 @@ class UpdateProfileImageApi(generics.GenericAPIView):
 
         # Return response with updated user data including profile image
         return Response({"user": UserSerializer(user).data})
+    
+class PostViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows posts to be viewed or edited.
+    """
+    queryset = Post.objects.all()
+    serializer_class = PostSer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    pagination_class = CustomPagination
+    filter_backends = [filters.OrderingFilter]
+    ordering = ['-createdAt']
+
+    @action(detail=True)
+    def posts(self, request, pk=None):
+        """
+        Retrieve posts for a specific user.
+        """
+        try:
+            owner = get_object_or_404(User, pk=pk)
+            owner_posts = Post.objects.filter(owner=owner.id)
+            serializer = PostSer(owner_posts, many=True)
+            return Response(serializer.data)
+        except Http404 as e:
+            return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': 'An unexpected error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class FollowingPostViewSet(viewsets.GenericViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSer
+
+    @action(detail=True, methods=['get'])
+    def following_posts(self, request, *args, **kwargs):
+        user_id = request.GET.get("0")
+        user = get_object_or_404(User, pk=user_id)
+        following = user.following.all()
+
+        if not following:
+            return Response([], status=status.HTTP_200_OK)
+
+        following_users_ids = [follow.targetUser.id for follow in following]
+        following_posts = Post.objects.filter(owner_id__in=following_users_ids)
+        following_posts = following_posts.exclude(owner=user)
+        
+        queryset = self.filter_queryset(following_posts)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
+
+    @action(detail=True, methods=['get'])
+    def following_users(self, request, *args, **kwargs):
+        user_id = request.GET.get("userId")
+        if user_id is None: 
+            user_id = request.GET.get("0")
+        user = get_object_or_404(User, pk=user_id)
+        following = user.following.all()
+
+        if not following:
+            return Response([], status=status.HTTP_200_OK)
+
+        following_users = [follow.targetUser for follow in following]
+        queryset = self.filter_queryset(following_users)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = UserSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = UserSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class LikeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows likes to be viewed or edited.
+    """
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+    @action(detail=True)
+    def liked_posts(self, request, pk=None):
+        """
+        Retrieve posts liked by a specific user.
+        """
+        try:
+            user = get_object_or_404(User, pk=pk)
+            liked_posts = Like.objects.filter(owner=user)
+            post_ids = [like.post.id for like in liked_posts]
+            posts = Post.objects.filter(id__in=post_ids).order_by('-createdAt')
+            post_data = PostSer(posts, many=True).data
+            return Response(post_data)
+        except Http404:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print("Error running get_user_liked_posts:", e)
+            return Response({"error": "Failed to retrieve user's liked posts"}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class SaveViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows posts to be saved, retrieved, updated, or deleted.
+    """
+    queryset = Save.objects.all()
+    serializer_class = SaveSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+    
+    @action(detail=True)
+    def saved_posts(self, request, pk=None):
+        """
+        Retrieve saved posts for a specific user.
+        """
+        try:
+            user = get_object_or_404(User, pk=pk)
+            saved_posts = Save.objects.filter(owner=user)
+            post_ids = [save.post.id for save in saved_posts]
+            posts = Post.objects.filter(id__in=post_ids).order_by('-createdAt')
+            post_data = PostSer(posts, many=True).data
+            return Response(post_data)
+        except Http404:
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print("Error from retrieving saved posts:", e)
+            return Response({'error': 'Failed to retrieve saved posts.'}, status=status.HTTP_400_BAD_REQUEST)

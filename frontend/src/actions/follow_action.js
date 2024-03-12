@@ -16,7 +16,7 @@ export const fetchFollowingPosts = (values) => {
     return async (dispatch, getState) => {
         const config = setConfig(getState);
         try {
-            const res = await axios.get('follow/following_posts/', { params: values }, config);
+            const res = await axios.get(`user/${values}/following_posts/`, { params: values }, config);
             dispatch({
                 type: GET_FOLLOWING_POSTS,
                 payload: res.data
@@ -34,14 +34,14 @@ export const fetchFollowingPosts = (values) => {
 export const getFollowingUsers = (values, callBack) => {
     return async (dispatch, getState) => {
         // Check if following users are already fetched
-        console.log("Ja zovem vala")
+        console.log("Ja zovem vala values: ", values)
         const { following_posts_reducer } = getState();
         if (!following_posts_reducer || !following_posts_reducer.following || following_posts_reducer.following.length === 0) {
             // Following users not fetched or empty, proceed with fetching
             const config = setConfig(getState);
             console.log("Received values: ", values);
             try {
-                const res = await axios.get('follow/following_users/', { params: values }, config);
+                const res = await axios.get(`user/${values.userId}/following_users/`, { params: values }, config);
                 dispatch({
                     type: GET_FOLLOWING_USERS,
                     payload: res.data

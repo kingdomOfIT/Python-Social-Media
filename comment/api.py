@@ -53,21 +53,6 @@ class CommentViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'error': 'An unexpected error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @action(detail=True)
-    def get_comments(self, request, pk=None):
-        """
-        Retrieve comments for a specific post.
-        """
-        try:
-            post = get_object_or_404(Post, pk=pk)
-            comments = Comment.objects.filter(post=post).order_by('-createdAt')
-            serialized_comments = CommentSerializer(comments, many=True).data
-            return Response(serialized_comments)
-        except Http404 as e:
-            return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({'error': 'An unexpected error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 class LikeViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows likes to be viewed or edited.
@@ -113,24 +98,6 @@ class LikeViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print("Error from delete like function:", e)
             return Response({"error": "Failed to delete like"}, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=True)
-    def get_user_liked_posts(self, request, pk=None):
-        """
-        Retrieve posts liked by a specific user.
-        """
-        try:
-            user = get_object_or_404(User, pk=pk)
-            liked_posts = Like.objects.filter(owner=user)
-            post_ids = [like.post.id for like in liked_posts]
-            posts = Post.objects.filter(id__in=post_ids).order_by('-createdAt')
-            post_data = PostSer(posts, many=True).data
-            return Response(post_data)
-        except Http404:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            print("Error running get_user_liked_posts:", e)
-            return Response({"error": "Failed to retrieve user's liked posts"}, status=status.HTTP_400_BAD_REQUEST)
     
 class SaveViewSet(viewsets.ModelViewSet):
     """
@@ -177,22 +144,4 @@ class SaveViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print("Error from deleting saved post:", e)
             return Response({'error': 'Failed to unsave the post.'}, status=status.HTTP_400_BAD_REQUEST)
-    
-    @action(detail=True)
-    def get_user_saved_posts(self, request, pk=None):
-        """
-        Retrieve saved posts for a specific user.
-        """
-        try:
-            user = get_object_or_404(User, pk=pk)
-            saved_posts = Save.objects.filter(owner=user)
-            post_ids = [save.post.id for save in saved_posts]
-            posts = Post.objects.filter(id__in=post_ids).order_by('-createdAt')
-            post_data = PostSer(posts, many=True).data
-            return Response(post_data)
-        except Http404:
-            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            print("Error from retrieving saved posts:", e)
-            return Response({'error': 'Failed to retrieve saved posts.'}, status=status.HTTP_400_BAD_REQUEST)
 

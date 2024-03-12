@@ -81,12 +81,12 @@ const UserInfo = ({ location }) => {
     console.log('User2 is empty. Rendering loading state...');
     return <Container style={{ paddingTop: '150px', align: 'center' }}></Container>;
   }
-
-  const user2 = userReducer.userByUserId;
-  const imagePath = user2.profile ? user2.profile.image_url : 'https://picsum.photos/200';
-  const followersCount = user2.profile ? user2.profile.followersCount : 5;
-  const followingCount = user2.profile ? user2.profile.followingCount : 5;
-  const posts = userPostsReducer.posts || [];
+  
+  const targetUser = userReducer.userByUserId;
+  const imagePath = targetUser.profile ? targetUser.profile.image_url : 'https://picsum.photos/200';
+  const followersCount = targetUser.profile ? targetUser.profile.followersCount : 0;
+  const followingCount = targetUser.profile ? targetUser.profile.followingCount : 0;
+  const posts = userPostsReducer || [];
   posts.forEach(post => {
     post.createdAt = new Date(post.createdAt);
   });
@@ -100,7 +100,7 @@ const UserInfo = ({ location }) => {
           <Avatar className="avatar" alt="User Profile Picture" src={imagePath} style={{ width: '150px', height: '150px', marginBottom: '10px' }} />
 
           <Typography variant="h5" component="div" align="center" gutterBottom>
-            {user2.first_name} {user2.last_name}
+            {targetUser.first_name} {targetUser.last_name}
           </Typography>
 
           <div align="center" style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '10px' }}>

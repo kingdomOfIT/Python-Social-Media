@@ -8,6 +8,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("",include("frontend.urls")),
     path('auth/',include('accounts.urls')),
+    path('user/',include('accounts.user_urls')),
+    path('users/',include('accounts.users_urls')),
     path('post/',include('post.urls')),
     path('comment/',include('comment.urls')),
     path('like/',include('comment.likes_url')),
