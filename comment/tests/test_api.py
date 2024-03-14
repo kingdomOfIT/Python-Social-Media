@@ -17,7 +17,7 @@ class CommentViewSetTest(APITestCase):
 
     def test_create_comment(self):
         self.client.force_authenticate(user=self.user)
-        url = '/comments/'
+        url = '/comment/'
         data = {
             'content': 'Test comment',
             'post': self.post.id
@@ -32,7 +32,7 @@ class CommentViewSetTest(APITestCase):
     def test_update_comment(self):
         comment = Comment.objects.create(content='Initial comment', post=self.post, owner=self.user)
         self.client.force_authenticate(user=self.user)
-        url = f'/comments/{comment.id}/'
+        url = f'/comment/{comment.id}/'
         updated_data = {
             'content': 'Updated comment'
         }
@@ -49,7 +49,7 @@ class LikeViewSetTest(APITestCase):
 
     def test_create_like(self):
         self.client.force_authenticate(user=self.user)
-        url = '/likes/'
+        url = '/like/'
         data = {'post': self.post.id, 'like': True}
         response = self.client.post(url, data, format='json')
 
@@ -61,7 +61,7 @@ class LikeViewSetTest(APITestCase):
     def test_delete_like(self):
         like = Like.objects.create(owner=self.user, post=self.post, like=False)
         self.client.force_authenticate(user=self.user)
-        url = f'/likes/{like.id}/'
+        url = f'/like/{like.id}/'
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)

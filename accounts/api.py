@@ -254,7 +254,6 @@ class UpdateUserApi(generics.GenericAPIView):
             sex = request_data_copy.pop('sex')
             profile_data = {}
             profile_data['sex'] = sex
-
             user = get_object_or_404(User, id = kwargs['id'])
             self.check_object_permissions(request, user)
 
@@ -387,7 +386,6 @@ class FollowingPostViewSet(viewsets.GenericViewSet):
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
 
-
 class LikeViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows likes to be viewed or edited.
@@ -413,7 +411,6 @@ class LikeViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print("Error running get_user_liked_posts:", e)
             return Response({"error": "Failed to retrieve user's liked posts"}, status=status.HTTP_400_BAD_REQUEST)
-        
 
 class SaveViewSet(viewsets.ModelViewSet):
     """

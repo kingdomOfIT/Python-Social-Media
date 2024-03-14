@@ -17,7 +17,7 @@ class PostViewSetTest(TestCase):
 
     def test_get_user_posts(self):
         view = PostViewSet.as_view({'get': 'get_user_posts'})
-        request = self.factory.get('/#/get_user_posts/')
+        request = self.factory.get(f'#/user/{self.user.pk}/user_posts/')
         force_authenticate(request, user=self.user)
         response = view(request, pk=self.user.pk)
         self.assertEqual(response.status_code, 200)

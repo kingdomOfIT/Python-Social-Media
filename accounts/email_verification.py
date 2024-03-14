@@ -9,6 +9,8 @@ from django.contrib import messages
 class Email:
     @staticmethod
     def send_activation_email(request, user, to_email):
+        print("Trenutni sajt: ", get_current_site(request))
+        print("Trenutna domena: ", get_current_site(request).domain)
         try:
             mail_subject = "Activate your user account."
             message = render_to_string("template_activate_account.html", {

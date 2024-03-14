@@ -76,7 +76,7 @@ function UserProfileMenu({ open, onClose, authReducer, updateUserInfo, updateUse
 
     updateUserInfo(updatedUserInfo, userId, () => {})
     handleCloseDialog()
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handleImageChange = (file) => {
@@ -92,7 +92,7 @@ function UserProfileMenu({ open, onClose, authReducer, updateUserInfo, updateUse
 
     setChangesMade(false);
     handleCloseDialog()
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handleOptionClick = (option) => {

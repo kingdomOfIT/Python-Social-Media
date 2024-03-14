@@ -17,7 +17,7 @@ export const closeAlert = () => {
 export const updateUserInfo = (body , userId ,callBack ,stopProgress) => {
     return (dispatch ,getState ) => {
         const config = setConfig(getState)
-        axios.post(`auth/update-user/${userId}/` ,body ,config).then( (res) => {
+        axios.post(`user/${userId}/update/` ,body ,config).then( (res) => {
             dispatch({
                 type : UPDATE_USER_INFO,
                 payload : res.data
@@ -38,7 +38,7 @@ export const updateUserInfo = (body , userId ,callBack ,stopProgress) => {
 export const updateUserImage = (values ,user_id ,callBack) => {
     return (dispatch ,getState) => {
         const config = setConfig(getState)
-        axios.post(`auth/update-image/${user_id}/`,values ,config).then( (res) => {
+        axios.post(`user/${user_id}/update-image/`,values ,config).then( (res) => {
             callBack()
             dispatch({
                 type : UPDATE_IMAGE,

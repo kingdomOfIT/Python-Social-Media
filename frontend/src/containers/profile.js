@@ -18,13 +18,14 @@ import Post from '../components/posts';
 const UserInfo = ({ location }) => {
   const [ownerIntId, setOwnerIntId] = useState(null);
   const [visitorIntId, setVisitorIntId] = useState(null);
-  const [followingList, setFollowingList] = useState([]);
+  const [isFollowing, setIsFollowing] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isFetchingFollowing, setIsFetchingFollowing] = useState(false);
 
   const authReducer = useSelector(state => state.authReducer);
   const userReducer = useSelector(state => state.userReducer);
   const userPostsReducer = useSelector(state => state.userPostsReducer || { posts: [] });
-  const followingArray = useSelector(state => state.following_posts_reducer.following);
+  const following = useSelector(state => state.following_posts_reducer.following);
 
   const dispatch = useDispatch();
 
@@ -43,11 +44,20 @@ const UserInfo = ({ location }) => {
 
     const ownerIntId = parseInt(userId, 10);
     const visitorIntId = parseInt(authReducer.user.id, 10);
-    await dispatch(getFollowingUsers(visitorIntId));
+
+    // Check if following data is already being fetched
+    if (!isFetchingFollowing) {
+      setIsFetchingFollowing(true); // Set flag to true to prevent duplicate fetches
+      await dispatch(getFollowingUsers(visitorIntId));
+    }
+
     setOwnerIntId(ownerIntId);
     setVisitorIntId(visitorIntId);
-    setFollowingList(followingArray);
-  }, [dispatch, location.search, authReducer.user.id, followingArray]);
+    console.log("******OID: ", ownerIntId)
+    console.log("******VID: ", visitorIntId)
+    console.log("=====Following: ", following)
+    setIsFollowing(following.some(user => user.id === ownerIntId));
+  }, [dispatch, location.search, authReducer.user.id, following, isFetchingFollowing]);
 
   useEffect(() => {
     fetchUserData();
@@ -61,21 +71,15 @@ const UserInfo = ({ location }) => {
     setIsDialogOpen(false);
   };
 
-  const isFollowing = useCallback((targetUserId, followingArray) => {
-    if (followingArray) {
-      return followingArray.some(user => user.id === targetUserId);
-    }
-    return false;
-  }, []);
-
-  const handleFollow = useCallback(() => {
-    if (isFollowing(ownerIntId, followingArray)) {
+  const handleFollow = () => {
+    if (isFollowing) {
       dispatch(deleteFollow(authReducer.user.id, ownerIntId));
+      setIsFollowing(false);
     } else {
       dispatch(createFollow({ targetUser: ownerIntId }));
+      setIsFollowing(true);
     }
-    setFollowingList(followingArray);
-  }, [ownerIntId, followingArray, authReducer.user.id, dispatch, isFollowing]);
+  };
 
   if (_.isEmpty(userReducer.userByUserId)) {
     console.log('User2 is empty. Rendering loading state...');
@@ -139,7 +143,7 @@ const UserInfo = ({ location }) => {
           )}
           {ownerIntId !== visitorIntId && (
             <Button className="follow-button" variant="contained" color="primary" fullWidth onClick={handleFollow}>
-              {isFollowing(ownerIntId, followingArray) ? 'Unfollow' : 'Follow'}
+              {isFollowing ? 'Unfollow' : 'Follow'}
             </Button>
           )}
 

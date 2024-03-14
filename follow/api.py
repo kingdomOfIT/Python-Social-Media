@@ -27,6 +27,10 @@ class FollowingPostViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mix
         requester_user = request.user
         target_user = get_object_or_404(User, id=target_user_id)
 
+        # Check if the follow relationship already exists
+        if requester_user.following.filter(id=target_user.id).exists():
+            return Response({'error': 'You are already following this user'}, status=status.HTTP_400_BAD_REQUEST)
+
         follow_data = {'requesterUser': requester_user.id, 'targetUser': target_user.id}
         serializer = FollowSerializer(data=follow_data)
 
@@ -44,6 +48,7 @@ class FollowingPostViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mix
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     @action(detail=False, methods=['post'])
     def delete_follow(self, request, *args, **kwargs):
@@ -68,5 +73,5 @@ class FollowingPostViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mix
         target_user.profile.followersCount = F('followersCount') - 1
         target_user.profile.save()
         
-        return Response({"message": "Follow relationship deleted successfully."}, status=status.HTTP_200_OK)
+        return Response({"message": "Follow relationship deleted successfully.", "targetUserId": target_user_id}, status=status.HTTP_200_OK)
 

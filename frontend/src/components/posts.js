@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import moment from "moment";
+import { connect } from 'react-redux';
 
 // Material-UI Components
 import Avatar from '@material-ui/core/Avatar';
@@ -24,7 +25,8 @@ import '../../static/frontend/mystyle.css';
 
 const Post = ({
   posts,
-  userID
+  userID,
+  authReducer
 }) => {
 
 const useStyles = theme  =>  ({
@@ -148,7 +150,7 @@ return posts.map((post) => {
                     </div>
                     }
                     action={
-                        <ResponsiveDialog post={post} userId={userID}/>
+                        authReducer.user.id === post.owner.id ? <ResponsiveDialog post={post} userId={userID}/> : null
                     }
                     />
                 </Grid>
@@ -208,4 +210,10 @@ return posts.map((post) => {
 
 }
 
-export default Post;
+const mapStateToProps = (state) => {
+    return {
+        authReducer: state.authReducer,
+    };
+};
+
+export default connect(mapStateToProps )(Post);

@@ -60,6 +60,35 @@ export const getFollowingUsers = (values, callBack) => {
 };
 
 
+// export const createFollow = (values) => {
+//     return async (dispatch, getState) => {
+//         const config = setConfig(getState);
+//         const { targetUser } = values; // Assuming values is an object containing targetUser
+
+//         // Check if the user is already following the targetUser
+//         const { following_posts_reducer } = getState();
+//         const isAlreadyFollowing = following_posts_reducer.following.some(user => user.id === targetUser.id);
+
+//         // If not already following, proceed with creating the follow
+//         if (!isAlreadyFollowing) {
+//             try {
+//                 const res = await axios.post('follow/', values, config);
+//                 dispatch({
+//                     type: CREATE_FOLLOW,
+//                     payload: res.data
+//                 });
+//             } catch (error) {
+//                 dispatch({
+//                     type: CREATE_FOLLOW_FAILED,
+//                     payload: error.response ? error.response.data : 'Unexpected error occurred'
+//                 });
+//             }
+//         } else {
+//             console.log("Already following the user");
+//             // Optionally, you can dispatch an action or handle this case differently
+//         }
+//     };
+// };
 export const createFollow = (values) => {
     return async (dispatch, getState) => {
         const config = setConfig(getState);

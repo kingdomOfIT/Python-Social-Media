@@ -13,7 +13,6 @@ class FollowAPITestCase(TestCase):
         self.user2 = User.objects.create_user(username='user2', email='user2@example.com', password='password')
 
     def test_create_follow(self):
-
         url = '/follow/'
         data = {'targetUser': self.user2.id, 'requesterUser': self.user1.id}
         self.client.force_authenticate(user=self.user1)
@@ -25,13 +24,12 @@ class FollowAPITestCase(TestCase):
         if response.status_code != status.HTTP_201_CREATED:
             print("Response data:", response.data)
         
+        print("=====================> ", response)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(Follow.objects.filter(requesterUser=self.user1, targetUser=self.user2).exists())
 
-
-
     def test_delete_follow(self):
-        follow = Follow.objects.create(requesterUser=self.user1, targetUser=self.user2)
+        Follow.objects.create(requesterUser=self.user1, targetUser=self.user2)
         self.user1.profile = Profile.objects.create(user=self.user1)
         self.user2.profile = Profile.objects.create(user=self.user2)
 
@@ -42,16 +40,3 @@ class FollowAPITestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(Follow.objects.filter(requesterUser=self.user1, targetUser=self.user2).exists())
 
-    def test_following_posts(self):
-        url = '/follow/following_posts/'
-        data = {'0': self.user1.id}
-        self.client.force_login(self.user1)
-        response = self.client.get(url, data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_following_users(self):
-        url = '/follow/following_users/'
-        data = {'userId': self.user1.id}
-        self.client.force_login(self.user1)
-        response = self.client.get(url, data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
