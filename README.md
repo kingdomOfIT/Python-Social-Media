@@ -1,6 +1,6 @@
 <div align="center">
   <br />
-    <img src="https://github.com/kingdomOfIT/Python-Social-Media/blob/main/media/img/SM-Image.png" alt="Project Banner">
+    <img src="https://github.com/kingdomOfIT/Algorithmic-Python-Trading/blob/main/static/CoverImage.png" alt="Project Banner">
   <br />
   <div>
     <img src="https://img.shields.io/badge/-Django-black?style=for-the-badge&logoColor=white&logo=django&color=092E20" alt="django" />
@@ -94,8 +94,6 @@ python manage.py runserver
 **Explore other projects or visit website**
 
 Check out my other projects on <a href="https://github.com/kingdomOfIT" target="_blank">GitHub</a> to discover more exciting creations!
-
-<br />
 
 🚀 Explore more of my work and stay updated with the latest projects on my <a href="https://amirkahriman.com" target="_blank">website</a>.
 
