@@ -91,25 +91,13 @@ python manage.py runserver
 
 ## <a name="more">🚀 More</a>
 
-**Explore More Projects**
+**Explore other projects or visit website**
 
-Check out my other projects on GitHub to discover more exciting creations!
-
-🌟 Explore Projects
-
-<a href="https://github.com/kingdomOfIT" target="_blank">
-🚀 Visit My GitHub
-</a>
+Check out my other projects on <a href="https://github.com/kingdomOfIT" target="_blank">GitHub</a> to discover more exciting creations!
 
 <br />
 
-**Visit My Website**
-
-🚀 Explore more of my work and stay updated with the latest projects on my website.
-
-<a href="https:/amirkahriman.com" target="_blank">
-🚀 Visit My Website
-</a>
+🚀 Explore more of my work and stay updated with the latest projects on my <a href="https://amirkahriman.com" target="_blank">website</a>.
 
 Thank you for visiting! Don't forget to star ⭐ this repository if you found it useful or interesting.
 
