@@ -1,10 +1,12 @@
 <div align="center">
-  <!-- <br />
-    <img src="https://github.com/adrianhajdin/social_media_app/assets/151519281/be514a19-3cbb-48b7-9acd-2cf4d2e319c4" alt="Project Banner">
-  <br /> -->
+  <br />
+    <img src="https://github.com/kingdomOfIT/Python-Social-Media/blob/main/media/img/SM-Image.png" alt="Project Banner">
+  <br />
   <div>
     <img src="https://img.shields.io/badge/-Django-black?style=for-the-badge&logoColor=white&logo=django&color=092E20" alt="django" />
-    <img src="https://img.shields.io/badge/-DOCKER-black?style=for-the-badge&logoColor=white&logo=docker&color=blue" alt="docker" />
+    <img src="https://img.shields.io/badge/-REACT-black?style=for-the-badge&logoColor=black&logo=react&color=61dbfb" alt="react" />
+    <img src="https://img.shields.io/badge/-HTML-black?style=for-the-badge&logoColor=white&logo=html5&color=e34c26" alt="html5" />
+    <img src="https://img.shields.io/badge/-css-black?style=for-the-badge&logoColor=white&logo=css3&color=264de4" alt="css3" />
     <img src="https://img.shields.io/badge/-Postgresql-black?style=for-the-badge&logoColor=white&logo=postgresql&color=00008B" alt="postgresql" />
   </div>
 
@@ -26,14 +28,16 @@
 
 ## <a name="introduction">🤖 Introduction</a>
 
-A dynamic social media platform crafted with Django, ReactJS, PostgreSQL, HTML, and CSS, showcasing a seamless user experience and robust functionality. With features including secure sign-up with email verification, personalized onboarding, intuitive post creation, comprehensive search capabilities, seamless user interactions like following others and commenting, as well as convenient tools for managing liked and saved posts and updating profile information, this project offers a comprehensive solution for engaging and connecting users in a vibrant online community
+Writer is a dynamic social media platform designed for seamless connection and interaction. Developed independently, it allows users to post text, follow others, like, and comment, fostering vibrant discussions and meaningful engagement. Prioritizing user experience and intuitive design, I crafted an efficient system to accommodate evolving needs. While I worked solo on Writer, I actively sought feedback, ensuring its relevance and value. As the creator and developer, I'm dedicated to fostering a vibrant community where individuals can connect, share, and thrive together.
 
 
 ## <a name="tech-stack">⚙️ Tech Stack</a>
 
 - Python
-- Fast API
-- Docker
+- Django
+- ReactJS
+- HTML
+- CSS
 - PostgreSQL
 
 ## <a name="features">🔋 Features</a>
