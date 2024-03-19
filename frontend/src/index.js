@@ -8,6 +8,6 @@ import store from "./store"
 
 ReactDOM.render(
     <Provider store = {store}>
-        <Favicon url="http://127.0.0.1:8000/media/img/SMLogo.png" />
+        <Favicon url="https://writer-sm.up.railway.app/media/img/SMLogo.png" />
         <App />
     </Provider>  , document.querySelector(".main"))
