@@ -101,9 +101,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static_in_env')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+print("STATICFILES_DIRS ========> ", STATICFILES_DIRS)
 VENV_PATH = os.path.dirname(BASE_DIR)
-STATIC_ROOT = os.path.join(VENV_PATH, 'static_root')
+print("VENV_PATH ========> ", VENV_PATH)
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+print("STATIC_ROOT ========> ", STATIC_ROOT)
+
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
