@@ -3,7 +3,7 @@ from .base import *
 DEBUG = True
 
 # ALLOWED_HOSTS = ['ip-address', 'www.writerapp.com']
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ["*"]
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
