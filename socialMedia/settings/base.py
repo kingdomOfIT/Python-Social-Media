@@ -72,7 +72,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware'
 ]
 
-ROOT_URLCONF = 'SocialMedia.urls'
+ROOT_URLCONF = 'socialmedia.urls'
 
 TEMPLATES = [
     {
@@ -90,7 +90,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'SocialMedia.wsgi.application'
+WSGI_APPLICATION = 'socialmedia.wsgi.application'
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
