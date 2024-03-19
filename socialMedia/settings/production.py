@@ -2,8 +2,9 @@ from .base import *
 
 DEBUG = True
 
-# ALLOWED_HOSTS = ['ip-address', 'www.writerapp.com']
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "writer-sm.up.railway.app"]
+
+CRF_TRUSTED_ORIGINS = ['https://writer-sm.up.railway.app']
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
