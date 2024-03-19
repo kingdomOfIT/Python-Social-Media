@@ -11,8 +11,6 @@ MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware',]
 
 # DEBUG TOOLBAR SETTINGS
 
-ROOT_URLCONF = 'socialMedia.urls'
-
 
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
