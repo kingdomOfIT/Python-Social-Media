@@ -5,7 +5,6 @@ import AnimatePage from "../../components/AnimatePage";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import { login } from "../../actions/auth_actions";
 
 function provider_login_url(provider) {
@@ -81,8 +80,14 @@ const Login = ({ authReducer, login }) => {
                                     placeholder="Password"
                                 />
                             </div>
-                            <button style={{ marginRight: "5px" }} className="btn btn-general btn-login"> Log In </button>
-                            <CircularProgress style={progress ? { display: "inline-block" } : { display: "none" }} />
+                            <button
+                                disabled={progress}
+                                onClick={onFormSubmit}
+                                style={{ marginRight: "5px" }} // Adding inline style
+                                className="btn btn-general btn-login" // Adding className
+                            >
+                                {progress ? <CircularProgress size={20} /> : "Log In"}
+                            </button>
                         </form>
                         <Popover
                             id={id}
