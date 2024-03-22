@@ -61,18 +61,19 @@ class ListUsersAPI(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         """
-        Retrieve a list of users.
+        Retrieve a list of users with profiles.
 
         Returns:
-            Response: A Response object containing the list of users.
+            Response: A Response object containing the list of users with profiles.
         """
         try:
             response = super().list(request, *args, **kwargs)
-            serialized_data = list(map(dict, response.data))
-            return response
+            users_with_profiles = [user for user in response.data if user.get('profile')]
+            print("*********** Vracanjee: ", Response(users_with_profiles) )
+            return Response(users_with_profiles)
         except Exception as e:
             # Log the exception and return an appropriate error response
-            logging.Logger.exception("Failed to retrieve list of users: %s", e)
+            logging.exception("Failed to retrieve list of users: %s", e)
             return Response({'error': 'Failed to retrieve list of users'},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
