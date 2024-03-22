@@ -5,6 +5,9 @@ from django.utils.encoding import force_bytes, force_str
 from .token import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib import messages
+from decouple import config
+
+SITE = config('SITE')
 
 class Email:
     @staticmethod
@@ -13,7 +16,7 @@ class Email:
             mail_subject = "Activate your user account."
             message = render_to_string("template_activate_account.html", {
                 'user': user.username,
-                'domain': get_current_site(request).domain,
+                'domain': SITE,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
                 "protocol": 'https' if request.is_secure() else 'http'
