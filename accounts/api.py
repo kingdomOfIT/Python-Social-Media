@@ -69,7 +69,6 @@ class ListUsersAPI(generics.ListAPIView):
         try:
             response = super().list(request, *args, **kwargs)
             users_with_profiles = [user for user in response.data if user.get('profile')]
-            print("*********** Vracanjee: ", Response(users_with_profiles) )
             return Response(users_with_profiles)
         except Exception as e:
             # Log the exception and return an appropriate error response

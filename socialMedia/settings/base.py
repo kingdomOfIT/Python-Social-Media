@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'webpack_loader',
     "drf_spectacular",
 ]
-SITE_ID = 2
+SITE_ID = 1
 
 SOCIALACCOUNT_PROVIDERS = {
     "google":{
