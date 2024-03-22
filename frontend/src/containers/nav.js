@@ -35,7 +35,7 @@ const Nav = (props) => {
             return (
                 <div className="navbar">
                     <div className="left-side">
-                        <a href="#">
+                        <a href="/">
                             <img src={"../../../media/img/SMLogo.png"} alt="Logo" className="logo" />
                         </a>
                         <div className="Appp">
@@ -59,7 +59,7 @@ const Nav = (props) => {
             return (
                 <nav className="navbar navbar-expand navbar-light custom-nav fixed-top">
                     <div className="container">
-                        <a className="navbar-custom-color" href="#">Writer</a>
+                        <a className="navbar-custom-color" href="/">Writer</a>
                         <div className="collapse navbar-collapse">  
                         <ul className="navbar-nav ml-auto">
                             <li className="nav-item">

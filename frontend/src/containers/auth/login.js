@@ -83,8 +83,8 @@ const Login = ({ authReducer, login }) => {
                             <button
                                 disabled={progress}
                                 onClick={onFormSubmit}
-                                style={{ marginRight: "5px" }} // Adding inline style
-                                className="btn btn-general btn-login" // Adding className
+                                style={{ marginRight: "5px" }}
+                                className="btn btn-general btn-login"
                             >
                                 {progress ? <CircularProgress size={20} /> : "Log In"}
                             </button>
