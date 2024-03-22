@@ -1,11 +1,12 @@
 from django.urls import path
 from . import api
 from rest_framework import routers
-from .api import PostViewSet, FollowingPostViewSet, LikeViewSet, SaveViewSet
+from .api import PostViewSet, FollowingPostViewSet, LikeViewSet, SaveViewSet, FollowingUsersViewSet
 
 router = routers.DefaultRouter()
 router.register('', PostViewSet, basename='posts')
-router.register('', FollowingPostViewSet, basename='follow')
+router.register('', FollowingPostViewSet, basename='following_posts')
+router.register('', FollowingUsersViewSet, basename='following_users')
 router.register('', LikeViewSet, basename='likes')
 router.register('', SaveViewSet, basename='saves')
 

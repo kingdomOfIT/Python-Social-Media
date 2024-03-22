@@ -12,11 +12,11 @@ import {
     DELETE_FOLLOW_SUCCESS
 } from './types';
 
-export const fetchFollowingPosts = (values) => {
+export const fetchFollowingPosts = (userId) => {
     return async (dispatch, getState) => {
         const config = setConfig(getState);
         try {
-            const res = await axios.get(`user/${values}/following_posts/`, { params: values }, config);
+            const res = await axios.get(`user/${userId}/following_posts/`, config);
             dispatch({
                 type: GET_FOLLOWING_POSTS,
                 payload: res.data

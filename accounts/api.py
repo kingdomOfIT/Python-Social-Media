@@ -346,7 +346,7 @@ class FollowingPostViewSet(viewsets.GenericViewSet):
 
     @action(detail=True, methods=['get'])
     def following_posts(self, request, *args, **kwargs):
-        user_id = request.GET.get("0")
+        user_id = kwargs.get('pk')
         user = get_object_or_404(User, pk=user_id)
         following = user.following.all()
 
@@ -365,7 +365,7 @@ class FollowingPostViewSet(viewsets.GenericViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
     
-
+class FollowingUsersViewSet(viewsets.GenericViewSet):
     @action(detail=True, methods=['get'])
     def following_users(self, request, *args, **kwargs):
         user_id = request.GET.get("userId")
